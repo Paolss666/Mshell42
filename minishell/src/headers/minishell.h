@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 14:25:38 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 15:48:43 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,11 @@ typedef struct s_file
 	struct	s_file	*next;
 }				t_file;
 
-typedef struct s_list_gb
+typedef struct s_lists
 {
-	t_list	*a;
-	t_list	*b;
-	t_list	*c;
-} 			t_list_gb;
+	t_list	*node;
+	int		list;
+}	t_lists;
 
 
 typedef struct s_v
@@ -108,6 +107,7 @@ typedef struct s_expand
 	int				err;
 }					t_expand;
 
+
 typedef struct s_cd
 {
 	char			*path;
@@ -141,7 +141,11 @@ typedef struct s_brain
 	t_exp	*export;
 }			t_brain;
 
-
+typedef struct s_gb
+{
+	int			list;
+	void		*p;
+}				t_gb;
 
 
 // ----------- UT --------------- //
@@ -190,6 +194,12 @@ t_envp				*logic_init_node(t_envp *new_node, const char *name, const char *value
 								char *temp);
 char				**ft_split_garbage(char const *s, char c);
 
+// ----------- GARBAGE --------------//
+void	del(void *p);
+void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+int		cmp(void *p1, void *p2);
+void	logic_garbage_clear(int list, t_list *a, t_list *b, t_list *c);
+int		logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
 // ----------- PIPE // REDIRECTION --------------//
 
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, int error_status);
@@ -229,15 +239,33 @@ void				found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd);
 void				found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd);
 t_exp 				*old_exp_add_back(char *old_modif);
 t_envp 				*old_nev_add_back(char *old_pwd, char *name_variable);
+char				*ft_strnjoin(const char *s1, const char *s2, size_t n);
 int     			found_export(t_cmd *to_pars);
 int					found_unset(t_cmd *to_pars);
 int					found_exit(t_cmd *to_pars);
 // int					print_pwd(t_envp *envp);
 int					found_echo(t_cmd *to_pars);
+int	print_not_found(int print_argument, t_cmd *arg_cmd);
+int					ft_condition_printf(int print_argument, t_cmd *arg_cmd,
+						char *expanded_value);
+int	found_echo_whit_flag(t_cmd *arg_cmd);
+char				*ft_expand_value(char *arg_value, int i, t_envp *environment,
+						int err);
+int	logic_display_error(t_cmd *arg_cmd);
+char	*add_logic_garbage(char *var_value, char *found);
+t_expand	*init_structure_expand(int i, int err, char *dollar);
+char				*find_variable_value(char *var_name, t_envp *enviroment, int e_st);
+char				*creation_var_name(int start, int i, char *arg_value);
+char				*cretion_sub_string(char *value, int len_tot, char *expanded_value);
 int					valid_variable_char(char c);
 int					is_special_char(char c);
 int					count_dollar(char *string);
 char				*logic_f_dollar_int(char *current, int error_status);
+char				*expnad_join_dollar(char *expanded_value, char *dollar);
+char				*expand_last_dollar(char *expanded_value, char *value);
+char				*expanded_var_value(char *var_value, char *expanded_value);
+void				process_expand(char **value, char **expanded_value, t_expand *expand,
+						t_envp *environment);
 int					ft_envp(t_cmd *to_pars);
 int					found_count_pipe(t_cmd *cmd);
 int					valid_variable_char(char c);

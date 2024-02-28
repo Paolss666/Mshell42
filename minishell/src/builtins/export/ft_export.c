@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:52:41 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 13:57:16 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 14:47:43 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -617,21 +617,21 @@ int is_valid_export_value(char *cmd)
 
 void remove_q(char *s)
 {
-    char *p; // Puntatore per scorrere la s
-    char *q; // Puntatore per scrivere la s risultante
+	char	*p;
+	char	*q;
 
 	p = s;
 	q = s;
-    while (*p != '\0')
+	while (*p != '\0')
 	{
-        if (*p != '"' && *p != '\'')
+		if (*p != '"' && *p != '\'')
 		{
-            *q = *p;
-            q++;
-        }
-        p++;
-    }
-    *q = '\0';
+			*q = *p;
+			q++;
+		}
+		p++;
+	}
+	*q = '\0';
 }
 
 void	ft_export_logic( t_envp **enviroment, t_exp **export, char *line)

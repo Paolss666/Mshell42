@@ -6,7 +6,7 @@
 #    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/02/28 14:24:01 by npaolett         ###   ########.fr        #
+#    Updated: 2024/02/28 15:49:16 by npaolett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,10 @@ SRC =	src/builtins/ft_pwd.c\
 		src/builtins/env/ft_env.c \
 		src/builtins/echo/ft_echo.c \
 		src/builtins/echo/ft_logic_echo.c \
+		src/builtins/echo/ft_logic_echo3.c \
 		src/builtins/echo/ft_utils_echo.c \
 		src/builtins/echo/ft_utils_echo2.c \
+		src/builtins/echo/ft_expand_value.c \
 		src/builtins/ft_exit.c  \
 		src/builtins/cd/ft_cd.c 	  \
 		src/builtins/cd/ft_utils_cd.c 	 \
@@ -37,6 +39,7 @@ SRC =	src/builtins/ft_pwd.c\
 		src/execve/ft_exceve.c	 \
 		src/execve/ft_redirection_in_out.c \
 		src/parsing/parsing_commandes.c \
+		src/parsing/garbage_logic.c \
 		src/parsing/garbage.c \
 		src/parsing/split_garbage.c \
 		src/signal/set_signal_action.c\

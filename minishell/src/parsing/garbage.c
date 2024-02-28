@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 17:24:17 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 10:26:27 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/02/28 15:50:15 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,37 +73,44 @@ void	logic_garbage_clear(int list, t_list *a, t_list *b, t_list *c)
 	}
 }
 
-
-
-int	garbagge(int rule, void *p, int list)
+int	logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb)
 {
-	static t_list	*a = NULL;
-	static t_list	*b = NULL;
-	static t_list	*c = NULL;
-	t_list			*node;
+	t_list	*node;
 
-	if (rule == ADD)
-	{
-		node = ft_lstnew(p);
-		if (!node)
-			return (free(p), 1);
-		if (list == PARS)
-			ft_lstadd_back(&a, node);
-		else if (list == EX)
-			ft_lstadd_back(&b, node);
-		else if (list == ENV)
-			ft_lstadd_back(&c, node);
-	}
-	else if (rule == FLUSH)
-		logic_garbage_clear(list, a, b, c);
-	else if (rule == FREE)
-	{
-		if (list == PARS)
-			ft_list_remove_if(&a, p, cmp);
-		else if (list == EX)
-			ft_list_remove_if(&b, p, cmp);
-		else if (list == ENV)
-			ft_list_remove_if(&c, p, cmp);
-	}
+	node = ft_lstnew(gb->p);
+	if (!node)
+		return (free(gb->p), 1);
+	if (gb->list == PARS)
+		ft_lstadd_back(a, node);
+	else if (gb->list == EX)
+		ft_lstadd_back(b, node);
+	else if (gb->list == ENV)
+		ft_lstadd_back(c, node);
 	return (0);
 }
+
+
+	// if (rule == ADD)
+	// {
+	// 	node = ft_lstnew(p);
+	// 	if (!node)
+	// 		return (free(p), 1);
+	// 	if (list == PARS)
+	// 		ft_lstadd_back(&a, node);
+	// 	else if (list == EX)
+	// 		ft_lstadd_back(&b, node);
+	// 	else if (list == ENV)
+	// 		ft_lstadd_back(&c, node);
+	// }
+	// else if (rule == FLUSH)
+	// 	logic_garbage_clear(list, a, b, c);
+	// else if (rule == FREE)
+	// {
+	// 	if (list == PARS)
+	// 		ft_list_remove_if(&a, p, cmp);
+	// 	else if (list == EX)
+	// 		ft_list_remove_if(&b, p, cmp);
+	// 	else if (list == ENV)
+	// 		ft_list_remove_if(&c, p, cmp);
+	// }
+	// return (0);

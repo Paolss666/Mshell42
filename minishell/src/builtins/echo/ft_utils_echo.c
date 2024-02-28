@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:07 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 14:23:10 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 15:03:25 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,3 +84,4 @@ int	count_dollar(char *string)
 			c++;
 	return (c);
 }
+

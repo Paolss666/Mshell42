@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 13:48:11 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 15:56:43 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -805,7 +805,7 @@ t_brain	*init_brain(void)
 	t_brain *brain;
 
 	brain = (t_brain *)malloc(sizeof(t_brain));
-	if(!brain || garbagge(ADD, brain, ENV))
+	if (!brain || garbagge(ADD, brain, ENV))
 		(perror(" "), exit(130));
 	brain->enviroment = NULL;
 	brain->export = NULL;

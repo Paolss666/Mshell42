@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:19:32 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/27 17:12:53 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 15:55:39 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@ void ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i)
 	ft_putstr_fd("bash : ", 2),
 	ft_putstr_fd(file_list->nome_file, 2);
 	perror(" ");
-	close(pipex->fd[0]);
-	close(pipex->fd[1]);
-	close(pipex->tmp_fd[i][0]);
-	close(pipex->tmp_fd[i][1]);
+	(void)i;
+	(void)pipex;
+	// close(pipex->fd[0]);
+	// close(pipex->fd[1]);
+	// close(pipex->tmp_fd[i][0]);
+	// close(pipex->tmp_fd[i][1]);
 	garbagge(FLUSH, NULL, EX);
 	garbagge(FLUSH, NULL, PARS);
 	garbagge(FLUSH, NULL, ENV);
