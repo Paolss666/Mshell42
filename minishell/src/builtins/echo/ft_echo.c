@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 14:44:50 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 23:24:10 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,20 @@
 
 extern int	g_signal_received;
 
-
-/* char	*found_chr_forjoin(t_cmd *to_pars)
-{
-	char	*value;
-	char	*current;
-	int		i;
-
-	i = 0;
-	current = to_pars->cmd;
-	while (current[i] && is_special_char(current[i]))
-		i++;
-	while ((current[i] && !is_special_char(current[i])))
-		i++;
-	if (current[i] && current[i + 1])
-	{
-		while (current[i] && is_special_char(current[i]))
-			i++;
-		i--;
-	}
-	value = ft_substr(current, i, ft_strlen(current) - i);
-	if (!value || garbagge(ADD, value, PARS))
-		return (NULL);
-	garbagge(FREE, current, PARS);
-	return (value);
-} */
-
 int	print_not_found(int print_argument, t_cmd *arg_cmd)
 {
-	char	*trim;
-
-	trim = NULL;
 	if (print_argument && arg_cmd->cmd != NULL && arg_cmd->cmd[0] != '\0')
 	{
-		if (ft_strchr(arg_cmd->cmd, '\''))
+		if (arg_cmd->cmd && arg_cmd->cmd[0] && !check_if_only_space(arg_cmd->cmd))
 		{
-			trim = ft_strtrim(arg_cmd->cmd, "\'");
-			if (!trim || garbagge(ADD, trim, PARS))
-				return (0);
-			printf("%s ", trim);
-		}
-		else
+			remove_q(arg_cmd->cmd);
 			printf("%s ", arg_cmd->cmd);
+		}
+		else 
+		{
+			remove_q(arg_cmd->cmd);
+			printf("%s ", arg_cmd->cmd);
+		}
 		return (print_argument);
 	}
 	else
@@ -63,32 +35,8 @@ int	print_not_found(int print_argument, t_cmd *arg_cmd)
 	return (print_argument);
 }
 
-int	ft_condition_printf(int print_argument, t_cmd *arg_cmd,
-		char *expanded_value)
-{
-	if ((arg_cmd))
-	{
-		if (expanded_value)
-		{
-			arg_cmd->cmd = expanded_value;
-			print_argument = 0;
-		}
-	}
-	else
-	{
-		if (expanded_value)
-			printf("%s ", expanded_value);
-		else
-			return (20);
-	}
-	return (print_argument);
-}
-
 int	logic_display_error(t_cmd *arg_cmd)
 {
-	char	*trim;
-
-	trim = NULL;
 	if (ft_strcmp(arg_cmd->cmd, "|") == 0 || ft_strcmp(arg_cmd->cmd, "<") == 0
 		|| ft_strcmp(arg_cmd->cmd, ">>") == 0 || ft_strcmp(arg_cmd->cmd,
 			">") == 0 || ft_strcmp(arg_cmd->cmd, "<<") == 0)
@@ -98,15 +46,11 @@ int	logic_display_error(t_cmd *arg_cmd)
 		printf("%s ", arg_cmd->cmd);
 		return (1);
 	}
-	if (arg_cmd->cmd && arg_cmd->cmd[0] && check_if_only_space(arg_cmd->cmd)
+	if (arg_cmd->cmd && arg_cmd->cmd[0] && !check_if_only_space(arg_cmd->cmd)
 		&& !arg_cmd->next)
 	{
-		trim = ft_strtrim(arg_cmd->cmd, "\"");
-		if (!trim || garbagge(ADD, trim, PARS))
-			return (0);
-		printf("%s ", trim);
-		garbagge(FREE, trim, PARS);
-		trim = NULL;
+		remove_q(arg_cmd->cmd);
+		printf("%s", arg_cmd->cmd);
 		return (1);
 	}
 	return (0);
@@ -125,7 +69,7 @@ int	found_echo_whit_flag(t_cmd *arg_cmd)
 			break ;
 		if (ft_strcmp(arg_cmd->cmd, "$") == 0 && arg_cmd->next)
 		{
-			printf("%s ", arg_cmd->cmd);
+			printf("%s", arg_cmd->cmd);
 			arg_cmd = arg_cmd->next;
 		}
 		print_argument = logic_print_echo(arg_cmd, print_argument,
@@ -208,7 +152,7 @@ char	*ft_expand_value(char *arg_value, int i, t_envp *environment,
 		expand = init_structure_expand(i, err, dollar);
 		process_expand(&value, &expanded_value, expand, environment);
 	}
-	remove_q(expanded_value);
+	printf("var exp %s\n", expanded_value);
 	return (expanded_value);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 13:50:03 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/01 00:17:55 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex)
 {
 	if (execve(get_good_path, good_commande, pipex->new_enviroment) == - 1)
 	{
+		printf("commande  %s\n", good_commande[0]);
 		perror("execve error");
 		garbagge(FLUSH, NULL, ALL);
 		exit(1);
@@ -244,20 +245,23 @@ void	found_echo_in_pipe(t_cmd *new_to_pars)
 
 void	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex)
 {
-	char	**good_commande;
-	char	*cmd;
+	char	**good_commande = NULL;
+	/* char	*cmd; */
 
-	cmd = change_in_quotes_star(new_to_pars->cmd, '*');
-	good_commande = ft_split_garbage(cmd, ' ');
+ 	/* remove_q(new_to_pars->cmd); */
+	good_commande = ft_split_garbage(new_to_pars->cmd, ' ');
 	if (!good_commande)
-		return (perror("error split"), (void)0);
+		return (perror("error split"), (void)0); 
+	/* cmd = change_in_quotes_star(new_to_pars->cmd, '*');
+ 	split_by_quotes_and_spaces(new_to_pars->cmd, good_commande);
 	if (good_commande[1])
-	{
+	  {
 		cmd = change_in_quotes_espace(good_commande[1], ' ');
 		good_commande[1] = ft_strtrim(cmd, "\"");
 		if (!good_commande[1] || garbagge(ADD, good_commande[1], PARS))
 			return ((void)0);
-	}
+	} */
+	printf("good com %s\n", good_commande[0]);
 	redirection(pipex->fd, i, pipex);
 	if (pipex->n_pipe - 1 > 0)
 		close_if_plus_zero(pipex);
@@ -594,6 +598,8 @@ t_execve	*init_structure(t_envp *enviroment, t_cmd *to_pars, int	error_status)
 	pipe->error = error_status;
 	pipe->pid[pipe->current_pipe] = 0;
 	pipe->pipe_redirections = list_array;
+/* 	pipe->fd[0] = 0;
+	pipe->fd[0] = 1; */
 	return (pipe);
 }
 
@@ -629,6 +635,7 @@ int	execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 	t_file	**temp;
 
 	temp = NULL;
+	printf("new to pars %s\n", new_to_pars->cmd);
 	good_path_access = ft_good_path_access(new_to_pars, enviroment, pipex);
 	if (!good_path_access)
 		return (ft_error_commande_not_to_pars(new_to_pars, pipex), 1);
@@ -739,8 +746,10 @@ int	ft_execve(t_cmd *to_pars, t_envp *enviroment, int error_status)
 	n = 0;
 	if (!to_pars)
 		return (1);
+	printf("current %s\n", to_pars->cmd);
 	pipex = init_structure(enviroment, to_pars, error_status);
 	new_to_pars = remove_redirections(to_pars);
+	printf("removw %s\n", to_pars->cmd);
 	new_to_pars = parse_for_token(new_to_pars);
 	while ((pipex && pipex->current_pipe < pipex->n_pipe && new_to_pars)
 		|| (pipex && pipex->current_pipe < pipex->n_pipe && new_to_pars

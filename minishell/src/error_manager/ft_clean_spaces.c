@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_clean_spaces.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 14:23:05 by armeyer           #+#    #+#             */
-/*   Updated: 2024/02/28 11:52:38 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 19:17:11 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,5 @@ void	replace_spaces(char *str)
 
 void	ft_handle_quote(char *str)
 {
-	int	quote_count;
-
-	quote_count = count_quote(str, 39, '"');
 	replace_spaces(str);
 }

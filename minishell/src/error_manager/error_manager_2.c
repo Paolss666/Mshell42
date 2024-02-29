@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_manager_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 14:23:17 by armeyer           #+#    #+#             */
-/*   Updated: 2024/02/28 13:41:32 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/28 21:53:21 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,14 @@ int	check_if_only_space(char *s)
 	while (s2[i])
 	{
 		if (s2[i] != ' ' && s2[i] != '\"')
+			return (0);
+		if (s2[i] != ' ' && s2[i] != '\'')
+			return (0);
+		if (s2[i] != ' ' && s2[i] != '\'')
+			return (0);
+		if (s2[i] != '\'' && s2[i + 1] != '\'')
+			return (0);
+		if (s2[i] != '\"' && s2[i + 1] != '\"')
 			return (0);
 		i++;
 	}

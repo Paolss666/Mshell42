@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 15:56:43 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/02/29 00:11:01 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -420,6 +420,17 @@ void	found_shlv(t_envp *enviroment, t_exp *export)
 	return ((void)0);
 }
 
+void replace_quotes(char *str) {
+    int i = 0;
+
+    while (str[i]) {
+        if (str[i] == '\'' || str[i] == '"') {
+            str[i] = '\v';
+        }
+        i++;
+    }
+}
+
 void	ft_error_commande_split(char *cmd)
 {
 	ft_putstr_fd("bash : ", 2);
@@ -429,45 +440,89 @@ void	ft_error_commande_split(char *cmd)
 
 void	ft_error_quotes(t_execve *pipex, t_cmd *to_pars)
 {
-	char	*trim;
-
-	trim = ft_strtrim(to_pars->cmd, "\"");
-	if (!trim || garbagge(ADD, trim, PARS))
-		return ;
+	/* remove_q(to_pars->cmd); */
+	remove_q(to_pars->cmd);
 	ft_putstr_fd("bash : ", 2);
-	ft_putstr_fd(trim, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_putstr_fd(to_pars->cmd, 2);
+	ft_putstr_fd(": 0command not found\n", 2);
 	pipex->error = 127;
 	return ((void)0);
 }
 
 void	ft_error_single_quotes(t_execve *pipex, t_cmd *to_pars)
 {
-	char *trim;
-
-	trim = ft_strtrim(to_pars->cmd, "\'");
-	if (!trim || garbagge(ADD, trim, PARS))
-		return ;
+	/* remove_q(to_pars->cmd); */
 	ft_putstr_fd("bash : ", 2);
-	ft_putstr_fd(trim, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_putstr_fd(to_pars->cmd, 2);
+	ft_putstr_fd(": 2command not found\n", 2);
 	pipex->error = 127;
 	return ((void)0);
 }
 
 void	logic_split_for_commande(t_cmd *to_pars)
 {
-	char	**split;
 
-	split = ft_split_garbage(to_pars->cmd, ' ');
+	/* remove_q(to_pars->cmd); */
 	ft_putstr_fd("bash : ", 2);
-	if (split[0])
-		ft_putstr_fd(split[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_putstr_fd(to_pars->cmd, 2);
+	ft_putstr_fd(": 1command not found\n", 2);
 }
+
+
+int split_by_quotes_and_spaces(char *str, char *tokens[]) {
+    int i = 0;
+    char *ptr = str;
+
+    while (*ptr != '\0') {
+        // Ignora gli spazi
+        while (*ptr == ' ') {
+            ptr++;
+        }
+        if (*ptr == '\0') {
+            break;
+        }
+
+        if (*ptr == '"' || *ptr == '\'') {
+            char quote = *ptr;
+            ptr++;  // Passa oltre la virgoletta
+            tokens[i++] = ptr;  // Aggiunge il punto di inizio del token
+            while (*ptr != '\0' && *ptr != quote) {
+                ptr++;  // Continua a scorrere finché non trovi un'altra virgoletta
+            }
+            if (*ptr == '\0') {
+                return -1;  // Errore: mancante virgoletta di chiusura
+            }
+            *ptr = '\0';  // Termina il token alla virgoletta di chiusura
+            ptr++;  // Passa oltre la virgoletta di chiusura
+        } else {
+            tokens[i++] = ptr;  // Aggiunge il punto di inizio del token
+            while (*ptr != ' ' && *ptr != '\0' && *ptr != '"' && *ptr != '\'') {
+                ptr++;  // Continua a scorrere fino a trovare uno spazio o una virgoletta
+            }
+            if (*ptr != '\0') {
+                *ptr = '\0';  // Termina il token allo spazio o alla virgoletta
+                ptr++;  // Passa oltre lo spazio o la virgoletta
+            }
+        }
+
+        if (i >= 50000) {
+            return -1;  // Errore: troppi token
+        }
+    }
+
+    tokens[i] = NULL;  // Termina l'array di token con un puntatore NULL
+    return i;  // Restituisce il numero di token trovati
+}
+
 
 void	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 {
+	char *token[INT16_MAX];
+	printf("commande che entra %s\n", to_pars->cmd);
+	split_by_quotes_and_spaces(to_pars->cmd, token);
+	/* print_string_array(token); */
+/* 	printf("commande che entra %s\n", to_pars->cmd); */
+
 	if (ft_strcmp(to_pars->cmd, " ") == 0)
 	{
 		pipex->error = 127;
@@ -505,7 +560,7 @@ char	*check_path_absolut(char **with_flag, t_execve *pipex)
 	if (ft_strchr(with_flag[0], '\'') || ft_strchr(with_flag[0], '\"'))
 		remove_q(with_flag[0]);
 	if (access(with_flag[0], F_OK | X_OK) == 0)
-		return (with_flag[0]);
+		return (printf("with_flag[0] %s\\n", with_flag[0]), with_flag[0]);
 	if (access(with_flag[0], F_OK | X_OK) == -1)
 	{
 		pipex->error = 1;
@@ -651,7 +706,6 @@ void	logic_expand_variable (int i, t_envp *enviroment,
 		{
 			if (new_cmd)
 			{
-				new_cmd = check_position_quotes(new_cmd);
 				current->cmd = ft_strdup(new_cmd);
 				if (!current->cmd || garbagge(ADD, current->cmd, PARS))
 					return ((void)0);
@@ -663,6 +717,7 @@ void	logic_expand_variable (int i, t_envp *enviroment,
 	new_cmd = NULL;
 }
 
+
 int	logic_check_type_quotes(char *str)
 {
 	int	i;
@@ -670,7 +725,8 @@ int	logic_check_type_quotes(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' && (str[i + 1] == '\v' || str[i + 1] == '\0') )|| str[i] == '\'')
+		if ((str[i] == '\'' && (str[i + 1] == '\v'
+			|| str[i + 1] == '\0' || is_valid_variable_char(str[i + 1]))))
 			return (2);
 		if (str[i] == '\"' && (str[i + 1] == '\v' || str[i + 1] == '\0'))
 			return (3);
@@ -731,10 +787,7 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 		}
 		logic_exp_quotes(error_status, i, environment, current);
 		if (logic_check_type_quotes(current->cmd) == 2)
-		{
-			remove_q(current->cmd);
 			current->cmd = current->cmd;
-		}
 		current = current->next;
 	}
 	return (*to_pars);
@@ -750,16 +803,9 @@ t_execve	*ft_init_pipex(t_execve *pipex)
 	return (pipex);
 }
 
-int	ft_error_env(t_cmd *to_pars)
-{
-	ft_putstr_fd("env :", 2);
-	ft_putstr_fd(to_pars->next->cmd, 2);
-	ft_putstr_fd(" :no such file or directory\n", 2);
-	return (1);
-}
-
 int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, int error_status)
 {
+	print_list(to_pars);
 	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
 		error_status = found_dollar_print_variable(to_pars, error_status);
 	else if (found_echo(to_pars) && found_count_pipe(to_pars))
@@ -772,6 +818,8 @@ int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, int error_status)
 		error_status = ft_execve(to_pars, enviroment, error_status);
 	else if (!found_token(to_pars))
 		error_status = ft_execve(to_pars, enviroment, error_status);
+/* 	else 
+		error_status = ft_execve(to_pars, enviroment, error_status); */
 	return	(error_status);
 }
 
@@ -780,6 +828,8 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 	if (found_level(to_pars))
 		found_shlv(enviroment, export);
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
+	printf("============\n");
+	print_list(to_pars);
 	error_status = brain_echo_execve(to_pars, enviroment, error_status);
 	ft_pwd(to_pars);
 	if (found_unset(to_pars))
@@ -788,8 +838,6 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 		print_export_list(export);
 	if (ft_envp(to_pars) == 2)
 		print_list_envp(enviroment);
-	else if (ft_envp(to_pars) == 1)
-		error_status = ft_error_env(to_pars);
 	if (found_export(to_pars) && to_pars->next)
 		error_status = add_export_env(to_pars, &enviroment, &export);
 	if (found_exit(to_pars))
