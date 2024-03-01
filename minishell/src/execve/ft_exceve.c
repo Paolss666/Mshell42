@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 18:31:39 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/01 18:56:08 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -567,6 +567,22 @@ t_file	***ft_cpy_list_redir2(int i, t_execve *pipe, t_file ***list_array)
 	}
 	return (list_array);
 }
+void initialize_file_descriptors(t_execve *pipe)
+{
+    // Inizializza gli array tmp_fd con valori predefiniti
+    int i;
+
+	i = 0;
+    while (i < pipe->n_pipe)
+	{
+        pipe->tmp_fd[i][0] = 0;
+        pipe->tmp_fd[i][1] = 0;
+        i++;
+    }
+    // Inizializza gli array fd[0] e fd[1]
+    pipe->fd[0] = 0; // stdin
+    pipe->fd[1] = 1; // stdout
+}
 
 t_execve	*init_structure(t_envp *enviroment, t_cmd *to_pars, int	error_status)
 {
@@ -592,10 +608,7 @@ t_execve	*init_structure(t_envp *enviroment, t_cmd *to_pars, int	error_status)
 	pipe->error = error_status;
 	pipe->pid[pipe->current_pipe] = 0;
 	pipe->pipe_redirections = list_array;
-	pipe->tmp_fd[pipe->n_pipe][0] = 0;
-	pipe->tmp_fd[pipe->n_pipe][1] = 0;
-	pipe->fd[0] = 0;
-	pipe->fd[0] = 1;
+	initialize_file_descriptors(pipe);
 	return (pipe);
 }
 

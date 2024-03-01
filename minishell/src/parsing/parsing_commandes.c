@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 18:46:18 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/01 18:48:49 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -890,15 +890,6 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 	return (*to_pars);
 }
 
-t_execve	*ft_init_pipex(t_execve *pipex)
-{
-	pipex->fd[0] = 0;
-	pipex->fd[1] = 0;
-	pipex->new_enviroment = NULL;
-	pipex->n_pipe = 0;
-	pipex->token = 0;
-	return (pipex);
-}
 
 int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, int error_status)
 {
@@ -966,8 +957,6 @@ int	main_brain(char **env, t_brain *brain)
 		brain->to_pars = add_cmd_star(brain->to_pars, brain->line);
 	if (brain->to_pars)
 		join_found_flag(&brain->to_pars);
-/* 	printf("<<<<< ---------printf list BUILDING --------------- >>\n");
-	print_list(to_pars); */
 	if (!brain->enviroment)
 		brain->enviroment = found_and_add_env(env, brain->enviroment);
 	if (!brain->export)
