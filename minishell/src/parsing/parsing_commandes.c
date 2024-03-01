@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 18:26:09 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/01 18:46:18 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -455,8 +455,24 @@ void	ft_error_commande_split(char *cmd)
 
 void	ft_error_quotes(t_execve *pipex, char *cmd)
 {
-	/* remove_q(to_pars->cmd); */
-	// remove_q(cmd);
+	if (ft_strchr(cmd, '/'))
+	{
+		if(is_directory(cmd))
+		{
+			ft_putstr_fd("bash : ", 2);
+			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			return ;
+		
+		}
+		else
+		{
+			ft_putstr_fd("bash : ", 2);
+			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+			return ;
+		}
+	}
 	ft_putstr_fd("bash : ", 2);
 	ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": command not found\n", 2);
@@ -466,7 +482,24 @@ void	ft_error_quotes(t_execve *pipex, char *cmd)
 
 void	ft_error_single_quotes(t_execve *pipex, char *cmd)
 {
-	/* remove_q(to_pars->cmd); */
+	if (ft_strchr(cmd, '/'))
+	{
+		if(is_directory(cmd))
+		{
+			ft_putstr_fd("bash : ", 2);
+			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			return ;
+		
+		}
+		else
+		{
+			ft_putstr_fd("bash : ", 2);
+			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+			return ;
+		}
+	}
 	ft_putstr_fd("bash : ", 2);
 	ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": command not found\n", 2);
@@ -506,18 +539,13 @@ int split_by_quotes_and_spaces(char *str, char *tokens[]) {
     int i = 0;
     char *ptr = str;
 
-    while (*ptr != '\0') {
+    while (*ptr != '\0')
+	{
         // Ignora gli spazi
-        while (*ptr == ' ') {
+        while (*ptr == ' ')
             ptr++;
-        }
-		printf("test0\n");
-        if (*ptr == '\0') {
-		printf("test01\n");
+        if (*ptr == '\0')
             break;
-        }
-
-		printf("test1\n");
         if (*ptr == '"' || *ptr == '\'')
 		{
             char quote = *ptr;
@@ -541,13 +569,13 @@ int split_by_quotes_and_spaces(char *str, char *tokens[]) {
                 ptr++;  // Passa oltre lo spazio o la virgoletta
             }
         }
-        if (i >= 50000) {
+        if (i >= 50000)
             return -1;  // Errore: troppi token
-        }
     }
     tokens[i] = NULL;  // Termina l'array con un puntatore NULL
     return i;  // Restituisce il numero di token trovati
 }
+
 
 
 void	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
@@ -610,13 +638,6 @@ char	*check_path_absolut(char **with_flag, t_execve *pipex, int *dir)
 	return (NULL);
 }
 
-/* int		check_if_dire(char *exec)
-{
-	char	*s;
-
-	s =  NULL;
-	s = ft_strjoin()
-} */
 
 
 char	*logic_get_good_path(char **with_flag, char **env_split, t_execve *pipex)
@@ -630,7 +651,7 @@ char	*logic_get_good_path(char **with_flag, char **env_split, t_execve *pipex)
 	if (check_path_absolut(with_flag, pipex, &dir))
 		return (with_flag[0]);
 	if (dir == 1)
-		return (printf ("TEST*************************************\n"), NULL);
+		return (NULL);
 	while (env_split[++i])
 	{
 		try_line = ft_strjoin(env_split[i], "/");
@@ -672,31 +693,20 @@ char	*ft_good_path_access(t_cmd *to_pars, t_envp *enviroment,
 	char	**with_flag;
 	char	*found_in_env;
 	char	*tmp;
-	// int		tok = 0;
+
 	tmp = ft_strdup(to_pars->cmd);
 	if (!tmp || garbagge(ADD, tmp, PARS))
 		return (NULL);
 	found_in_env = NULL;
 	env_split = NULL;
-	with_flag = NULL;
 	with_flag = ft_split_garbage(to_pars->cmd, ' ');
 	if(!with_flag)
 		return (NULL);
 	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
 		split_by_quotes_and_spaces(tmp, with_flag);
-	// remove_q(to_pars->cmd);
-	// printf("==%s==\n", to_pars->cmd);
-	printf("with flah %s==\n", with_flag[1]);
-	printf("with flah 2%s<==\n", with_flag[2]);
-	printf("with flah 3%s<==\n", with_flag[3]);
-
-	// if(with_flag[1])
-	// 	remove_q(with_flag[1]);
-	if(!to_pars->cmd[0])
+	// printf("with flah %s==\n", with_flag[0]);
+	if((tmp[0] == '\'' && ft_strlen(tmp) == 1) || (tmp[0] == '\"' && ft_strlen(tmp) == 1))
 		return (NULL);
-	if (!with_flag)
-		return (NULL);
-	printf("=====\n");
 	print_string_array(with_flag);
 	found_in_env = found_path_envp_list(enviroment);
 	env_split = ft_split_garbage(found_in_env, ':');

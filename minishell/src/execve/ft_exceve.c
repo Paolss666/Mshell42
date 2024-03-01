@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 18:17:12 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/01 18:31:39 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ void	close_if_plus_zero(t_execve *pipex)
 
 void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex)
 {
-	printf("get %s\n", good_commande[2]);
+	// printf("get %s\n", good_commande[2]);
 	if (execve(get_good_path, good_commande, pipex->new_enviroment) == - 1)
 	{
 		perror("execve error");
@@ -247,10 +247,7 @@ void	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex)
 {
 	char	**good_commande = NULL;
 	char	*tmp;
-	/* char	*cmd; */
 
- 	/* remove_q(new_to_pars->cmd); */
-	// printf("to_pars-> %s\n", new_to_pars->cmd);
 	print_list(new_to_pars);
 	tmp = ft_strdup(new_to_pars->cmd);
 	if(!tmp || garbagge(ADD, tmp, PARS))
@@ -260,18 +257,6 @@ void	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex)
 		return (perror("error split"), (void)0);
 	if (ft_strchr(new_to_pars->cmd, '\'') || ft_strchr(new_to_pars->cmd, '\"') )
 		split_by_quotes_and_spaces(tmp, good_commande);
-	/* cmd = change_in_quotes_star(new_to_pars->cmd, '*');
- 	split_by_quotes_and_spaces(new_to_pars->cmd, good_commande);
-	if (good_commande[1])
-	  {
-		cmd = change_in_quotes_espace(good_commande[1], ' ');
-		good_commande[1] = ft_strtrim(cmd, "\"");
-		if (!good_commande[1] || garbagge(ADD, good_commande[1], PARS))
-			return ((void)0);
-	} */
-	printf("good com %s\n", good_commande[0]);
-	printf("good com %s\n", good_commande[1]);
-	printf("good com %s\n", good_commande[2]);
 	redirection(pipex->fd, i, pipex);
 	if (pipex->n_pipe - 1 > 0)
 		close_if_plus_zero(pipex);
