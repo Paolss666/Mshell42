@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error_case_1.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 13:59:52 by armeyer           #+#    #+#             */
-/*   Updated: 2024/02/26 14:32:34 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/01 15:28:12 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,6 @@ int	ft_error_case_1(char c)
 	{
 		ft_printf("bash: syntax error near unexpected token 'newline'\n");
 		return (2);
-	}
-	if (c == '/')
-	{
-		ft_printf("bash: // Is a directory\n");
-		return (126);
 	}
 	error_status = ft_error_case_1_part_2(c);
 	if (error_status)

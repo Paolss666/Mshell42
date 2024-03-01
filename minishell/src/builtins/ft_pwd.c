@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:29:14 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/27 12:32:59 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/01 17:06:16 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ int	ft_pwd(t_cmd *to_pars)
 		{
 			get_pwd = getcwd(NULL, 0);
 			if (!get_pwd || garbagge(ADD, get_pwd, ENV))
-				ft_putstr_fd("shell-init: error retrieving current directory: No such file or directory\n", 2);
+			{
+				ft_putstr_fd("shell-init: error retrieving", 2);
+				ft_putstr_fd(" current directory: No such file or directory\n", 2);
+			}
 			else
 				printf("%s\n", get_pwd);
 			break ;

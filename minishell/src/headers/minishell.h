@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 15:48:43 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/01 17:49:01 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <dirent.h>
 
 # define EXIT_FAILURE 1
 # define RESET_COLOR "\001\033[0m\002"
@@ -200,6 +201,7 @@ void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
 int		cmp(void *p1, void *p2);
 void	logic_garbage_clear(int list, t_list *a, t_list *b, t_list *c);
 int		logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
+char **ft_split_quotes_gb(char const *s, char c);
 // ----------- PIPE // REDIRECTION --------------//
 
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, int error_status);
@@ -226,6 +228,7 @@ int					found_infile_or_endfile(t_cmd *to_pars);
 char				*direction_in_out_file(t_cmd	*to_pars);
 
 // ------------ BUILDING ----------- // 
+int split_by_quotes_and_spaces(char *str, char *tokens[]);
 int					ft_pwd(t_cmd *to_pars);
 int					ft_cd(t_cmd *to_pars);
 void				ft_home_not_found(char *home);
@@ -243,6 +246,13 @@ char				*ft_strnjoin(const char *s1, const char *s2, size_t n);
 int     			found_export(t_cmd *to_pars);
 int					found_unset(t_cmd *to_pars);
 int					found_exit(t_cmd *to_pars);
+char				*ft_clean_exit(char *str);
+int					has_number(char *str);
+int					before_num_is_right(char *str);
+int					after_num_is_right(char *str);
+void				too_much_arg_neg(void);
+void				ft_exit_neg(t_cmd *to_pars);
+void				ft_exit_ls(t_cmd *to_pars);
 // int					print_pwd(t_envp *envp);
 int					found_echo(t_cmd *to_pars);
 int	print_not_found(int print_argument, t_cmd *arg_cmd);
