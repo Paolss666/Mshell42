@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:52:41 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 14:47:43 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/02 14:42:16 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@ int	found_export(t_cmd *to_pars)
 	while (to_pars != NULL)
 	{
 		if (ft_strcmp(to_pars->cmd, "export") == 0)
+			return (1);
+		if (ft_strcmp(to_pars->cmd, "\"export\"") == 0)
+			return (1);
+		if (ft_strcmp(to_pars->cmd, "\'export\'") == 0)
 			return (1);
 		to_pars = to_pars->next;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 18:48:49 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/02 14:34:30 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,20 @@ void	free_list_to_pars(t_cmd **to_pars)
 	}
 	*to_pars = NULL;
 }
+int	len_liste_exp(t_exp *enviromet)
+{
+	int	index;
+
+	index = 0;
+	if (!enviromet)
+		return (0);
+	while (enviromet)
+	{
+		index++;
+		enviromet = enviromet->next;
+	}
+	return (index + 1);
+}
 
 int	len_liste_envp(t_envp *enviromet)
 {
@@ -267,7 +281,7 @@ int	found_token(t_cmd *to_pars)
 			return (1);
 		if (ft_strcmp(to_pars->cmd, "echo") == 0)
 			return (1);
-		if (ft_strcmp(to_pars->cmd, "echo -n") == 0)
+		if (ft_strncmp(to_pars->cmd, "echo -", 6) == 0)
 			return (1);
 		if (ft_strcmp(to_pars->cmd, "env") == 0)
 			return (1);
@@ -510,7 +524,6 @@ void	ft_error_single_quotes(t_execve *pipex, char *cmd)
 void	logic_split_for_commande(char *cmd)
 {
 
-	/* remove_q(to_pars->cmd); */
 	if (ft_strchr(cmd, '/'))
 	{
 		if(is_directory(cmd))
@@ -578,13 +591,14 @@ int split_by_quotes_and_spaces(char *str, char *tokens[]) {
 
 
 
-void	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
+int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 {
 	char **cmd;
 
+	pipex->error = 127;
 	cmd = ft_split_garbage(to_pars->cmd, ' ');
 	if(!cmd)
-		return (garbagge(FLUSH, NULL, ALL), exit(10), (void)0);
+		return (garbagge(FLUSH, NULL, ALL), exit (10), 0);
 	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
 		split_by_quotes_and_spaces(to_pars->cmd, cmd);
 	print_string_array(cmd);
@@ -594,7 +608,6 @@ void	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 		ft_putstr_fd(to_pars->cmd, 2);
 		ft_putstr_fd(": command not found\n", 2);	
 		pipex->error = 127;
-		return ((void)0);
 	}
 	if (!to_pars->cmd)
 	{
@@ -604,15 +617,16 @@ void	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\"'))
 	{
 		ft_error_quotes(pipex, cmd[0]);
-		return ;
+		return(pipex->error) ;
 	}
 	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\''))
 	{
 		ft_error_single_quotes(pipex, cmd[0]);
-		return ;
+		return (pipex->error);
 	}
 	logic_split_for_commande(cmd[0]);
 	pipex->error = 127;
+	return (pipex->error);
 }
 
 char	*return_exec(char *exec, char **with_flag, char **env_split)
@@ -891,45 +905,61 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 }
 
 
-int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, int error_status)
+int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
 	print_list(to_pars);
 	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
 		error_status = found_dollar_print_variable(to_pars, error_status);
 	else if (found_echo(to_pars) && found_count_pipe(to_pars))
-			error_status = ft_execve(to_pars, enviroment, error_status);
+			error_status = ft_execve(to_pars, enviroment, export, error_status);
 	else if (found_echo(to_pars) && !found_count_pipe(to_pars)
 			&& found_infile_or_endfile(to_pars))
-		error_status = ft_execve(to_pars, enviroment, error_status);
+		error_status = ft_execve(to_pars, enviroment, export, error_status);
 	else if (found_echo(to_pars) && found_count_pipe(to_pars)
 			&& found_infile_or_endfile(to_pars))
-		error_status = ft_execve(to_pars, enviroment, error_status);
+		error_status = ft_execve(to_pars, enviroment, export, error_status);
 	else if (!found_token(to_pars))
-		error_status = ft_execve(to_pars, enviroment, error_status);
+		error_status = ft_execve(to_pars, enviroment, export, error_status);
+	else
+		error_status  = ft_execve(to_pars, enviroment, export, error_status);
 	return	(error_status);
 }
 
+int	ft_found_pwd(t_cmd *to_pars)
+{
+	while (to_pars != NULL)
+	{
+		if (ft_strcmp(to_pars->cmd, "pwd") == 0)
+			return (1);
+		to_pars = to_pars->next;
+	}
+	return (0);
+}
+
+
 int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
-	if (found_level(to_pars))
+	if (found_level(to_pars) && !found_count_pipe(to_pars))
 		found_shlv(enviroment, export);
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
 	printf("============\n");
 	print_list(to_pars);
-	error_status = brain_echo_execve(to_pars, enviroment, error_status);
-	ft_pwd(to_pars);
-	if (found_unset(to_pars))
+	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
+		ft_pwd(to_pars);
+	else if (!found_count_pipe(to_pars) && found_unset(to_pars))
 		unset_delete_variable(to_pars, &enviroment, &export);
-	if (to_pars && !to_pars->next && found_export(to_pars))
+	else if (!found_count_pipe(to_pars) && to_pars && !to_pars->next && found_export(to_pars))
 		print_export_list(export);
-	if (ft_envp(to_pars) == 2)
+	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
 		print_list_envp(enviroment);
-	if (found_export(to_pars) && to_pars->next)
+	else if (found_export(to_pars) && to_pars->next && !found_count_pipe(to_pars))
 		error_status = add_export_env(to_pars, &enviroment, &export);
-	if (found_exit(to_pars))
+	else if (found_exit(to_pars) && !found_count_pipe(to_pars))
 		ft_exit(to_pars);
-	if (ft_cd(to_pars))
+	else if (ft_cd(to_pars) && !found_count_pipe(to_pars))
 		found_cd_pwd_update(to_pars, enviroment, export);
+	else
+		error_status = brain_echo_execve(to_pars, enviroment, export, error_status);
 	return (error_status);
 }
 

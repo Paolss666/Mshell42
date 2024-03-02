@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 17:49:01 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/02 12:31:25 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_execve
 {
 	pid_t		pid[1024];
 	char		**new_enviroment;
+	char		**exp;
 	int			tmp_fd[1024][2];
 	t_file		***pipe_redirections;
 	int			fd[2];
@@ -174,7 +175,7 @@ int 			check_if_only_space(char *s);
 // ----------- ERRORI --------------- //
 void			freeList(t_cmd *head);
 void 			free_list_to_pars(t_cmd **to_pars);
-void			ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex);
+int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex);
 // void 			free_file_array(t_file ***file_array);
 // void free_array_of_lists(t_file **array_of_lists, int num_lists);
 // void 			free_array_of_lists(t_file ***array_of_lists, int dim1, int dim2);
@@ -204,9 +205,9 @@ int		logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
 char **ft_split_quotes_gb(char const *s, char c);
 // ----------- PIPE // REDIRECTION --------------//
 
-t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, int error_status);
+t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int error_status);
 void				parent(int *fd, int i, t_execve *pipex);
-void				child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex);
+void	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j);
 // int	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, t_envp *eniviroment);
 
 int					read_here_doc(int fd, t_file *file, t_envp *enviroment);
@@ -217,8 +218,10 @@ void				ft_open_redir_here_doc(t_file *file_list, t_execve *pipex, int i);
 void				ft_open_redir_in_append(t_file *file_list, t_execve *pipex, int i);
 void				ft_open_redir_in(t_file *file_list, t_execve *pipex, int i);
 void				ft_open_redir_out(t_file *file_list, t_execve *pipex, int i);
-int     			ft_execve(t_cmd *to_pars, t_envp *enviroment, int error_status);
+int     			ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status);
 char 				**envp_list_to_new_env(t_envp *enviroment);
+
+int	len_liste_exp(t_exp *enviromet);
 char				*ft_good_path_access(t_cmd	*to_pars, t_envp *enviroment, t_execve *pipex);
 int					execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 						t_envp *enviroment);

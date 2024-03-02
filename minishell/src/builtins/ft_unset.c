@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 12:52:57 by npoalett          #+#    #+#             */
-/*   Updated: 2024/02/22 10:41:38 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/02 14:41:46 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ int	found_unset(t_cmd *to_pars)
 	{
 		if (ft_strncmp(to_pars->cmd, "unset", ft_strlen("unset")) == 0
 			&& ft_strlen("unset") == 5)
+			return (1);
+		if (ft_strcmp(to_pars->cmd, "\"unset\"") == 0)
+			return (1);
+		if (ft_strcmp(to_pars->cmd, "\'unset\'") == 0)
 			return (1);
 		to_pars = to_pars->next;
 	}
@@ -88,7 +92,7 @@ void	unset_delete_variable(t_cmd *to_pars, t_envp **enviroment,
 	t_cmd	*next;
 
 	if (!to_pars->next)
-		return (ft_putstr_fd("unset need arguments\n", 2), (void)0);
+		return ((void)0);
 	else
 		next = to_pars->next;
 	while (next)

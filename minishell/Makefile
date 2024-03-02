@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
+#    By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/01 17:49:53 by npaolett         ###   ########.fr        #
+#    Updated: 2024/03/01 22:34:06 by npoalett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,8 +74,8 @@ $(NAME): $(OBJ)
 	cc -o $(NAME) $(OBJ) $(LIBFT) -lreadline 
 
 # $(BONUS): $(OBJ_BONUS)
-	# make lib
-	# cc -o $(BONUS) $(OBJ_BONUS) $(LIBFT) 
+ # make lib
+# cc -o $(BONUS) $(OBJ_BONUS) $(LIBFT) 
 
 all : $(NAME)
 
