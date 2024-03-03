@@ -6,7 +6,7 @@
 #    By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/03 08:39:48 by npoalett         ###   ########.fr        #
+#    Updated: 2024/03/03 10:51:02 by npoalett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ RM = rm -fr
 
 CFLAGS = -g3 -Wall -Wextra -Werror 
 
-INCL = -I -I./libft 
+INCL = -I ./libft 
 
 SRC =	src/builtins/ft_pwd.c\
 		src/builtins/env/ft_env.c \
@@ -40,7 +40,10 @@ SRC =	src/builtins/ft_pwd.c\
 		src/builtins/export/ft_export.c  \
 		src/builtins/ft_unset.c    \
 		src/execve/ft_exceve.c	 \
+		src/execve/ft_logic_exceve.c	 \
+		src/execve/ft_utils_exceve.c	 \
 		src/execve/ft_redirection_in_out.c \
+		src/parsing/ft_non_inter.c \
 		src/parsing/parsing_commandes.c \
 		src/parsing/garbage_logic.c \
 		src/parsing/garbage.c \

@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 09:45:39 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 10:10:34 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,6 +331,23 @@ void	found_env_in_pipe(char *cmd, t_execve *pipe)
 	garbagge(FLUSH, NULL, ALL);
 	exit(0);
 }
+
+/* void	built_in_child(t_cmd *new_to_pars, t_execve *pipex)
+{
+	if (ft_strncmp(new_to_pars->cmd, "echo ", ft_strlen("echo ")) == 0)
+		found_echo_in_pipe(new_to_pars);
+	if(!ft_strncmp(new_to_pars->cmd, "env ", ft_strlen("env")))
+		found_env_in_pipe(new_to_pars->cmd, pipex);
+	if(!ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export")))
+		found_export_in_pipe(new_to_pars->cmd, pipex);
+	if(!ft_strncmp(new_to_pars->cmd, "exit", ft_strlen("exit"))
+		||!ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd"))
+		||!ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset")))
+		found_exit_in_pipe();
+	if (ft_strncmp(new_to_pars->cmd, "pwd", ft_strlen("pwd")) == 0)
+		found_pwd_in_pipe(pipex);
+} */
+
 
 void	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j)
 {
@@ -759,6 +776,16 @@ void	logic_parent(t_execve *pipex, t_file **temp)
 			*temp = NULL;
 	}
 }
+
+/* int is_builts(char *cmd)
+{
+    if (ft_strncmp(cmd, "export ", ft_strlen("export")) == 0 || 
+        ft_strncmp(cmd, "exit ", ft_strlen("exit")) == 0 ||
+        ft_strncmp(cmd, "cd", ft_strlen("cd")) == 0 ||
+        ft_strncmp(cmd, "unset", ft_strlen("unset")) == 0)
+        return(1);  // Comando speciale
+    return (0);  // Non un comando speciale
+} */
 
 int	execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 	t_envp *enviroment)

@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 09:13:08 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 10:49:36 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,39 +152,37 @@ typedef struct s_gb
 
 // ----------- UT --------------- //
 
-void remove_q(char *s);
-void	print_list(t_cmd *head);
-void print_string_array(char **array);
-void	ft_free_tab_garbage(char **tab);
-// ----------- ERROR --------------- //
-void 			close_if_open(int fd);
-void	close_all_fd_tmp(t_execve *pipex, int n);
-int				garbagge(int rule, void *p, int list);
+void 				remove_q(char *s);
+void				print_list(t_cmd *head);
+void 				print_string_array(char **array);
+void				ft_free_tab_garbage(char **tab);
+// ----------- E	RROR --------------- //
+void 				close_if_open(int fd);
+void				close_all_fd_tmp(t_execve *pipex, int n);
+int					garbagge(int rule, void *p, int list);
 
-void    set_signal_action(int sig_case);
-int				ft_error_directoryx(char *str);
-void			ft_clean_spaces(char *str);
-int				count_quote(char *str, char c, char d);
-void			change_quote_in_star(char *str);
-// void			kill_double_quote(char *str, int i, int j, int flag);
-void			kill_single_quote(char *str, int i, int j, int flag);
-int				kill_useless_quote(char *str);
-int				kill_double_quote(char *str, int i, int j, int flag);
-// int				remove_double_quotes(char *str);
-int 			check_if_only_space(char *s);
-// ----------- ERRORI --------------- //
-void			freeList(t_cmd *head);
-void 			free_list_to_pars(t_cmd **to_pars);
-int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex);
-// void 			free_file_array(t_file ***file_array);
-// void free_array_of_lists(t_file **array_of_lists, int num_lists);
-// void 			free_array_of_lists(t_file ***array_of_lists, int dim1, int dim2);
-// void			free_list_array_red(t_file **list_array, t_execve *pipex, int i);
-void 			ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i);
-void			ft_error_redir_file(int fd, t_execve *pipex, int i, t_cmd *to_pars);
+void    			set_signal_action(int sig_case);
+int					ft_error_directoryx(char *str);
+/* void				ft_clean_spaces(char *str); */
+int					count_quote(char *str, char c, char d);
+/* void				change_quote_in_star(char *str); */
+// void				kill_double_quote(char *str, int i, int j, int flag);
+void				kill_single_quote(char *str, int i, int j, int flag);
+int					kill_useless_quote(char *str);
+int					kill_double_quote(char *str, int i, int j, int flag);
+// int					remove_double_quotes(char *str);
+int 				check_if_only_space(char *s);
+// ----------- E	RRORI --------------- //
+void				freeList(t_cmd *head);
+void 				free_list_to_pars(t_cmd **to_pars);
+int					ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex);
+void 				ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i);
+void				ft_error_redir_file(int fd, t_execve *pipex, int i, t_cmd *to_pars);
 // void			ft_error_pipe2(int *fd, int i, t_cmd *to_pars);
 
 // ----------- PARS --------------//
+void				ft_issatty(t_brain *brain);
+int					non_interactive_mode(t_brain *brain);
 t_cmd				*add_cmd_list(t_cmd *list, char **commande_split, char *line);
 int					join_found_flag(t_cmd **to_pars);
 char				*display_prompt(void);
@@ -195,21 +193,18 @@ t_envp				*add_node_to_end(t_envp **list, const char *name, const char *value);/
 t_envp				*logic_init_node(t_envp *new_node, const char *name, const char *value,
 								char *temp);
 char				**ft_split_garbage(char const *s, char c);
-
 // ----------- GARBAGE --------------//
-void	del(void *p);
-void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
-int		cmp(void *p1, void *p2);
-void	logic_garbage_clear(int list, t_list *a, t_list *b, t_list *c);
-int		logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
-char **ft_split_quotes_gb(char const *s, char c);
+void				del(void *p);
+void				ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+int					cmp(void *p1, void *p2);
+void				logic_garbage_clear(int list, t_list *a, t_list *b, t_list *c);
+int					logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
+/* char **ft_split_quotes_gb(char const *s, char c); */
 // ----------- PIPE // REDIRECTION --------------//
-
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int error_status);
 void				parent(int *fd, int i, t_execve *pipex);
-void	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j);
+void				child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j);
 // int	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, t_envp *eniviroment);
-
 int					read_here_doc(int fd, t_file *file, t_envp *enviroment);
 void				redirection(int *fd, int i, t_execve *pipex);
 void				redirection_simple(int *fd, int i, t_execve *pipex);
@@ -220,7 +215,6 @@ void				ft_open_redir_in(t_file *file_list, t_execve *pipex, int i);
 void				ft_open_redir_out(t_file *file_list, t_execve *pipex, int i);
 int     			ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status);
 char 				**envp_list_to_new_env(t_envp *enviroment);
-
 int					len_liste_exp(t_exp *enviromet);
 char				*ft_good_path_access(t_cmd	*to_pars, t_envp *enviroment, t_execve *pipex);
 int					execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
@@ -265,15 +259,15 @@ void				ft_exit_neg(t_cmd *to_pars);
 void				ft_exit_ls(t_cmd *to_pars);
 // int					print_pwd(t_envp *envp);
 int					found_echo(t_cmd *to_pars);
-int	print_not_found(int print_argument, t_cmd *arg_cmd);
-int					ft_condition_printf(int print_argument, t_cmd *arg_cmd,
-						char *expanded_value);
-int	found_echo_whit_flag(t_cmd *arg_cmd);
+int					print_not_found(int print_argument, t_cmd *arg_cmd);
+/* int					ft_condition_printf(int print_argument, t_cmd *arg_cmd,
+						char *expanded_value );*/
+int					found_echo_whit_flag(t_cmd *arg_cmd);
 char				*ft_expand_value(char *arg_value, int i, t_envp *environment,
 						int err);
-int	logic_display_error(t_cmd *arg_cmd);
-char	*add_logic_garbage(char *var_value, char *found);
-t_expand	*init_structure_expand(int i, int err, char *dollar);
+int					logic_display_error(t_cmd *arg_cmd);
+char				*add_logic_garbage(char *var_value, char *found);
+t_expand			*init_structure_expand(int i, int err, char *dollar);
 char				*find_variable_value(char *var_name, t_envp *enviroment, int e_st);
 char				*creation_var_name(int start, int i, char *arg_value);
 char				*cretion_sub_string(char *value, int len_tot, char *expanded_value);
@@ -310,11 +304,11 @@ void 				ft_swap(t_exp *a, t_exp *b);
 void				export_env_sort(t_exp *exp_env);
 char				*found_variable_env(t_envp *enviroment, char *name_v);
 char				*found_variable_exp(t_exp *export, char *name_v);
-int	is_valid_variable_char(char c);
-int	found_dollar_alone(char *s);
+int					is_valid_variable_char(char c);
+int					found_dollar_alone(char *s);
 // ------------ ERROR SYNTAX ----------- // 
 int					check_forb_logic(int i, int blind, char c, char *str);
-int	check_alone(char *s);
+int					check_alone(char *s);
 int					ft_only_pipe(char *str);
 int					ft_error_pipe_in_pipe(char *str);
 int					ft_error_pipe_no_word(char *str, int i, int count);
@@ -333,7 +327,7 @@ int					ft_error_parenthesis(char *str);
 int					ft_error_semicol(char *str);
 int					ft_error_stx(char *str);
 int					is_error(char *to_epur);
-int 				check_only_single_space(char *s);
+/* int 				check_only_single_space(char *s); */
 
 
 #endif

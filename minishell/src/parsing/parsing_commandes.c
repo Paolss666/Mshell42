@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 09:44:11 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 10:52:31 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -859,7 +859,6 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 
 int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
-	/* print_list(to_pars); */
 	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
 		error_status = found_dollar_print_variable(to_pars, error_status);
 	else if (found_echo(to_pars) && found_count_pipe(to_pars))
@@ -892,8 +891,6 @@ int	ft_found_pwd(t_cmd *to_pars)
 int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
-/* 	printf("============\n");
-	print_list(to_pars); */
 	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
 		ft_pwd(to_pars);
 	else if (!found_count_pipe(to_pars) && found_unset(to_pars))
@@ -975,6 +972,7 @@ void	head_minishell(char **env, int temp_error, t_brain *brain)
 		brain->to_pars = free_cmds_list(brain->to_pars);
 }
 
+
 int	main(int ac, char **av, char **env)
 {
 	int		temp_error;
@@ -988,10 +986,10 @@ int	main(int ac, char **av, char **env)
 	temp_error = 0;
 	if (ac != 1)
 		return (ft_putstr_fd("Don't need arguments\n", 2), 1);
+	ft_issatty(brain);
 	while (1)
 		head_minishell(env, temp_error, brain);
 	if (brain->enviroment || brain->export)
 		garbagge(FLUSH, NULL, ALL);
-/* 	garbagge(FLUSH, NULL, ALL); */
 	return (0);
 }

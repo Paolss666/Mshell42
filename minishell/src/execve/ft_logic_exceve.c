@@ -3,11 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   ft_logic_exceve.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:54:19 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/27 17:54:20 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:59:12 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/minishell.h"
+#include "../headers/minishell.h"
