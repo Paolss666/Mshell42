@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:27:26 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 08:35:18 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 13:51:56 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,20 +110,23 @@ t_envp	*found_and_add_env(char **env, t_envp *enviroment)
 	return (enviroment);
 }
 
-int	ft_envp(t_cmd *to_pars)
+int ft_envp(t_cmd *to_pars)
 {
-	t_cmd	*next;
+    t_cmd *next;
 
-	next = to_pars->next;
-	while (to_pars != NULL)
-	{
-		if (ft_strcmp(to_pars->cmd, "env") == 0 && !next)
-			return (2);
-		if (ft_strcmp(to_pars->cmd, "env") == 0 && next)
-			return (1);
-		to_pars = to_pars->next;
-	}
-	return (0);
+    while (to_pars != NULL)
+    {
+        if (ft_strcmp(to_pars->cmd, "env") == 0)
+        {
+            next = to_pars->next;
+            if (!next)
+                return 2;
+            else
+                return 1;
+        }
+        to_pars = to_pars->next;
+    }
+    return 0;
 }
 
 void	print_list_envp(t_envp *head)

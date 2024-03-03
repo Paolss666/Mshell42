@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:19:32 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 08:43:56 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 12:35:04 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i)
 	(void)pipex;
 	garbagge(FLUSH, NULL, EX);
 	garbagge(FLUSH, NULL, PARS);
+	garbagge(FLUSH, NULL, ENV);
+	exit(1);
 }
 
 void	ft_error_redir_file(int fd, t_execve *pipex, int i, t_cmd *to_pars)

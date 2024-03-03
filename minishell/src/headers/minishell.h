@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 10:49:36 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 12:22:08 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ typedef struct s_execve
 	int			current_pipe;
 	int			token;
 	int			error;
+	char		*get_g_path;
+	char		**good_cmd;
 }				t_execve;
 
 
@@ -203,7 +205,8 @@ int					logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
 // ----------- PIPE // REDIRECTION --------------//
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int error_status);
 void				parent(int *fd, int i, t_execve *pipex);
-void				child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j);
+void	child(t_cmd *new_to_pars, int i, t_execve *pipex, int j);
+/* void				child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j); */
 // int	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, t_envp *eniviroment);
 int					read_here_doc(int fd, t_file *file, t_envp *enviroment);
 void				redirection(int *fd, int i, t_execve *pipex);

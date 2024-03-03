@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:52:41 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 17:29:28 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 14:08:08 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,11 +198,12 @@ t_envp	*add_node_to_end(t_envp **list, const char *name, const char *value)
 	return (*list);
 }
 
-void	handle_export_error(char *cmd)
+int	handle_export_error(char *cmd)
 {
 	ft_putstr_fd("export : ", 2);
 	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(" identifiant non variable\n", 2);
+	ft_putstr_fd(" not a valid identifier\n", 2);
+	return (1);
 }
 
 void	found_name_both_env(char *value, char *name_v, char *modif_variable,
@@ -679,23 +680,25 @@ int	check_plus_before(char *line)
 int	add_export_env(t_cmd *to_pars, t_envp **enviroment, t_exp **export)
 {
 	char	*line;
+	int		err;
 
+	err = 0;
 	while (to_pars->next)
 	{
 		if (!valid_variable_char(to_pars->next->cmd[0])
 			|| check_plus_before(to_pars->next->cmd))
 		{
-			handle_export_error(to_pars->next->cmd);
+			err = handle_export_error(to_pars->next->cmd);
 			if (!to_pars->next->next)
-				return (1);
+				return (err);
 			line = to_pars->next->next->cmd;
 		}
 		else
 			line = to_pars->next->cmd;
 		if (is_valid_export_value(line))
 		{
-			handle_export_error(line);
-			return (1);
+			err = handle_export_error(line);
+			return (err);
 		}
 		ft_export_logic(enviroment, export, line);
 		to_pars = to_pars->next;

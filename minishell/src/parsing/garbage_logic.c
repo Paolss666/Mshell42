@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_logic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:47:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 15:47:42 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/03 11:04:42 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ int	garbagge(int rule, void *p, int list)
 	gb = init_gb();
 	if (!gb)
 		return (1);
-	gb->list = list;
-	gb->p = p;
+	(gb->list = list, gb->p = p);
 	if (rule == ADD)
 	{
 		if (logic_add_back(&a, &b, &c, gb))

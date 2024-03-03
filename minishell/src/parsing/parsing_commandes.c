@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 10:52:31 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 14:10:03 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -897,7 +897,7 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 		unset_delete_variable(to_pars, &enviroment, &export);
 	else if (!found_count_pipe(to_pars) && to_pars && !to_pars->next && found_export(to_pars))
 		print_export_list(export);
-	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
+	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2 && enviroment)
 		print_list_envp(enviroment);
 	else if (found_export(to_pars) && to_pars->next && !found_count_pipe(to_pars))
 		error_status = add_export_env(to_pars, &enviroment, &export);
