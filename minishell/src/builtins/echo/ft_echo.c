@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 21:12:08 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/02 22:21:12 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ char	*ft_expand_value(char *arg_value, int i, t_envp *environment,
 		expand = init_structure_expand(i, err, dollar);
 		process_expand(&value, &expanded_value, expand, environment);
 	}
-	printf("var exp %s\n", expanded_value);
+/* 	printf("var exp %s\n", expanded_value); */
 	return (expanded_value);
 }
 

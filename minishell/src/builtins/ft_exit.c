@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 12:28:46 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 17:06:18 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/03 08:38:51 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
 
 int	ft_is_valid_number(char *str)
 {
@@ -74,8 +75,9 @@ void	exit_process(t_cmd *to_pars)
 		ft_exit_ls(to_pars);
 }
 
-void	ft_exit(t_cmd *to_pars)
+void	ft_exit(t_cmd *to_pars, t_envp *env, t_exp *exp)
 {
+	found_shlv_exit(env, exp);
 	if (!ft_strncmp("exit -", to_pars->cmd, ft_strlen("exit -")))
 		ft_exit_neg(to_pars);
 	else

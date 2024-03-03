@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 12:31:25 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:13:08 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void				ft_open_redir_out(t_file *file_list, t_execve *pipex, int i);
 int     			ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status);
 char 				**envp_list_to_new_env(t_envp *enviroment);
 
-int	len_liste_exp(t_exp *enviromet);
+int					len_liste_exp(t_exp *enviromet);
 char				*ft_good_path_access(t_cmd	*to_pars, t_envp *enviroment, t_execve *pipex);
 int					execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 						t_envp *enviroment);
@@ -231,7 +231,10 @@ int					found_infile_or_endfile(t_cmd *to_pars);
 char				*direction_in_out_file(t_cmd	*to_pars);
 
 // ------------ BUILDING ----------- // 
-int split_by_quotes_and_spaces(char *str, char *tokens[]);
+int 				split_by_quotes_and_spaces(char *str, char *tokens[]);
+int					handle_quotes(char **ptr, char quote, char *tokens[], int *i);
+int					find_missing_quote(char **ptr, char quote);
+void				find_and_terminate_token(char **ptr);
 int					ft_pwd(t_cmd *to_pars);
 int					ft_cd(t_cmd *to_pars);
 void				ft_home_not_found(char *home);
@@ -249,6 +252,10 @@ char				*ft_strnjoin(const char *s1, const char *s2, size_t n);
 int     			found_export(t_cmd *to_pars);
 int					found_unset(t_cmd *to_pars);
 int					found_exit(t_cmd *to_pars);
+void				logic_shlvl_exit_exp(t_exp *export);
+void				logic_shlvl_exit_env(t_envp *enviroment);
+void				check_shlvl_expo(t_exp *export);
+void				found_shlv_exit(t_envp *enviroment, t_exp *export);
 char				*ft_clean_exit(char *str);
 int					has_number(char *str);
 int					before_num_is_right(char *str);
@@ -311,7 +318,7 @@ int	check_alone(char *s);
 int					ft_only_pipe(char *str);
 int					ft_error_pipe_in_pipe(char *str);
 int					ft_error_pipe_no_word(char *str, int i, int count);
-void				ft_exit(t_cmd   *to_pars);
+void				ft_exit(t_cmd   *to_pars, t_envp *env, t_exp *exp);
 int					error_manager(char *str);
 int					ft_error_case_1(char c);
 int					ft_error_blank(char *str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_cd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:55:59 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 14:12:19 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/02 18:22:25 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd)
 	char	*name_variable;
 	t_envp	*tmp;
 
+	if(!old_pwd)
+		return ;
 	tmp = enviroment;
 	name_variable = ft_strjoin("=", old_pwd);
 	if (!name_variable || garbagge(ADD, name_variable, ENV))
@@ -49,6 +51,8 @@ void	found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd)
 	t_exp	*tmp;
 
 	tmp = export;
+	if(!old_pwd)
+		return ;
 	old_modif = ft_strjoin(old_pwd, "\"");
 	if (!old_modif || garbagge(ADD, old_modif, ENV))
 		return ((void)0);
@@ -75,6 +79,8 @@ void	found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd)
 void	change_env_export_old_pwd(t_envp *enviroment, t_exp *export,
 		char *old_pwd)
 {
+	if(!old_pwd)
+		return ;
 	if (!enviroment || !export)
 		return (ft_putstr_fd("env ou EXPO not\n", 2), (void)0);
 	found_old_pwd_env_and_modif(enviroment, old_pwd);
@@ -85,12 +91,12 @@ void	change_env_export_old_pwd(t_envp *enviroment, t_exp *export,
 void	found_cd_home(t_exp *export, t_envp *enviroment, char *home, char *pwd)
 {
 
-	if ( home && chdir(home) == 0)
+	if (home && chdir(home) == 0 && pwd)
 	{
 		change_env_export_pwd(enviroment, export, home);
 		change_env_export_old_pwd(enviroment, export, pwd);
 	}
-	else if (home)
+	else if (!home && pwd)
 		ft_putstr_fd("FAIL chdir home path not found\n", 2);
 }
 

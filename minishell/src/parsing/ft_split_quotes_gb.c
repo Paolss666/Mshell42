@@ -3,112 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_quotes_gb.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 17:47:00 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 17:47:32 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:21:45 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static int ft_count_w(const char *s, char c)
+void find_and_terminate_token(char **ptr)
 {
-    size_t i;
-    size_t n;
-
-    n = 0;
-    i = 0;
-    if (!s)
-        return (0);
-    while (s[i])
-    {
-        if ((i == 0 || s[i - 1] == c) && s[i] != c)
-            n++;
-        i++;
+    while (**ptr != ' ' && **ptr != '\0' && **ptr != '"' && **ptr != '\'')
+        (*ptr)++;  // Continua a scorrere fino a trovare uno spazio o una virgoletta
+    if (**ptr != '\0')
+	{
+        **ptr = '\0';  // Termina il token allo spazio o alla virgoletta
+        (*ptr)++;  // Passa oltre lo spazio o la virgoletta
     }
-    return (n);
 }
 
-static size_t ft_strl_c(const char *s, char c)
+int find_missing_quote(char **ptr, char quote)
 {
-    size_t i;
-
-    i = 0;
-    while (s[i] != c && s[i])
-        i++;
-    return (i);
+    while (**ptr != '\0' && **ptr != quote)
+        (*ptr)++;  // Continua a scorrere finché non trovi un'altra virgoletta
+    if (**ptr == '\0')
+        return (-1);  // Errore: mancante virgoletta di chiusura
+    return (0);  // La virgoletta di chiusura è stata trovata correttamente
 }
 
-static void ft_array(char **array, const char *s, char c)
-{
-    size_t i;
-    size_t j;
-    t_boolean swtc;
-    size_t n_words;
 
-    swtc = FALSE;
-    i = 0;
-    j = 0;
-    n_words = ft_count_w(s, c);
-    if (!s)
-        return ;
-    while (s[j] && i < n_words)
-    {
-        if (s[j] == '\'' || s[j] == '\"')
-            swtc = !swtc; // Toggle in_quote when encountering quotes
-        if (s[j] == c && !swtc)
-            swtc = FALSE; // Reset in_quote if delimiter found outside quotes
-        else if (s[j] != c && !swtc && s[j] != '\'' && s[j] != '\"')
-        {
-            array[i] = (char *)malloc(ft_strl_c(&(s[j]), c) + 1);
-            if (!array[i])
-                return ;
-            swtc = TRUE;
-            i++;
+int handle_quotes(char **ptr, char quote, char *tokens[], int *i)
+{
+    (*ptr)++;  // Passa oltre la virgoletta
+    tokens[(*i)++] = *ptr;  // Aggiunge il punto di inizio del token
+    if (find_missing_quote(ptr, quote) == -1)
+        return (-1);  // Errore: mancante virgoletta di chiusura
+    **ptr = '\0';  // Termina il token alla virgoletta di chiusura
+    (*ptr)++;  // Passa oltre la virgoletta di chiusura
+    return (0);  // Operazione completata con successo
+}
+
+int split_by_quotes_and_spaces(char *str, char *tokens[])
+{
+    int i;
+    char *ptr;
+
+	i = 0;
+	ptr = str;
+    while (*ptr != '\0')
+	{
+        while (*ptr == ' ')
+            ptr++;
+        if (*ptr == '\0')
+            break;
+        if (*ptr == '"' || *ptr == '\'')
+		{
+		    if (handle_quotes(&ptr, *ptr, tokens, &i) == -1)
+		        return -1;  // Errore: mancante virgoletta di chiusur
+		}
+		else
+		{
+            tokens[i++] = ptr;  // Aggiunge il punto di inizio del token
+			find_and_terminate_token(&ptr);
         }
-        j++;
     }
-}
-
-static void ft_cpy_array(char **array, const char *s, char c)
-{
-    t_boolean start_cpy;
-    size_t i;
-    size_t j;
-
-    i = 0;
-    j = 0;
-    start_cpy = FALSE;
-    if (!s)
-        return ;
-    while (s[j])
-    {
-        if (s[j] == c && !start_cpy)
-            start_cpy = FALSE;
-        else if ((s[j] != c || start_cpy) && s[j] != '\'' && s[j] != '\"')
-        {
-            if (!start_cpy)
-                start_cpy = TRUE;
-            array[i] = (char *)malloc(ft_strl_c(&(s[j]), c) + 1);
-            if (!array[i])
-                return ;
-            ft_strlcpy(array[i], &(s[j]), ft_strl_c(&(s[j]), c) + 1);
-            i++;
-        }
-        j++;
-    }
-}
-
-char **ft_split_quotes_gb(char const *s, char c)
-{
-    char **array;
-
-    array = (char **)malloc((ft_count_w(s, c) + 1) * sizeof(char *));
-    if (!array)
-        return (NULL);
-    ft_array(array, s, c);
-    ft_cpy_array(array, s, c);
-    array[ft_count_w(s, c)] = NULL;
-    return (array);
+    tokens[i] = NULL;  // Termina l'array con un puntatore NULL
+    return (i);  // Restituisce il numero di token trovati
 }

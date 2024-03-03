@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:29:14 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 17:06:16 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/02 22:22:12 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ int	ft_pwd(t_cmd *to_pars)
 			get_pwd = getcwd(NULL, 0);
 			if (!get_pwd || garbagge(ADD, get_pwd, ENV))
 			{
-				ft_putstr_fd("shell-init: error retrieving", 2);
-				ft_putstr_fd(" current directory: No such file or directory\n", 2);
+				ft_putstr_fd("pwd: erreur : getcwd", 2);
+				ft_putstr_fd(" current \n", 2);
+
 			}
 			else
 				printf("%s\n", get_pwd);
-			break ;
 		}
 		break ;
 		to_pars = to_pars->next;

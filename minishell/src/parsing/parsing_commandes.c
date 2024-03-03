@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 14:34:30 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:40:22 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -548,48 +548,25 @@ void	logic_split_for_commande(char *cmd)
 }
 
 
-int split_by_quotes_and_spaces(char *str, char *tokens[]) {
-    int i = 0;
-    char *ptr = str;
-
-    while (*ptr != '\0')
+/* int	logic_error_commande_nf(t_cmd *to_pars, t_execve *pipex)
+{
+	if (!to_pars->cmd)
 	{
-        // Ignora gli spazi
-        while (*ptr == ' ')
-            ptr++;
-        if (*ptr == '\0')
-            break;
-        if (*ptr == '"' || *ptr == '\'')
-		{
-            char quote = *ptr;
-            ptr++;  // Passa oltre la virgoletta
-            tokens[i++] = ptr;  // Aggiunge il punto di inizio del token
-            while (*ptr != '\0' && *ptr != quote)
-                ptr++;  // Continua a scorrere finché non trovi un'altra virgoletta
-            if (*ptr == '\0')
-                return -1;  // Errore: mancante virgoletta di chiusura
-            *ptr = '\0';  // Termina il token alla virgoletta di chiusura
-            ptr++;  // Passa oltre la virgoletta di chiusura
-        }
-		else
-		{
-            tokens[i++] = ptr;  // Aggiunge il punto di inizio del token
-            while (*ptr != ' ' && *ptr != '\0' && *ptr != '"' && *ptr != '\'') {
-                ptr++;  // Continua a scorrere fino a trovare uno spazio o una virgoletta
-            }
-            if (*ptr != '\0') {
-                *ptr = '\0';  // Termina il token allo spazio o alla virgoletta
-                ptr++;  // Passa oltre lo spazio o la virgoletta
-            }
-        }
-        if (i >= 50000)
-            return -1;  // Errore: troppi token
-    }
-    tokens[i] = NULL;  // Termina l'array con un puntatore NULL
-    return i;  // Restituisce il numero di token trovati
-}
-
-
+		ft_error_commande_split(cmd[0]);
+		pipex->error = 127;	
+	}
+	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\"'))
+	{
+		ft_error_quotes(pipex, cmd[0]);
+		return(pipex->error) ;
+	}
+	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\''))
+	{
+		ft_error_single_quotes(pipex, cmd[0]);
+		return (pipex->error);
+	}
+	return (pipex->error)
+} */
 
 int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 {
@@ -652,16 +629,24 @@ char	*check_path_absolut(char **with_flag, t_execve *pipex, int *dir)
 	return (NULL);
 }
 
+void	f_gbgb(char **tab)
+{
+	int	i;
 
+	i = -1;
+	while (tab[++i])
+		garbagge(FREE, tab[i], PARS);
+	garbagge(FREE, tab, PARS);
+}
 
 char	*logic_get_good_path(char **with_flag, char **env_split, t_execve *pipex)
 {
 	char	*exec;
 	char	*try_line;
 	int		i;
-	int dir = 0;
+	int 	dir;
 
-	i = -1;
+	(i = -1, dir = 0);
 	if (check_path_absolut(with_flag, pipex, &dir))
 		return (with_flag[0]);
 	if (dir == 1)
@@ -670,15 +655,12 @@ char	*logic_get_good_path(char **with_flag, char **env_split, t_execve *pipex)
 	{
 		try_line = ft_strjoin(env_split[i], "/");
 		if (!try_line || garbagge(ADD, try_line, ENV))
-			return (ft_free_tab_garbage(with_flag),
-				ft_free_tab_garbage(env_split), NULL);
+			return (f_gbgb(with_flag), f_gbgb(env_split), NULL);
 		exec = ft_strjoin(try_line, with_flag[0]);
 		if (!exec || garbagge(ADD, exec, ENV))
 			return (NULL);
-		garbagge(FREE, try_line, ENV);
 		if (access(exec, F_OK | X_OK) == 0)
-			return (ft_free_tab_garbage(with_flag),
-				ft_free_tab_garbage(env_split), exec);
+			return (f_gbgb(with_flag),f_gbgb(env_split), exec);
 		if (access(exec, F_OK | X_OK) == -1 && pipex)
 			pipex->error = 1;
 		garbagge(FREE, exec, ENV);
@@ -690,14 +672,14 @@ char	*logic_get_good_path(char **with_flag, char **env_split, t_execve *pipex)
 int contains_only_spaces(const char *str)
 {
     if (*str == ' ' && *(str + 1) == '\0')
-        return (0); // Restituisce 0 se la stringa contiene solo uno spazio
+        return (0);
     while (*str != '\0')
 	{
         if (*str != ' ')
-            return (0); // Restituisce 0 se trova un carattere diverso dallo spazio
+            return (0);
         str++;
     }
-    return (1); // Restituisce 1 se la stringa contiene solo spazi
+    return (1); 
 }
 
 char	*ft_good_path_access(t_cmd *to_pars, t_envp *enviroment,
@@ -718,10 +700,8 @@ char	*ft_good_path_access(t_cmd *to_pars, t_envp *enviroment,
 		return (NULL);
 	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
 		split_by_quotes_and_spaces(tmp, with_flag);
-	// printf("with flah %s==\n", with_flag[0]);
 	if((tmp[0] == '\'' && ft_strlen(tmp) == 1) || (tmp[0] == '\"' && ft_strlen(tmp) == 1))
 		return (NULL);
-	print_string_array(with_flag);
 	found_in_env = found_path_envp_list(enviroment);
 	env_split = ft_split_garbage(found_in_env, ':');
 	if (!env_split)
@@ -773,35 +753,7 @@ int	count_single_quotes(char *cmd)
 	return (1);
 }
 
-/* 
-char	*check_position_quotes(char *s)
-{
-	char	*trim;
 
-	trim = NULL;
-	if (s[0] == '\"' && s[1] == '\'')
-	{
-		trim = ft_strtrim(s, "\"");
-		if (!trim || garbagge(ADD, trim, PARS))
-			return (NULL);
-		return (trim);
-	}
-	else if (s[0] == '\'' && s[1] == '\"')
-	{
-		trim = ft_strtrim(s, "\'");
-		if (!trim || garbagge(ADD, trim, PARS))
-			return (NULL);
-		return (trim);
-	}
-	else if (s[0] == '\"' && s[1] != '\'')
-	{
-		trim = ft_strtrim(s, "\"");
-		if (!trim || garbagge(ADD, trim, PARS))
-			return (NULL);
-		return (trim);
-	}
-	return (s);
-} */
 
 void	logic_expand_variable (int i, t_envp *enviroment,
 		t_cmd *current, int e_st)
@@ -939,11 +891,9 @@ int	ft_found_pwd(t_cmd *to_pars)
 
 int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
-	if (found_level(to_pars) && !found_count_pipe(to_pars))
-		found_shlv(enviroment, export);
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
-	printf("============\n");
-	print_list(to_pars);
+/* 	printf("============\n");
+	print_list(to_pars); */
 	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
 		ft_pwd(to_pars);
 	else if (!found_count_pipe(to_pars) && found_unset(to_pars))
@@ -955,7 +905,7 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 	else if (found_export(to_pars) && to_pars->next && !found_count_pipe(to_pars))
 		error_status = add_export_env(to_pars, &enviroment, &export);
 	else if (found_exit(to_pars) && !found_count_pipe(to_pars))
-		ft_exit(to_pars);
+		ft_exit(to_pars, enviroment, export);
 	else if (ft_cd(to_pars) && !found_count_pipe(to_pars))
 		found_cd_pwd_update(to_pars, enviroment, export);
 	else
@@ -1030,8 +980,10 @@ int	main(int ac, char **av, char **env)
 	int		temp_error;
 	t_brain	*brain;
 
-	(void)av;
+	((void)av, (void)ac);
 	brain = init_brain();
+	if(!brain)
+		return (124);
 	g_signal_received = 0;
 	temp_error = 0;
 	if (ac != 1)
@@ -1040,5 +992,6 @@ int	main(int ac, char **av, char **env)
 		head_minishell(env, temp_error, brain);
 	if (brain->enviroment || brain->export)
 		garbagge(FLUSH, NULL, ALL);
+/* 	garbagge(FLUSH, NULL, ALL); */
 	return (0);
 }

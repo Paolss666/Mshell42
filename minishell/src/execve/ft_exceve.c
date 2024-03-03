@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 14:37:45 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 08:41:48 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,13 +224,6 @@ void	close_if_plus_zero(t_execve *pipex)
 
 void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex, int i)
 {
-/* 	printf("get %s\n", good_commande[1]);
-	printf("pare %s\n", good_commande[2]); */
-/* 	if(!good_commande)
-	{
-		garbagge(FLUSH, NULL, ALL);
-		exit(1);
-	} */
 	if (i)
 	{
 		garbagge(FLUSH, NULL, ALL);
@@ -685,8 +678,8 @@ void initialize_file_descriptors(t_execve *pipe)
         pipe->tmp_fd[i][1] = 0;
         i++;
     }
-    pipe->fd[0] = 0; // stdin
-    pipe->fd[1] = 1; // stdout
+    pipe->fd[0] = 0;
+    pipe->fd[1] = 1;
 }
 
 char	**export_list_to_exp_env(t_exp *enviroment)

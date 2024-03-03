@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 14:16:40 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/02 18:24:41 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,14 @@ void	found_cd_et_pass(t_cmd *to_pars, t_envp *enviroment, t_exp *export,
 		change_env_export_old_pwd(enviroment, export, old_pwd);
 		pwd = getcwd(NULL, 0);
 		if (!pwd || garbagge(ADD, pwd, ENV))
-			return (ft_putstr_fd(to_pars->next->cmd, 2), perror(" :"), (void)0);
+			return (ft_putstr_fd(to_pars->next->cmd, 2), perror(" "), (void)0);
 		change_env_export_pwd(enviroment, export, pwd);
 	}
 	else
 	{
 		ft_putstr_fd("bash :", 2);
 		ft_putstr_fd(to_pars->next->cmd, 2);
-		ft_putstr_fd("  is not a directory\n", 2);
+		ft_putstr_fd(" : is not a directory\n", 2);
 	}
 }
 
@@ -93,7 +93,7 @@ void	found_cd_oldpwd(t_exp *export, t_envp *enviroment, char *old_pwd,
 
 	line = NULL;
 	pwd = getcwd(NULL, 0);
-	if (!pwd || garbagge(ADD, pwd, ENV))
+	if (!pwd || garbagge(ADD, pwd, ENV) || !home)
 		return (perror(" "), (void)0);
 	if (old_pwd && chdir(old_pwd) == 0)
 	{
@@ -123,7 +123,7 @@ void	found_cd_pwd_update(t_cmd *to_pars, t_envp *enviroment, t_exp *export)
 	char	*old_pwd;
 
 	pwd = getcwd(NULL, 0);
-	if (!pwd || garbagge(ADD, pwd, ENV))
+	if (garbagge(ADD, pwd, ENV))
 		return ((void)0);
 	home = found_variable_env(enviroment, "HOME");
 	old_pwd = found_variable_env(enviroment, "OLDPWD");

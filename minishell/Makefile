@@ -6,7 +6,7 @@
 #    By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/01 22:34:06 by npoalett         ###   ########.fr        #
+#    Updated: 2024/03/03 08:39:48 by npoalett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC =	src/builtins/ft_pwd.c\
 		src/builtins/ft_exit.c  \
 		src/builtins/ft_exit_logic.c  \
 		src/builtins/ft_exit_logic2.c  \
+		src/builtins/ft_exit_shlvl.c  \
 		src/builtins/cd/ft_cd.c 	  \
 		src/builtins/cd/ft_utils_cd.c 	 \
 		src/builtins/cd/ft_logic_cd.c 	 \

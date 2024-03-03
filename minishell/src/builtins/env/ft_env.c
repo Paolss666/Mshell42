@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:27:26 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/21 15:35:22 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/03 08:35:18 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,44 @@ char	*ft_strcpy(char *dest, const char *src, size_t size)
 	return (dest);
 }
 
+char	*found_shlvl_init(char *env)
+{
+	int	n;
+	char *value;
+
+	value = NULL;
+	n = 0;
+	if(!env)
+		return (NULL);
+	if((ft_strncmp(env, "SHLVL=", 6) == 0))
+	{
+		value  = ft_strchr(env, '=') + 1;
+		n = ft_atoi(value) + 1;
+		value  = ft_itoa(n);
+		if(!value || garbagge(ADD, value, ENV))
+			return (NULL);
+		env = ft_strjoin("SHLVL=", value);
+		if (!env || garbagge(ADD, env, ENV))
+			return(garbagge(FLUSH, NULL, ALL), exit(124), NULL);
+		return(env);
+	}
+	return(NULL);
+}
+
+
 t_envp	*create_enviroment(char **env, int i)
 {
 	int		len;
 	t_envp *current;
+	char	*shlvl;
 
 	len = 0;
 	current = (t_envp *)malloc(sizeof(t_envp));
 	if (!current || garbagge(ADD, current, ENV))
 		return (perror("FAIL malloc t_envp"), NULL);
+	shlvl = found_shlvl_init(env[i]);
+	if(shlvl)
+		env[i] = shlvl;
 	current->path = env[i];
 	current->value = ft_strdup(ft_strchr(current->path, '=') + 1);
 	if (!current->value || garbagge(ADD, current->value, ENV))

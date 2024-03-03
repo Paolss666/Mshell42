@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:52:41 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 14:42:16 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/02 17:29:28 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -662,15 +662,30 @@ void	ft_export_logic( t_envp **enviroment, t_exp **export, char *line)
 			check_equal_list);
 }
 
+
+int	check_plus_before(char *line)
+{
+	char *pr;
+
+	pr = NULL;
+	if(!line)
+		return(1);
+	pr = ft_strchr(line, '+');
+	if(pr && pr[1] != '=')
+		return(1);
+	return(0);
+}
+
 int	add_export_env(t_cmd *to_pars, t_envp **enviroment, t_exp **export)
 {
 	char	*line;
 
 	while (to_pars->next)
 	{
-		if (!valid_variable_char(to_pars->next->cmd[0]))
+		if (!valid_variable_char(to_pars->next->cmd[0])
+			|| check_plus_before(to_pars->next->cmd))
 		{
-			handle_export_error(to_pars->cmd);
+			handle_export_error(to_pars->next->cmd);
 			if (!to_pars->next->next)
 				return (1);
 			line = to_pars->next->next->cmd;
