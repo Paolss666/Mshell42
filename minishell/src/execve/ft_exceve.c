@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 08:41:48 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:45:39 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,7 +337,7 @@ void	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int 
 	char	**good_commande = NULL;
 	char	*tmp;
 
-	print_list(new_to_pars);
+/* 	print_list(new_to_pars); */
 	tmp = ft_strdup(new_to_pars->cmd);
 	if(!tmp || garbagge(ADD, tmp, PARS))
 		return ((void)0);
@@ -888,7 +888,7 @@ int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_statu
 	pipex = init_structure(enviroment, to_pars, export, error_status);
 	new_to_pars = remove_redirections(to_pars);
 	new_to_pars = parse_for_token(new_to_pars);
-	print_list(new_to_pars);
+	/* print_list(new_to_pars); */
 	while ((pipex && pipex->current_pipe < pipex->n_pipe && new_to_pars)
 		|| (pipex && pipex->current_pipe < pipex->n_pipe && new_to_pars
 			&& pipex->pipe_redirections[pipex->current_pipe]))

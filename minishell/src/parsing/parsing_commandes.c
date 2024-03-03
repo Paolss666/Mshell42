@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 09:40:22 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:44:11 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,7 +366,7 @@ void	logic_found_shlvl_env(t_envp *enviroment)
 		if (ft_strcmp(enviroment->name, "SHLVL") == 0)
 		{
 			n = ft_atoi(enviroment->value) + 1;
-			printf("n %d\n", n);
+/* 			printf("n %d\n", n); */
 			enviroment->value = ft_itoa(n);
 			if (!enviroment->value || garbagge(ADD, enviroment->value, ENV))
 				return ((void)0);
@@ -377,7 +377,7 @@ void	logic_found_shlvl_env(t_envp *enviroment)
 			if (!enviroment->path || garbagge(ADD, enviroment->path, ENV))
 				return ((void)0);
 			garbagge(FREE, tmp, ENV);
-			printf("enviroment->path %s\n", enviroment->path);
+/* 			printf("enviroment->path %s\n", enviroment->path); */
 			return ((void)0);
 		}
 		enviroment = enviroment->next;
@@ -578,7 +578,7 @@ int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 		return (garbagge(FLUSH, NULL, ALL), exit (10), 0);
 	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
 		split_by_quotes_and_spaces(to_pars->cmd, cmd);
-	print_string_array(cmd);
+	/* print_string_array(cmd); */
 	if (ft_strcmp(to_pars->cmd, " ") == 0)
 	{
 		ft_putstr_fd("bash : ", 2);
@@ -859,7 +859,7 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 
 int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
-	print_list(to_pars);
+	/* print_list(to_pars); */
 	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
 		error_status = found_dollar_print_variable(to_pars, error_status);
 	else if (found_echo(to_pars) && found_count_pipe(to_pars))
