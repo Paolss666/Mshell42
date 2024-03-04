@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 18:30:17 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:39:20 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,7 +346,13 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int i, int j, t_
 		{
 			i = ft_error_commande_not_to_pars(new_to_pars, pipex);
 			if(i)
+			{
+				close(pipex->fd[0]);
+				close(pipex->fd[1]);
+				close(pipex->tmp_fd[pipex->current_pipe][0]);
+				close(pipex->tmp_fd[pipex->current_pipe][1]);
 				return (garbagge(FLUSH, NULL, ALL),exit(i), (void)0);
+			}
 		}
 	}
 	if (pipex->n_pipe - 1 > 0)
@@ -872,7 +878,6 @@ t_execve	*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int	
 	i = 0;
 	if (ft_cpy_list_redirection(i, to_pars, enviroment, list_array) == 1)
 		return (NULL);
-/* 	print_file_list(**list_array); */
 	pipe->current_pipe = 0;
 	pipe->error = error_status;
 	pipe->pid[pipe->current_pipe] = 0;
