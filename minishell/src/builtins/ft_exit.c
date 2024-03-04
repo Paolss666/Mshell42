@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 12:28:46 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 08:38:51 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 17:25:42 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
 
 int	ft_is_valid_number(char *str)
 {
@@ -20,6 +19,8 @@ int	ft_is_valid_number(char *str)
 	if (!before_num_is_right(str))
 		return (0);
 	if (after_num_is_right(str) == 0)
+		return (0);
+	if (check_for_max_int(str))
 		return (0);
 	return (1);
 }

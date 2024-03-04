@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 14:36:11 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:15:33 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ int					logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
 // ----------- PIPE // REDIRECTION --------------//
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int error_status);
 void				parent(int *fd, int i, t_execve *pipex);
-void	child(t_cmd *new_to_pars, int i, t_execve *pipex, int j);
+void				child(t_cmd *new_to_pars, int i, t_execve *pipex, int j, t_envp *enviroment);
 /* void				child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j); */
 // int	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, t_envp *eniviroment);
 int					read_here_doc(int fd, t_file *file, t_envp *enviroment);
@@ -261,6 +261,7 @@ int					after_num_is_right(char *str);
 void				too_much_arg_neg(void);
 void				ft_exit_neg(t_cmd *to_pars);
 void				ft_exit_ls(t_cmd *to_pars);
+int					check_for_max_int(char *str);
 // int					print_pwd(t_envp *envp);
 int					found_echo(t_cmd *to_pars);
 int					print_not_found(int print_argument, t_cmd *arg_cmd);

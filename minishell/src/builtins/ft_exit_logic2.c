@@ -3,14 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit_logic2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 14:35:12 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/01 17:06:38 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/04 17:23:07 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+long int	ft_atol(const char *nptr, int i, int parity, int digit)
+{
+	long long int	number;
+
+	number = 0;
+	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
+		i++;
+	if (nptr[i] == '-' || nptr[i] == '+')
+	{
+		if (nptr[i] == '-')
+			parity++;
+		i++;
+	}
+	while (nptr[i] == '0')
+		i++;
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		number = 10 * number + nptr[i] - 48;
+		digit++;
+		i++;
+	}
+	if (digit > 19)
+		return (0);
+	if (parity % 2 == 0)
+		return ((long int)number);
+	return ((long int)number * -1);
+}
+
+int	check_for_max_int(char *str)
+{
+	long int		nb;
+	int				i;
+	int				parity;
+	int				digit;
+
+	parity = 0;
+	digit = 0;
+	i = 0;
+	nb = ft_atol(str, i, parity, digit);
+	if (nb == 0)
+		return (1);
+	if (nb < -9223372036854775807)
+		return (1);
+	if (nb > 9223372036854775807)
+		return (1);
+	return (0);
+}
 
 char	*ft_clean_exit(char *str)
 {

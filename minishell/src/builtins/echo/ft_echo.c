@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 22:21:12 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 17:17:21 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,18 @@ int	print_not_found(int print_argument, t_cmd *arg_cmd)
 		if (arg_cmd->cmd && arg_cmd->cmd[0] && !check_if_only_space(arg_cmd->cmd))
 		{
 			remove_q(arg_cmd->cmd);
-			printf("%s ", arg_cmd->cmd);
+			printf("%s", arg_cmd->cmd);
+			if (arg_cmd->next)
+				printf(" ");
+			// printf("%s ", arg_cmd->cmd);
 		}
 		else 
 		{
 			remove_q(arg_cmd->cmd);
-			printf("%s ", arg_cmd->cmd);
+			printf("%s", arg_cmd->cmd);
+			if (arg_cmd->next)
+				printf(" ");
+			// printf("%s ", arg_cmd->cmd);
 		}
 		return (print_argument);
 	}

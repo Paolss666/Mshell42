@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 09:14:30 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:04:53 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -876,7 +876,7 @@ int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int er
 	else if (found_echo(to_pars) && found_count_pipe(to_pars)
 			&& found_infile_or_endfile(to_pars))
 		error_status = ft_execve(to_pars, enviroment, export, error_status);
-	else if (!found_token(to_pars))
+	else if (!found_token(to_pars) && !found_infile_or_endfile(to_pars))
 		error_status = ft_execve(to_pars, enviroment, export, error_status);
 	else
 		error_status  = ft_execve(to_pars, enviroment, export, error_status);
@@ -897,7 +897,6 @@ int	ft_found_pwd(t_cmd *to_pars)
 
 int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
-	printf("prima di sxzpand%d\n", error_status);
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
 	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
 		ft_pwd(to_pars);
@@ -908,21 +907,13 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
 		print_list_envp(enviroment);
 	else if (found_export(to_pars) && to_pars->next && !found_count_pipe(to_pars))
-	{
-		printf("%d\n", error_status);
 		error_status = add_export_env(to_pars, &enviroment, &export);
-		printf("after %d\n", error_status);
-	}
 	else if (found_exit(to_pars) && !found_count_pipe(to_pars))
 		ft_exit(to_pars, enviroment, export);
 	else if (ft_cd(to_pars) && !found_count_pipe(to_pars))
 		found_cd_pwd_update(to_pars, enviroment, export);
 	else
-	{
-		printf("before %d\n", error_status);
 		error_status = brain_echo_execve(to_pars, enviroment, export, error_status);
-		printf("after %d\n", error_status);
-	}
 	return (error_status);
 }
 
@@ -958,7 +949,6 @@ int	main_brain(char **env, t_brain *brain)
 		brain->export = add_env_with_export(brain->enviroment);
 	export_env_sort(brain->export);
 	brain->error = minishell_brain(brain->to_pars, brain->enviroment, brain->export, brain->prev_err);
-	printf("brain %d\n", brain->error);
 	return (brain->error);
 }
 
@@ -976,7 +966,6 @@ void	head_minishell(char **env, int temp_error, t_brain *brain)
 	{
 		brain->error = temp_error;
 		temp_error = 0;
-		printf("tmp %d\n", temp_error);
 		if (g_signal_received)
 		{
 			if (g_signal_received == 60)

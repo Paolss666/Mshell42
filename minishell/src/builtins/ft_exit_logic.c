@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit_logic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 18:14:14 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/01 16:39:12 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/04 17:08:38 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	ft_exit_neg(t_cmd *to_pars)
 	tab[1][0] = '0';
 	while (tab[1][i] != '\0')
 	{
-		if (ft_isdigit(tab[1][i]) == 0)
+		if (ft_isdigit(tab[1][i]) == 0 || check_for_max_int(tab[1]))
 		{
 			ft_putstr_fd("exit: \n", 2);
 			ft_putstr_fd("bash: ", 2);

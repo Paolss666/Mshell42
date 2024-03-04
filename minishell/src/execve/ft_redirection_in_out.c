@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirection_in_out.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:19:32 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 09:23:43 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:02:21 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ void ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i)
 	ft_putstr_fd(file_list->nome_file, 2);
 	perror(" ");
 	(void)i;
-	pipex->error = 1;
-	printf("errrrrrror direct %d\n", pipex->error);
+	(void)pipex;
+	// pipex->error = 1;
+	// printf("errrrrrror direct %d\n", pipex->error);
 	garbagge(FLUSH, NULL, EX);
 	garbagge(FLUSH, NULL, PARS);
 	garbagge(FLUSH, NULL, ENV);
@@ -52,7 +53,7 @@ void	ft_open_redir_in(t_file *file_list, t_execve *pipex, int i)
 	fd_1 = open(file_list->nome_file, O_WRONLY | O_CREAT | O_TRUNC,
 			0666);
 	if (fd_1 == -1)
-		return (pipex->error =1, ft_error_not_found_directory(file_list, pipex, i),
+		return (ft_error_not_found_directory(file_list, pipex, i),
 			(void)0);
 	if (dup2(fd_1, 1) == -1)
 		(perror("error dup1 open"), close(fd_1));
@@ -65,7 +66,7 @@ void	ft_open_redir_out(t_file *file_list, t_execve *pipex, int i)
 
 	fd_2 = open(file_list->nome_file, O_RDONLY, 0666);
 	if (fd_2 == -1)
-		return (pipex->error =1, ft_error_not_found_directory(file_list, pipex, i), (void)0);
+		return (ft_error_not_found_directory(file_list, pipex, i), (void)0);
 	if (dup2(fd_2, 0) == -1)
 		(perror("error dup1 open"), close(fd_2));
 	close(fd_2);
