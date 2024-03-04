@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 17:17:21 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:21:29 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	logic_display_error(t_cmd *arg_cmd)
 		return (1);
 	if (ft_strcmp(arg_cmd->cmd, "$") == 0 && !arg_cmd->next)
 	{
-		printf("%s ", arg_cmd->cmd);
+		printf("%s", arg_cmd->cmd);
 		return (1);
 	}
 	if (arg_cmd->cmd && arg_cmd->cmd[0] && !check_if_only_space(arg_cmd->cmd)
