@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error_shift_operator.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:03:04 by armeyer           #+#    #+#             */
-/*   Updated: 2024/02/26 15:22:04 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/03 16:06:06 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-int	no_words_before(char *str, int indice)
+/* int	no_words_before(char *str, int indice)
 {
 	if (indice == 0)
 		return (0);
@@ -25,7 +25,7 @@ int	no_words_before(char *str, int indice)
 		indice--;
 	}
 	return (1);
-}
+} */
 
 int	no_words_after(char *str, int indice)
 {
@@ -51,11 +51,6 @@ int	ft_error_shift_operator_2(char *str)
 	{
 		if (str[i] == '>' || str[i] == '<')
 		{
-			if (no_words_before(str, i))
-			{
-				printf("bash: syntax error near unexpected token\n");
-				return (1);
-			}
 			if (no_words_after(str, i))
 			{
 				printf("bash: syntax error near unexpected token\n");

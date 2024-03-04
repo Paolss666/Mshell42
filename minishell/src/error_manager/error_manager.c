@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_manager.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:02:33 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/01 16:56:50 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/03 15:58:07 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ int	check_forbiden_quote(char *str)
 	blind = 0;
 	i = 0;
 	c = '\v';
+	if(!str)
+		return(1);
 	c = check_forb_logic(i, blind, c, str);
 	if (c == '\'')
 		return (printf("bash: syntax error near unexpected token '''\n"), 1);

@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 12:22:08 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/03 14:36:11 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ typedef struct s_brain
 {
 	char	*line;
 	int		error;
+	int		prev_err;
 	t_cmd	*to_pars;
 	t_envp	*enviroment;
 	t_exp	*export;

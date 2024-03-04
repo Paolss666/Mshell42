@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 14:10:03 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 00:47:01 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -464,7 +464,7 @@ void	ft_error_commande_split(char *cmd)
 {
 	ft_putstr_fd("bash : ", 2);
 	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_putstr_fd(": qcommand not found\n", 2);
 }
 
 void	ft_error_quotes(t_execve *pipex, char *cmd)
@@ -897,16 +897,24 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 		unset_delete_variable(to_pars, &enviroment, &export);
 	else if (!found_count_pipe(to_pars) && to_pars && !to_pars->next && found_export(to_pars))
 		print_export_list(export);
-	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2 && enviroment)
+	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
 		print_list_envp(enviroment);
 	else if (found_export(to_pars) && to_pars->next && !found_count_pipe(to_pars))
+	{
+		printf("%d\n", error_status);
 		error_status = add_export_env(to_pars, &enviroment, &export);
+		printf("after %d\n", error_status);
+	}
 	else if (found_exit(to_pars) && !found_count_pipe(to_pars))
 		ft_exit(to_pars, enviroment, export);
 	else if (ft_cd(to_pars) && !found_count_pipe(to_pars))
 		found_cd_pwd_update(to_pars, enviroment, export);
 	else
+	{
+		printf("before %d\n", error_status);
 		error_status = brain_echo_execve(to_pars, enviroment, export, error_status);
+		printf("after %d\n", error_status);
+	}
 	return (error_status);
 }
 
@@ -930,6 +938,8 @@ int	main_brain(char **env, t_brain *brain)
 {
 	if (brain->error == 999)
 		brain->error = 0;
+	brain->prev_err = brain->error;
+	brain->error = 0;
 	if (!brain->to_pars && brain->line)
 		brain->to_pars = add_cmd_star(brain->to_pars, brain->line);
 	if (brain->to_pars)
@@ -939,7 +949,8 @@ int	main_brain(char **env, t_brain *brain)
 	if (!brain->export)
 		brain->export = add_env_with_export(brain->enviroment);
 	export_env_sort(brain->export);
-	brain->error = minishell_brain(brain->to_pars, brain->enviroment, brain->export, brain->error);
+	brain->error = minishell_brain(brain->to_pars, brain->enviroment, brain->export, brain->prev_err);
+	printf("brain %d\n", brain->error);
 	return (brain->error);
 }
 
@@ -956,6 +967,8 @@ void	head_minishell(char **env, int temp_error, t_brain *brain)
 	if (!brain->error || g_signal_received)
 	{
 		brain->error = temp_error;
+		temp_error = 0;
+		printf("tmp %d\n", temp_error);
 		if (g_signal_received)
 		{
 			if (g_signal_received == 60)
