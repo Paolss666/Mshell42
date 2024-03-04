@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 00:39:53 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 09:19:31 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,7 @@ void	close_if_plus_zero(t_execve *pipex)
 
 void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex, int i)
 {
-	pipex->error = 0;
+	/* pipex->error = 0; */
 	if (i)
 	{
 		garbagge(FLUSH, NULL, ALL);
@@ -916,15 +916,21 @@ int	execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 	int		i = 0;
 
 	temp = NULL;
+	printf("dentro executre %d\n", pipex->error);
 	if(ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))
 		&& ft_strncmp(new_to_pars->cmd, "\'export\' ", ft_strlen("\'export\'")) 
 		&& ft_strncmp(new_to_pars->cmd, "exit ", ft_strlen("exit"))
 		&& ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd"))
 		&& ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset")))
 	{
+		printf("prima good %d\n", pipex->error);
 		pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
 		if (!pipex->get_g_path )
+		{
+			printf("ft_error %d\n", pipex->error);
 			i = ft_error_commande_not_to_pars(new_to_pars, pipex);
+		}
+		printf("dentro good %d\n", pipex->error);
 	}
 	if (pipex->n_pipe - 1 > 0)
 	{
@@ -932,9 +938,10 @@ int	execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 				|| pipe(pipex->tmp_fd[pipex->current_pipe]) == -1))
 			perror("pipe error");
 	}
+	printf("dentro pipe %d\n", pipex->error);
 	pipex->pid[pipex->current_pipe] = fork();
 	in_logic_fork(new_to_pars, pipex, temp, i);
-	return (0);
+	return (pipex->error);
 }
 
 void    logic_wait_pd(t_execve *pipex, int n)
@@ -1044,7 +1051,7 @@ int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_statu
 	if (g_signal_received == 60)
 		return (error_status);
 	printf("piepx tatus -> %d\n", pipex->error);
-	/* error_status = pipex->error; */
+	error_status = pipex->error;
 	printf("errpr tatus -> %d\n", error_status);
 	return (pipex->error);
 }

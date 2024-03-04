@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 00:47:01 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/04 09:14:30 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -476,6 +476,7 @@ void	ft_error_quotes(t_execve *pipex, char *cmd)
 			ft_putstr_fd("bash : ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": Is a directory\n", 2);
+			pipex->error = 126;
 			return ;
 		
 		}
@@ -484,6 +485,7 @@ void	ft_error_quotes(t_execve *pipex, char *cmd)
 			ft_putstr_fd("bash : ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
+			pipex->error = 127;
 			return ;
 		}
 	}
@@ -503,6 +505,7 @@ void	ft_error_single_quotes(t_execve *pipex, char *cmd)
 			ft_putstr_fd("bash : ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": Is a directory\n", 2);
+			pipex->error = 126;
 			return ;
 		
 		}
@@ -511,6 +514,7 @@ void	ft_error_single_quotes(t_execve *pipex, char *cmd)
 			ft_putstr_fd("bash : ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
+			pipex->error = 127;
 			return ;
 		}
 	}
@@ -521,7 +525,7 @@ void	ft_error_single_quotes(t_execve *pipex, char *cmd)
 	return ((void)0);
 }
 
-void	logic_split_for_commande(char *cmd)
+void	logic_split_for_commande(char *cmd, t_execve *pipex)
 {
 
 	if (ft_strchr(cmd, '/'))
@@ -531,6 +535,7 @@ void	logic_split_for_commande(char *cmd)
 			ft_putstr_fd("bash : ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": Is a directory\n", 2);
+			pipex->error = 126;
 			return ;
 		
 		}
@@ -539,6 +544,7 @@ void	logic_split_for_commande(char *cmd)
 			ft_putstr_fd("bash : ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
+			pipex->error = 127;
 			return ;
 		}
 	}
@@ -601,7 +607,7 @@ int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 		ft_error_single_quotes(pipex, cmd[0]);
 		return (pipex->error);
 	}
-	logic_split_for_commande(cmd[0]);
+	logic_split_for_commande(cmd[0], pipex);
 	pipex->error = 127;
 	return (pipex->error);
 }
@@ -623,7 +629,8 @@ char	*check_path_absolut(char **with_flag, t_execve *pipex, int *dir)
 		return (with_flag[0]);
 	if (access(with_flag[0], F_OK | X_OK) == -1)
 	{
-		pipex->error = 1;
+		(void)pipex;
+		/* pipex->error = 1; */
 		return (NULL);
 	}
 	return (NULL);
@@ -662,7 +669,7 @@ char	*logic_get_good_path(char **with_flag, char **env_split, t_execve *pipex)
 		if (access(exec, F_OK | X_OK) == 0)
 			return (f_gbgb(with_flag),f_gbgb(env_split), exec);
 		if (access(exec, F_OK | X_OK) == -1 && pipex)
-			pipex->error = 1;
+			pipex->error = 0;
 		garbagge(FREE, exec, ENV);
 	}
 	return (NULL);
@@ -890,6 +897,7 @@ int	ft_found_pwd(t_cmd *to_pars)
 
 int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
+	printf("prima di sxzpand%d\n", error_status);
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
 	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
 		ft_pwd(to_pars);
