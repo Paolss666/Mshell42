@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 18:39:20 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 13:37:51 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1041,6 +1041,88 @@ void	found_single_quotes(t_cmd *to_pars)
 	}
 }
 
+void add_node_sp(t_cmd **head_ref, char *cmd) {
+    t_cmd *new_node = (t_cmd *)malloc(sizeof(t_cmd));
+    new_node->cmd = cmd;
+    new_node->next = NULL;
+
+    if (*head_ref == NULL) {
+        *head_ref = new_node;
+        return;
+    }
+
+    t_cmd *last = *head_ref;
+    while (last->next != NULL) {
+        last = last->next;
+    }
+
+    last->next = new_node;
+}
+
+char *combine_tokens(const char *cmd)
+{
+    int len = ft_strlen(cmd);
+    char *result = (char *)malloc((len + 1) * sizeof(char));
+	strcpy(result, cmd);
+
+    char *current = result;
+    char *prev = NULL;
+    while (*current)
+	{
+        if ((*current == '<' && prev && *prev == '<') ||
+            (*current == '>' && prev && *prev == '>')) {
+            // Rimuovi lo spazio tra i due token
+            ft_memmove(prev, current, ft_strlen(current) + 1);
+            current = prev;
+        }
+        prev = current;
+        current++;
+    }
+	printf("comen token%s\n", result);
+    return (result);
+}
+
+void add_ep_redirection_and_pipes(t_cmd *head)
+{
+    
+	t_cmd *current;
+    
+	current = head;
+	while (current)
+	{
+        char *token = current->cmd;
+        char *new_com = (char *)malloc(ft_strlen(token) * 2 + 1);
+        char *new_token = new_com;
+        char last_char = '\0'; // Memorizza l'ultimo carattere aggiunto
+        while (*token)
+		{
+            if (*token == '<' || *token == '>' || *token == '|')
+			{
+                // Aggiungi uno spazio solo se il carattere precedente non è uno spazio
+                if (last_char != ' ') {
+                    *new_token++ = ' ';
+                }
+                *new_token++ = *token;
+                // Aggiungi uno spazio solo se il carattere successivo non è uno spazio o il terminatore di stringa
+                if (*(token + 1) != ' ' && *(token + 1) != '\0') {
+                    *new_token++ = ' ';
+                }
+            } else {
+                *new_token++ = *token;
+            }
+            last_char = *token; // Aggiorna l'ultimo carattere aggiunto
+            token++;
+        }
+        *new_token = '\0';
+        garbagge(FREE, current->cmd, PARS);
+		// combine_tokens(new_com);
+		printf("token new_cmd %s\n", new_com);
+        current->cmd = combine_tokens(new_com);
+        current = current->next;
+    }
+}
+	
+
 int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
 	t_execve	*pipex;
@@ -1050,6 +1132,11 @@ int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_statu
 	n = 0;
 	if (!to_pars)
 		return (0);
+	print_list(to_pars);
+	t_cmd 	*cur = to_pars;
+	add_ep_redirection_and_pipes(cur);
+	printf("++++++++++++++++++++++++++\n");
+	print_list(cur);
 	pipex = init_structure(enviroment, to_pars, export, error_status);
 	new_to_pars = remove_redirections(to_pars);
 	new_to_pars = parse_for_token(new_to_pars);

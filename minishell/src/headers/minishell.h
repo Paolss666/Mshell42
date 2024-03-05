@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 18:15:33 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 12:32:05 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ char				*found_variable_exp(t_exp *export, char *name_v);
 int					is_valid_variable_char(char c);
 int					found_dollar_alone(char *s);
 // ------------ ERROR SYNTAX ----------- // 
-int					check_forb_logic(int i, int blind, char c, char *str);
+int    				check_forb_logic(int i, char c, char *str);
 int					check_alone(char *s);
 int					ft_only_pipe(char *str);
 int					ft_error_pipe_in_pipe(char *str);

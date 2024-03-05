@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_manager.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:02:33 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 15:58:07 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/05 12:32:46 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,23 +71,21 @@ int	is_error(char *str)
 	return (0);
 }
 
-int	check_forbiden_quote(char *str)
+int    check_forbiden_quote(char *str)
 {
-	int		i;
-	int		blind;
-	char	c;
+    int        i;
+    char    c;
 
-	blind = 0;
-	i = 0;
-	c = '\v';
-	if(!str)
-		return(1);
-	c = check_forb_logic(i, blind, c, str);
-	if (c == '\'')
-		return (printf("bash: syntax error near unexpected token '''\n"), 1);
-	if (c == '"')
-		return (printf("bash: syntax error near unexpected token '\"'\n"), 2);
-	return (0);
+    i = 0;
+    c = '\v';
+    if (!str)
+        return (1);
+    c = check_forb_logic(i, c, str);
+    if (c == '\'')
+        return (printf("bash: syntax error near unexpected token '''\n"), 1);
+    if (c == '"')
+        return (printf("bash: syntax error near unexpected token '\"'\n"), 2);
+    return (0);
 }
 
 int	error_manager(char *str)
