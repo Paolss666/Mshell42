@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 18:04:53 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 18:46:58 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -465,6 +465,7 @@ void	ft_error_commande_split(char *cmd)
 	ft_putstr_fd("bash : ", 2);
 	ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": qcommand not found\n", 2);
+	return ;
 }
 
 void	ft_error_quotes(t_execve *pipex, char *cmd)
@@ -491,7 +492,7 @@ void	ft_error_quotes(t_execve *pipex, char *cmd)
 	}
 	ft_putstr_fd("bash : ", 2);
 	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_putstr_fd(": 2command not found\n", 2);
 	pipex->error = 127;
 	return ((void)0);
 }
@@ -520,14 +521,13 @@ void	ft_error_single_quotes(t_execve *pipex, char *cmd)
 	}
 	ft_putstr_fd("bash : ", 2);
 	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_putstr_fd(": 2command not found\n", 2);
 	pipex->error = 127;
 	return ((void)0);
 }
 
 void	logic_split_for_commande(char *cmd, t_execve *pipex)
 {
-
 	if (ft_strchr(cmd, '/'))
 	{
 		if(is_directory(cmd))
@@ -548,9 +548,15 @@ void	logic_split_for_commande(char *cmd, t_execve *pipex)
 			return ;
 		}
 	}
-	ft_putstr_fd("bash : ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	else
+	{
+		ft_putstr_fd("bash : ", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": quacommand not found\n", 2);
+		return ;
+	}
+	// exit(127);
+	return ;
 }
 
 
@@ -579,23 +585,25 @@ int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 	char **cmd;
 
 	pipex->error = 127;
+	// printf("commande inside err %s\n",to_pars->cmd);
 	cmd = ft_split_garbage(to_pars->cmd, ' ');
 	if(!cmd)
 		return (garbagge(FLUSH, NULL, ALL), exit (10), 0);
 	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
 		split_by_quotes_and_spaces(to_pars->cmd, cmd);
-	/* print_string_array(cmd); */
 	if (ft_strcmp(to_pars->cmd, " ") == 0)
 	{
 		ft_putstr_fd("bash : ", 2);
 		ft_putstr_fd(to_pars->cmd, 2);
-		ft_putstr_fd(": command not found\n", 2);	
+		ft_putstr_fd(": 10command not found\n", 2);	
 		pipex->error = 127;
+		return (pipex->error);
 	}
 	if (!to_pars->cmd)
 	{
 		ft_error_commande_split(cmd[0]);
-		pipex->error = 127;	
+		pipex->error = 127;
+		return (pipex->error);
 	}
 	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\"'))
 	{
@@ -630,7 +638,6 @@ char	*check_path_absolut(char **with_flag, t_execve *pipex, int *dir)
 	if (access(with_flag[0], F_OK | X_OK) == -1)
 	{
 		(void)pipex;
-		/* pipex->error = 1; */
 		return (NULL);
 	}
 	return (NULL);
@@ -911,7 +918,7 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 	else if (found_exit(to_pars) && !found_count_pipe(to_pars))
 		ft_exit(to_pars, enviroment, export);
 	else if (ft_cd(to_pars) && !found_count_pipe(to_pars))
-		found_cd_pwd_update(to_pars, enviroment, export);
+		error_status = found_cd_pwd_update(to_pars, enviroment, export);
 	else
 		error_status = brain_echo_execve(to_pars, enviroment, export, error_status);
 	return (error_status);
@@ -958,7 +965,6 @@ void	head_minishell(char **env, int temp_error, t_brain *brain)
 	brain->line = display_prompt();
 	if (!brain->line)
 		(garbagge(FLUSH, NULL, ALL), printf("exit\n"), exit(130));
-	temp_error = 0;
 	if (brain->error)
 		temp_error = brain->error;
 	brain->error = error_manager(brain->line);

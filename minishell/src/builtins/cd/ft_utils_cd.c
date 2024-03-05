@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_cd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:55:59 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 18:22:25 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/05 18:12:38 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	change_env_export_old_pwd(t_envp *enviroment, t_exp *export,
 	garbagge(FREE, old_pwd, ENV);
 }
 
-void	found_cd_home(t_exp *export, t_envp *enviroment, char *home, char *pwd)
+int	found_cd_home(t_exp *export, t_envp *enviroment, char *home, char *pwd)
 {
 
 	if (home && chdir(home) == 0 && pwd)
@@ -97,7 +97,11 @@ void	found_cd_home(t_exp *export, t_envp *enviroment, char *home, char *pwd)
 		change_env_export_old_pwd(enviroment, export, pwd);
 	}
 	else if (!home && pwd)
+	{
 		ft_putstr_fd("FAIL chdir home path not found\n", 2);
+		return (2);
+	}
+	return (0);
 }
 
 void	change_env_export_pwd(t_envp *enviroment, t_exp *export, char *new_pwd)

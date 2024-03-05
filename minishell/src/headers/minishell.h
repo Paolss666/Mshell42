@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 12:32:05 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 18:16:12 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ void 				remove_q(char *s);
 void				print_list(t_cmd *head);
 void 				print_string_array(char **array);
 void				ft_free_tab_garbage(char **tab);
+t_cmd	*add_new_cmd(char **commande_split, int i);
 // ----------- E	RROR --------------- //
 void 				close_if_open(int fd);
 void				close_all_fd_tmp(t_execve *pipex, int n);
@@ -235,12 +236,12 @@ int					find_missing_quote(char **ptr, char quote);
 void				find_and_terminate_token(char **ptr);
 int					ft_pwd(t_cmd *to_pars);
 int					ft_cd(t_cmd *to_pars);
-void				ft_home_not_found(char *home);
+int				ft_home_not_found(char *home);
 char				*home_found(char *home);
 char				*old_pwd_not_found(char *pwd, t_envp *enviroment, t_exp *export);
 void				found_pwd_in_env_modif(t_envp *enviroment, char *new_pwd);
 void				change_env_export_pwd(t_envp *enviroment, t_exp *export, char *new_pwd);
-void				found_cd_home(t_exp *export, t_envp *enviroment, char *home, char *pwd);
+int					found_cd_home(t_exp *export, t_envp *enviroment, char *home, char *pwd);
 void				change_env_export_old_pwd(t_envp *enviroment, t_exp *export, char *old_pwd);
 void				found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd);
 void				found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd);
@@ -289,7 +290,7 @@ int					ft_envp(t_cmd *to_pars);
 int					found_count_pipe(t_cmd *cmd);
 int					valid_variable_char(char c);
 t_envp				*found_and_add_env(char **env, t_envp *enviroment);
-void				found_cd_pwd_update(t_cmd *to_pars, t_envp *enviroment, t_exp *export);
+int					found_cd_pwd_update(t_cmd *to_pars, t_envp *enviroment, t_exp *export);
 /* void				add_export_env(t_cmd *to_pars, t_envp **enviroment); */
 int					found_dollar_print_variable(t_cmd *to_pars, int error_status);
 int					logic_found_dollar_interrogation(t_cmd *current, int error_status);

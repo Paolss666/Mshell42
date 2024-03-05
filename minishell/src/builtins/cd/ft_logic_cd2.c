@@ -6,20 +6,22 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:14:48 by npaolett          #+#    #+#             */
-/*   Updated: 2024/02/28 14:15:51 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 18:14:16 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-void	ft_home_not_found(char *home)
+int	ft_home_not_found(char *home)
 {
 	if (!home)
 	{
 		ft_putstr_fd("bash :", 2);
 		ft_putstr_fd("cd :", 2);
 		ft_putstr_fd("HOME not set\n", 2);
+		return (2);
 	}
+	return(0);
 }
 
 char	*home_found(char *home)
