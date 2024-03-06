@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 18:46:58 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 23:04:03 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,61 +26,20 @@ char	*display_prompt(void)
 	return (line);
 }
 
-void	freeList(t_cmd *head)
+
+
+char	*init_for_join_found_flag(t_cmd *next, t_cmd *current)
 {
-	t_cmd	*current;
-	t_cmd	*next;
+	char	*espace;
+	char	*temp_cmd;
 
-	current = head;
-	while (current != NULL)
-	{
-		next = current->next;
-		garbagge(FREE, current->cmd, PARS);
-		garbagge(FREE, current, PARS);
-		current = next;
-	}
-}
-
-t_cmd	*free_cmds_list(t_cmd *head)
-{
-	t_cmd	*history;
-
-	history = head;
-	if (history)
-	{
-		garbagge(FREE, history->cmd, PARS);
-		garbagge(FREE, history, PARS);
-		return (NULL);
-	}
-	else
-		return (head);
-}
-
-t_exp	*free_exp_list(t_exp *head)
-{
-	t_exp	*history;
-
-	history = head;
-	if (history)
-	{
-		garbagge(FREE, history->path, ENV);
-		garbagge(FREE, history->value, ENV);
-		garbagge(FREE, history->name, ENV);
-		garbagge(FREE, history, ENV);
-		return (NULL);
-	}
-	else
-		return (head);
-}
-
-void	free_cmd_list(t_cmd *head)
-{
-	if (head)
-	{
-		garbagge(FREE, head->cmd, PARS);
-		garbagge(FREE, head, PARS);
-	}
-	return ((void)0);
+	espace = ft_strjoin(" ", next->cmd);
+	if (!espace || garbagge(ADD, espace, PARS))
+		return (garbagge(FLUSH, NULL, ALL),exit(99), NULL);
+	temp_cmd = ft_strjoin(current->cmd, espace);
+	if (!temp_cmd || garbagge(ADD, temp_cmd, PARS))
+		return (garbagge(FLUSH, NULL, ALL),exit(99), NULL);
+	return(temp_cmd);
 }
 
 
@@ -89,33 +48,19 @@ int	join_found_flag(t_cmd **to_pars)
 	t_cmd	*current;
 	t_cmd	*next;
 	int		count;
-	char	*temp_cmd;
-	char	*espace;
 
 	next = NULL;
 	count = 0;
 	current = *to_pars;
 	if (!*to_pars)
-		return (printf("joind flag to_pars null\n"), 0);
+		return (0);
 	while (current != NULL && current->cmd != NULL)
 	{
 		next = current->next;
 		while (next != NULL && next->cmd != NULL && next->cmd[0] == '-')
 		{
-			espace = ft_strjoin(" ", next->cmd);
-			if (!espace || garbagge(ADD, espace, PARS))
-				return (0);
-			temp_cmd = ft_strjoin(current->cmd, espace);
-			if (!temp_cmd || garbagge(ADD, temp_cmd, PARS))
-				return (garbagge(FREE, espace, PARS), 0);
-			garbagge(FREE, current->cmd, PARS);
-			current->cmd = ft_strdup(temp_cmd);
-			if (!current->cmd || garbagge(ADD, current->cmd, PARS))
-				return (garbagge(FREE, temp_cmd, PARS), garbagge(FREE, espace,
-						PARS), 0);
-			garbagge(FREE, temp_cmd, PARS);
+			current->cmd = init_for_join_found_flag(next, current);
 			current->next = next->next;
-			free_cmd_list(next);
 			next = current->next;
 		}
 		count++;
@@ -447,178 +392,7 @@ void replace_quotes(char *str) {
     }
 }
 
-int	is_directory(char *s)
-{
-	DIR	*dir;
 
-	dir = opendir(s);
-	if (dir)
-	{
-		closedir(dir);
-		return (1);
-	}
-	return (0);
-}
-
-void	ft_error_commande_split(char *cmd)
-{
-	ft_putstr_fd("bash : ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": qcommand not found\n", 2);
-	return ;
-}
-
-void	ft_error_quotes(t_execve *pipex, char *cmd)
-{
-	if (ft_strchr(cmd, '/'))
-	{
-		if(is_directory(cmd))
-		{
-			ft_putstr_fd("bash : ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			pipex->error = 126;
-			return ;
-		
-		}
-		else
-		{
-			ft_putstr_fd("bash : ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
-			pipex->error = 127;
-			return ;
-		}
-	}
-	ft_putstr_fd("bash : ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": 2command not found\n", 2);
-	pipex->error = 127;
-	return ((void)0);
-}
-
-void	ft_error_single_quotes(t_execve *pipex, char *cmd)
-{
-	if (ft_strchr(cmd, '/'))
-	{
-		if(is_directory(cmd))
-		{
-			ft_putstr_fd("bash : ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			pipex->error = 126;
-			return ;
-		
-		}
-		else
-		{
-			ft_putstr_fd("bash : ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
-			pipex->error = 127;
-			return ;
-		}
-	}
-	ft_putstr_fd("bash : ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": 2command not found\n", 2);
-	pipex->error = 127;
-	return ((void)0);
-}
-
-void	logic_split_for_commande(char *cmd, t_execve *pipex)
-{
-	if (ft_strchr(cmd, '/'))
-	{
-		if(is_directory(cmd))
-		{
-			ft_putstr_fd("bash : ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			pipex->error = 126;
-			return ;
-		
-		}
-		else
-		{
-			ft_putstr_fd("bash : ", 2);
-			ft_putstr_fd(cmd, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
-			pipex->error = 127;
-			return ;
-		}
-	}
-	else
-	{
-		ft_putstr_fd("bash : ", 2);
-		ft_putstr_fd(cmd, 2);
-		ft_putstr_fd(": quacommand not found\n", 2);
-		return ;
-	}
-	// exit(127);
-	return ;
-}
-
-
-/* int	logic_error_commande_nf(t_cmd *to_pars, t_execve *pipex)
-{
-	if (!to_pars->cmd)
-	{
-		ft_error_commande_split(cmd[0]);
-		pipex->error = 127;	
-	}
-	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\"'))
-	{
-		ft_error_quotes(pipex, cmd[0]);
-		return(pipex->error) ;
-	}
-	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\''))
-	{
-		ft_error_single_quotes(pipex, cmd[0]);
-		return (pipex->error);
-	}
-	return (pipex->error)
-} */
-
-int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
-{
-	char **cmd;
-
-	pipex->error = 127;
-	// printf("commande inside err %s\n",to_pars->cmd);
-	cmd = ft_split_garbage(to_pars->cmd, ' ');
-	if(!cmd)
-		return (garbagge(FLUSH, NULL, ALL), exit (10), 0);
-	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
-		split_by_quotes_and_spaces(to_pars->cmd, cmd);
-	if (ft_strcmp(to_pars->cmd, " ") == 0)
-	{
-		ft_putstr_fd("bash : ", 2);
-		ft_putstr_fd(to_pars->cmd, 2);
-		ft_putstr_fd(": 10command not found\n", 2);	
-		pipex->error = 127;
-		return (pipex->error);
-	}
-	if (!to_pars->cmd)
-	{
-		ft_error_commande_split(cmd[0]);
-		pipex->error = 127;
-		return (pipex->error);
-	}
-	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\"'))
-	{
-		ft_error_quotes(pipex, cmd[0]);
-		return(pipex->error) ;
-	}
-	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\''))
-	{
-		ft_error_single_quotes(pipex, cmd[0]);
-		return (pipex->error);
-	}
-	logic_split_for_commande(cmd[0], pipex);
-	pipex->error = 127;
-	return (pipex->error);
-}
 
 char	*return_exec(char *exec, char **with_flag, char **env_split)
 {

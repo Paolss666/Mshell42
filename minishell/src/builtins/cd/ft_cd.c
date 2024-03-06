@@ -3,63 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 18:16:48 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 20:38:25 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-void	found_pwd_in_env_modif(t_envp *enviroment, char *new_pwd)
-{
-	if (!enviroment || !new_pwd)
-		return ((void)0);
-	while (enviroment)
-	{
-		if (ft_strcmp(enviroment->name, "PWD") == 0)
-			break ;
-		enviroment = enviroment->next;
-	}
-	if (!enviroment)
-		return ((void)0);
-	enviroment->value = ft_strjoin("=", new_pwd);
-	if (!enviroment->value || garbagge(ADD, enviroment->value, ENV))
-		return ((void)0);
-	enviroment->path = ft_strjoin(enviroment->name, enviroment->value);
-	if (!enviroment->path || garbagge(ADD, enviroment->path, ENV))
-		return (garbagge(FREE, enviroment->value, ENV), (void)0);
-}
-
-t_cd	*cpy_cd_list(char **splits, t_cd *commande_cd)
-{
-	t_cd	*current;
-	t_cd	*envp;
-	int		i;
-
-	i = -1;
-	while (splits[++i])
-	{
-		current = (t_cd *)malloc(sizeof(t_cmd));
-		if (!current || garbagge(ADD, current, PARS))
-			return (perror("FAIL malloc t_cd"), NULL);
-		current->path = ft_strdup(splits[i]);
-		if (!current->path || garbagge(ADD, current->path, PARS))
-			return (garbagge(FREE, current, PARS), NULL);
-		current->next = NULL;
-		if (!commande_cd)
-			commande_cd = current;
-		else
-		{
-			envp = commande_cd;
-			while (envp->next != NULL)
-				envp = envp->next;
-			envp->next = current;
-		}
-	}
-	return (commande_cd);
-}
 
 int	found_cd_et_pass(t_cmd *to_pars, t_envp *enviroment, t_exp *export,
 		char *pwd)
@@ -87,69 +38,80 @@ int	found_cd_et_pass(t_cmd *to_pars, t_envp *enviroment, t_exp *export,
 	return (0);
 }
 
-int	found_cd_oldpwd(t_exp *export, t_envp *enviroment, char *old_pwd,
-		char *home)
+void	print_old_and_go(t_l_cd *cd, t_envp *enviroment, t_exp *export)
 {
 	char	*line;
-	char	*pwd;
 
 	line = NULL;
-	pwd = getcwd(NULL, 0);
-	if (!pwd || garbagge(ADD, pwd, ENV) || !home)
+	cd->old_pwd = cd->pwd;
+	change_env_export_old_pwd(enviroment, export, cd->old_pwd);
+	cd->pwd = getcwd(NULL, 0);
+	if (!cd->pwd || garbagge(ADD, cd->pwd, ENV))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	change_env_export_pwd(enviroment, export, cd->pwd);
+	line = ft_substr(cd->pwd, ft_strlen(cd->home), ft_strlen(cd->pwd));
+	if (!line || garbagge(ADD, line, ENV))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	line = ft_strjoin("~", line);
+	if (!line || garbagge(ADD, line, ENV))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	printf("%s\n", line);
+}
+
+int	found_cd_oldpwd(t_exp *export, t_envp *enviroment, t_l_cd *cd)
+{
+	cd->pwd = getcwd(NULL, 0);
+	if (!cd->pwd || garbagge(ADD, cd->pwd, ENV) || !cd->home)
 		return (perror(" "), 1);
-	if (old_pwd && chdir(old_pwd) == 0)
-	{
-		old_pwd = pwd;
-		change_env_export_old_pwd(enviroment, export, old_pwd);
-		pwd = getcwd(NULL, 0);
-		if (!pwd || garbagge(ADD, pwd, ENV))
-			return (1);
-		change_env_export_pwd(enviroment, export, pwd);
-		line = ft_substr(pwd, ft_strlen(home), ft_strlen(pwd));
-		if (!line || garbagge(ADD, line, ENV))
-			return (perror("FAIL ft_substr cd"), 1);
-		line = ft_strjoin("~", line);
-		if (!line || garbagge(ADD, line, ENV))
-			return (1);
-		printf("%s\n", line);
-	}
+	if (cd->old_pwd && chdir(cd->old_pwd) == 0)
+		print_old_and_go(cd, enviroment, export);
 	else
 	{
-		old_pwd = old_pwd_not_found(pwd, enviroment, export);
+		cd->old_pwd = old_pwd_not_found(cd->pwd, enviroment, export);
 		return (2);
 	}
 	return (0);
 }
 
-/* JE DOIT IMPLEMENTER D'ABORD LE PIPE E LE ex */
+
+int		logic_cd(t_cmd *to_pars, t_exp *export, t_envp *enviroment, t_l_cd *cd)
+{
+	int	err;
+
+	err = 0;
+	if (cd->home)
+		cd->home = home_found(cd->home);
+	if (ft_cd(to_pars) == 1 && !to_pars->next && cd->home)
+		err = found_cd_home(export, enviroment, cd->home, cd->pwd);
+	else if (ft_cd(to_pars) == 1 && !to_pars->next && !cd->home)
+		err = ft_home_not_found(cd->home);
+	if (ft_cd(to_pars) && to_pars->next && !to_pars->next->next)
+		err = found_cd_et_pass(to_pars, enviroment, export, cd->pwd);
+	if (ft_cd(to_pars) == 2 && !to_pars->next)
+		err = found_cd_oldpwd(export, enviroment, cd);
+	return (err);
+}
+
 int	found_cd_pwd_update(t_cmd *to_pars, t_envp *enviroment, t_exp *export)
 {
-	char	*pwd;
-	char	*home;
-	char	*old_pwd;
+	t_l_cd	*cd;
 	int		err;
 
 	err = 0;
-	pwd = getcwd(NULL, 0);
-	if (garbagge(ADD, pwd, ENV))
+	cd = (t_l_cd *)malloc(sizeof(t_l_cd));
+	if(!cd || garbagge(ADD, cd, ENV))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	cd->pwd = getcwd(NULL, 0);
+	if (garbagge(ADD, cd->pwd, ENV))
 		return (3);
-	home = found_variable_env(enviroment, "HOME");
-	old_pwd = found_variable_env(enviroment, "OLDPWD");
-	if (old_pwd)
+	cd->home = found_variable_env(enviroment, "HOME");
+	cd->old_pwd = found_variable_env(enviroment, "OLDPWD");
+	if (cd->old_pwd)
 	{
-		old_pwd = ft_substr(old_pwd, ft_strlen("OLDPWD="), ft_strlen(old_pwd));
-		if (garbagge(ADD, old_pwd, ENV))
+		cd->old_pwd = ft_substr(cd->old_pwd, ft_strlen("OLDPWD="), ft_strlen(cd->old_pwd));
+		if (garbagge(ADD, cd->old_pwd, ENV))
 			return (3);
 	}
-	if (home)
-		home = home_found(home);
-	if (ft_cd(to_pars) == 1 && !to_pars->next && home)
-		err = found_cd_home(export, enviroment, home, pwd);
-	else if (ft_cd(to_pars) == 1 && !to_pars->next && !home)
-		err = ft_home_not_found(home);
-	if (ft_cd(to_pars) && to_pars->next && !to_pars->next->next)
-		err = found_cd_et_pass(to_pars, enviroment, export, pwd);
-	if (ft_cd(to_pars) == 2 && !to_pars->next)
-		err = found_cd_oldpwd(export, enviroment, old_pwd, home);
+	err = logic_cd(to_pars, export, enviroment, cd);
 	return (err);
 }

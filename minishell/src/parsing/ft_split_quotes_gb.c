@@ -6,30 +6,38 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 17:47:00 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 09:21:45 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/05 22:26:03 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
+// Continua a scorrere fino a trovare uno spazio o una virgoletta
+// Termina il token allo spazio o alla virgoletta
+// Passa oltre lo spazio o la virgoletta
+
 void find_and_terminate_token(char **ptr)
 {
     while (**ptr != ' ' && **ptr != '\0' && **ptr != '"' && **ptr != '\'')
-        (*ptr)++;  // Continua a scorrere fino a trovare uno spazio o una virgoletta
+        (*ptr)++;
     if (**ptr != '\0')
 	{
-        **ptr = '\0';  // Termina il token allo spazio o alla virgoletta
-        (*ptr)++;  // Passa oltre lo spazio o la virgoletta
+        **ptr = '\0';
+        (*ptr)++;
     }
 }
 
+// Continua a scorrere finché non trovi un'altra virgoletta
+// Errore: mancante virgoletta di chiusura
+// La virgoletta di chiusura è stata trovata correttamente
+// Errore: mancante virgoletta di chiusura
 int find_missing_quote(char **ptr, char quote)
 {
     while (**ptr != '\0' && **ptr != quote)
-        (*ptr)++;  // Continua a scorrere finché non trovi un'altra virgoletta
+        (*ptr)++;
     if (**ptr == '\0')
-        return (-1);  // Errore: mancante virgoletta di chiusura
-    return (0);  // La virgoletta di chiusura è stata trovata correttamente
+        return (-1);
+    return (0);  
 }
 
 
@@ -60,7 +68,7 @@ int split_by_quotes_and_spaces(char *str, char *tokens[])
         if (*ptr == '"' || *ptr == '\'')
 		{
 		    if (handle_quotes(&ptr, *ptr, tokens, &i) == -1)
-		        return -1;  // Errore: mancante virgoletta di chiusur
+		        return (-1);  // Errore: mancante virgoletta di chiusur
 		}
 		else
 		{

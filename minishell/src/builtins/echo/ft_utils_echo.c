@@ -6,142 +6,55 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:07 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/02 20:27:39 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/05 21:24:33 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-/* char *get_first_non_n_token(const char *cmd){
-    const char *token = "echo -n";
-    const char *delimiter = " ";
-    
-    // Trova la lunghezza del token "echo -n"
-    size_t token_length = strlen(token);
-    // Trova il punto in cui inizia il comando successivo al token "echo -n"
-    const char *next_command_start = strstr(cmd, token) + token_length;
-    if(!next_command_start)
-        return NULL;
-    // Trova il primo delimitatore dopo il token "echo -n"
-    const char *first_delimiter = strchr(next_command_start, delimiter[0]);
-    // Se non ci sono delimitatori, restituisci NULL
-    if (first_delimiter == NULL)
-        return NULL;
-    // Trova il primo carattere del comando successivo al token "echo -n"
-    const char *next_command = first_delimiter;
-    while (*next_command == ' ')
-        next_command++;
-    // Controlla se il comando successivo inizia con '-'
-    if (*next_command == '-') {
-        // Alloca memoria per il comando successivo
-        char *result = strdup(next_command);
-        return result;
-    }
-    return NULL; // Non trovato alcun comando diverso da "-n"
-} */
 
-/* void addNodeAfterDoubleDash(struct Node** head_ref) {
-    if (*head_ref == NULL || (*head_ref)->next == NULL)
-        return;
 
-    struct Node* current = *head_ref;
-    while (current != NULL) {
-        char* double_dash_pos = strstr(current->data, "--");
-        if (double_dash_pos != NULL && double_dash_pos == current->data) {
-            // Trovato "--" come parte del valore di questo nodo
-            struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
-            strcpy(new_node->data, double_dash_pos + 2); // Copia il resto della stringa dopo "--"
-            new_node->next = current->next; // Collega il nuovo nodo al nodo successivo del nodo corrente
-            current->next = new_node; // Collega il nodo corrente al nuovo nodo
-            return;
-        }
-        current = current->next;
-    }
-} */
-/* char *get_first_non_n_token(const char *cmd)
+char    *funny_commande_echo(const char *next_command)
 {
-    const char *token = "echo -n";
-    const char *delimiter = " ";
-    
-    // Trova la lunghezza del token "echo -n"
-    size_t token_length = strlen(token);
-    // Trova il punto in cui inizia il comando successivo al token "echo -n"
-    const char *next_command_start = strstr(cmd, token);
-    // Se il token non viene trovato, restituisci NULL
-    if (next_command_start == NULL)
-        return NULL;
-    next_command_start += token_length;
-    // Trova il primo delimitatore dopo il token "echo -n"
-    const char *first_delimiter = strchr(next_command_start, delimiter[0]);
-    // Se non ci sono delimitatori, restituisci NULL
-    if (first_delimiter == NULL)
-        return NULL;
-    // Trova il primo carattere del comando successivo al token "echo -n"
-    const char *next_command = first_delimiter;
-    while (*next_command == ' ')
-        next_command++;
-    // Controlla se il comando successivo è diverso da "-n"
-    if (strncmp(next_command, "-n", 2) != 0) {
-        // Trova la lunghezza del comando successivo
-        size_t command_length = strcspn(next_command, delimiter);
-        // Alloca memoria per il comando successivo
-        char *result = malloc(command_length + 1);
-        if (result != NULL) {
-            // Copia il comando successivo nella memoria allocata
-            strncpy(result, next_command, command_length);
-            result[command_length] = '\0'; // Aggiunge il terminatore di stringa
-            return result;
-        }
+    size_t  command_length;
+    char    *result;
+
+    command_length = ft_strlen(next_command);
+    result = malloc(command_length + 1);
+    if (garbagge(ADD, result, PARS))
+        return ((garbagge(FLUSH, NULL, ALL), exit(99)), NULL);
+    if (result != NULL)
+    {
+        ft_strcpy(result, next_command, ft_strlen(next_command));
+        return (result);
     }
-    return NULL; // Non trovato alcun comando diverso da "-n"
-} */
-
-char *get_first_non_n_token(const char *cmd) {
-    const char *token = "echo -n";
-    const char *delimiter = " ";
-
-    // Trova la lunghezza del token "echo -n"
-    size_t token_length = strlen(token);
-    // Trova il punto in cui inizia il comando successivo al token "echo -n"
-    const char *next_command_start = strstr(cmd, token) + token_length;
-    if (next_command_start == NULL)
-        return NULL;
-
-    // Trova il primo delimitatore dopo il token "echo -n"
-    const char *first_delimiter = strchr(next_command_start, delimiter[0]);
-    // Se non ci sono delimitatori, restituisci NULL
-    if (first_delimiter == NULL)
-        return NULL;
-
-    // Trova il primo carattere del comando successivo al token "echo -n"
-    const char *next_command = first_delimiter;
-    while (*next_command == ' ')
-        next_command++;
-
-    // Controlla se il comando successivo è diverso da "-n"
-    if (strncmp(next_command, "-n", 2) != 0) {
-        // Trova la lunghezza del comando successivo
-        size_t command_length = strlen(next_command);
-        // Alloca memoria per il comando successivo
-        char *result = malloc(command_length + 1);
-        if (result != NULL) {
-            // Copia il comando successivo nella memoria allocata
-            strcpy(result, next_command);
-            return result;
-        }
-    }
-    return NULL; // Non trovato alcun comando diverso da "-n"
+    return(NULL);
 }
 
-
-/* int		check_flag_quotes(t_cmd *to_pars)
+char *get_first_non_n_token(const char *cmd)
 {
-	if (ft_strcmp(to_pars->cmd, "echo") == 0)
-		if (to_pars->next != NULL && strcmp(to_pars->next->cmd, "\"-n\"") == 0)
-			return(-1);
-		return (2);
-	return (0);
-} */
+    const char *token;
+    const char *delimiter;
+    const char *next_command;
+    const char *first_delimiter;
+    const char *next_command_start;
+    size_t token_length;
 
+    token = "echo -n";
+    delimiter = " ";
+    token_length = ft_strlen(token);
+    next_command_start = ft_strstr(cmd, token) + token_length;
+    if (next_command_start == NULL)
+        return (NULL);
+   first_delimiter = ft_strchr(next_command_start, delimiter[0]);
+    if (first_delimiter == NULL)
+        return (NULL);
+    next_command = first_delimiter;
+    while (*next_command == ' ')
+        next_command++;
+    if (ft_strncmp(next_command, "-n", 2) != 0)
+        return (funny_commande_echo(next_command));
+    return (NULL);
+}
 
 
 int	found_echo(t_cmd *to_pars)
@@ -162,7 +75,7 @@ int	found_echo(t_cmd *to_pars)
 				return (-1);
 			remove_q(vl);
 			printf("%s ", vl); 
-			garbagge(FREE, to_pars->cmd, PARS);
+			/* garbagge(FREE, to_pars->cmd, PARS); */
 			to_pars->cmd = NULL;
 			to_pars->cmd = ft_strdup("echo");
 			if(!to_pars->cmd || garbagge(ADD, to_pars->cmd, PARS))

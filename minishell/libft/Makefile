@@ -6,7 +6,7 @@
 #    By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 11:11:08 by npaolett          #+#    #+#              #
-#    Updated: 2023/11/23 14:27:04 by npoalett         ###   ########.fr        #
+#    Updated: 2024/03/05 20:59:39 by npoalett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC = 	ft_atoi.c\
 		ft_putstr_fd.c\
 		ft_split.c\
 		ft_strchr.c\
+		ft_strstr.c\
 		ft_strdup.c\
 		ft_strjoin.c\
 		ft_strlcat.c \

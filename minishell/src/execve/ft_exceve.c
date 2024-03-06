@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 18:45:09 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/06 00:55:33 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,26 @@ void	add_command_to_list_token(t_cmd **command_list, t_cmd *command)
 }
 
 
+/* void		logi_parse_add_empty(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list)
+{
+	t_cmd *next_temp = temp->next;
+    if (!prev_temp || (prev_temp && ft_strcmp(temp->cmd, "|") == 0 && ft_strcmp(prev_temp->cmd, "|") == 0))
+    {
+        // Se c'è un comando dopo la pipe, aggiungi la pipe alla lista
+        t_cmd *empty_command = NULL;
+        creation_cmd_empty(&empty_command, NULL);
+        add_command_to_list_token(&command_list, empty_command);
+		current_command = NULL;
+    }
+	if (!next_temp)
+	{
+        t_cmd *empty_command = NULL;
+        creation_cmd_empty(&empty_command, NULL);
+        add_command_to_list_token(&command_list, empty_command);
+		current_command = NULL;
+	}
+
+} */
 
 t_cmd *parse_for_token(t_cmd *to_pars)
 {
@@ -240,13 +260,9 @@ char	*change_in_quotes_star(char *cmd, char replacement)
 	while (cmd[i])
 	{
 		if (cmd[i] == '\"')
-		{
 			inside_quotes = !inside_quotes;
-		}
 		else if (inside_quotes && cmd[i] == ' ')
-		{
 			cmd[i] = replacement;
-		}
 		i++;
 	}
 	return cmd;
@@ -321,12 +337,13 @@ void	print_env_array(char **str_array)
 
 const char *found_in_env_char(char **envi)
 {
-	int	i;
+	int			i;
+	const char *f;
 
 	i = -1;
 	while(envi[++i])
 	{
-		const char *f = ft_strnstr(envi[i], "PWD=", ft_strlen("PWD="));
+		f = ft_strnstr(envi[i], "PWD=", ft_strlen("PWD="));
 		if(f)
 			return(f);
 	}
@@ -344,8 +361,57 @@ void	found_pwd_in_pipe(t_execve *pipex)
 }
 
 
-void	found_exit_in_pipe(void)
+int	if_not_numeric(char *s)
 {
+	int	i;
+	i = 0;
+	if(s[i] == '-')
+		i++;
+	while(s[i])
+	{
+		if(ft_isalpha(s[i]) || s[i] == '-')
+			return(0);
+		i++;
+	}
+	return (i);
+}
+void	print_err_to_not_numb(char *exit_r)
+{
+	ft_putstr_fd("bash: exit :", 2);
+	ft_putstr_fd(exit_r, 2);
+	ft_putstr_fd(" : numeric argument required\n", 2);
+	garbagge(FLUSH, NULL, ALL);
+	exit(2);
+}
+
+
+
+
+void	found_exit_in_pipe(t_cmd *ntp)
+{
+	char	**exit_n;
+	int		n;
+
+	n = 0;
+	exit_n = ft_split_garbage(ntp->cmd, ' ');
+	if(!exit_n)
+		exit(99);
+	if(exit_n[1])
+	{
+		if(exit_n[2])
+		{
+			ft_putstr_fd("bash: exit: too many arguments\n", 2);
+			garbagge(FLUSH, NULL, ALL);
+			exit(2);
+		}
+		if (check_for_max_int(exit_n[1]))
+			print_err_to_not_numb(exit_n[1]);
+		if(!if_not_numeric(exit_n[1]))
+			print_err_to_not_numb(exit_n[1]);
+		n = ft_atoi(exit_n[1]);
+		garbagge(FLUSH, NULL, ALL);
+		exit((256 + n) % 256);
+	}
 	garbagge(FLUSH, NULL, ALL);
 	exit(1);
 }
@@ -388,7 +454,7 @@ void	found_env_in_pipe(char *cmd, t_execve *pipe)
 	exit(1);
 }
 
-void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int i, int j, t_envp *enviroment)
+void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex, int i)
 {
 	if(new_to_pars && new_to_pars->cmd  && ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))
 		&& ft_strncmp(new_to_pars->cmd, "\'export\' ", ft_strlen("\'export\'")) 
@@ -402,7 +468,6 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int i, int j, t_
 			i = ft_error_commande_not_to_pars(new_to_pars, pipex);
 			if(i)
 			{
-				printf("arrivato\n");
 				close(pipex->fd[0]);
 				close(pipex->fd[1]);
 				close(pipex->tmp_fd[pipex->current_pipe][0]);
@@ -411,6 +476,11 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int i, int j, t_
 			}
 		}
 	}
+}
+
+void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int i, int j, t_envp *enviroment)
+{
+	child_check_path_ifnt_error(new_to_pars, enviroment, pipex, i);
 	if (pipex->n_pipe - 1 > 0)
 		close_if_plus_zero(pipex);
 	if (new_to_pars && new_to_pars->cmd && (ft_strncmp(new_to_pars->cmd, "echo ", ft_strlen("echo ")) == 0))
@@ -422,7 +492,7 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int i, int j, t_
 	if(new_to_pars && new_to_pars->cmd && (!ft_strncmp(new_to_pars->cmd, "exit", ft_strlen("exit"))
 		||!ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd"))
 		||!ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset"))))
-		found_exit_in_pipe();
+		found_exit_in_pipe(new_to_pars);
 	if (new_to_pars && new_to_pars->cmd && (ft_strncmp(new_to_pars->cmd, "pwd", ft_strlen("pwd")) == 0))
 		found_pwd_in_pipe(pipex);
 	else if (!new_to_pars  || !new_to_pars->cmd)
@@ -696,7 +766,7 @@ int	add_file_node(t_file **fileList, t_cmd *to_pars, char *here_doc,
 	return (0);
 }
 
-t_file	*init_new_node_redir_special(t_file *new_node, t_cmd *to_pars, char *here_dod)
+/* t_file	*init_new_node_redir_special(t_file *new_node, t_cmd *to_pars, char *here_dod)
 {
 	new_node = (t_file *)malloc(sizeof(t_file));
 	if (!new_node || garbagge(ADD, new_node, EX))
@@ -755,9 +825,9 @@ t_file	*init_new_node_redir_special(t_file *new_node, t_cmd *to_pars, char *here
 	}
 	new_node->next = NULL;
 	return (new_node);
-}
+} */
 
-int	add_file_node_special(t_file **fileList, t_cmd *to_pars, char *here_doc,
+/* int	add_file_node_special(t_file **fileList, t_cmd *to_pars, char *here_doc,
 		t_envp *enviroment)
 {
 	t_file	*new_node;
@@ -785,7 +855,7 @@ int	add_file_node_special(t_file **fileList, t_cmd *to_pars, char *here_doc,
 	if (fileList)
 		add_node_logic(fileList, temp, new_node);
 	return (0);
-}
+} */
 /* 	// else if (ft_strncmp(to_pars->cmd, "<<", 2) == 0 && !to_pars->next)
 	// {
 	// 	char *here_dod = ft_substr(to_pars->cmd, 2, ft_strlen(to_pars->cmd));
@@ -988,22 +1058,6 @@ int	execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 	int		i = 0;
 
 	temp = NULL;
-	// if(new_to_pars  && ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))
-	// 	&& ft_strncmp(new_to_pars->cmd, "\'export\' ", ft_strlen("\'export\'")) 
-	// 	&& ft_strncmp(new_to_pars->cmd, "exit ", ft_strlen("exit"))
-	// 	&& ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd"))
-	// 	&& ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset")))
-	// {
-	// 	pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
-	// 	if (!pipex->get_g_path /* && pipex->pid[pipex->current_pipe] */)
-	// 	{
-	// 		i = ft_error_commande_not_to_pars(new_to_pars, pipex);
-	// 		if(i)
-	// 			return (i);
-	// 	}
-	// }
-	printf("=======EXECUTE=======\n");
-	print_list(new_to_pars);
 	if (pipex->n_pipe - 1 > 0)
 	{
 		if ((pipe(pipex->fd) == -1
@@ -1154,7 +1208,7 @@ char *check_redir_for_split(char *cmd)
         }
         i++; // Passa al prossimo carattere
     }
-    return result;
+	return (result);
 }
 
 void add_ep_redirection_and_pipes(t_cmd *head)
@@ -1176,27 +1230,26 @@ void add_ep_redirection_and_pipes(t_cmd *head)
             if (*token == '<' || *token == '>' || *token == '|')
 			{
                 // Aggiungi uno spazio solo se il carattere precedente non è uno spazio
-                if (last_char != ' ') {
+                if (last_char != ' ')
                     *new_token++ = ' ';
-                }
                 *new_token++ = *token;
                 // Aggiungi uno spazio solo se il carattere successivo non è uno spazio o il terminatore di stringa
-                if (*(token + 1) != ' ' && *(token + 1) != '\0') {
+                if (*(token + 1) != ' ' && *(token + 1) != '\0')
                     *new_token++ = ' ';
-                }
-            } else {
+            } 
+			else
                 *new_token++ = *token;
-            }
             last_char = *token; // Aggiorna l'ultimo carattere aggiunto
             token++;
         }
         *new_token = '\0';
         garbagge(FREE, current->cmd, PARS);
-		remove_q(new_com);
         current->cmd = check_redir_for_split(new_com);
         current = current->next;
     }
 }
+
+
 
 t_cmd *add_cmd_for_redir(t_cmd *list)
 {
@@ -1206,25 +1259,19 @@ t_cmd *add_cmd_for_redir(t_cmd *list)
     {
         int i = -1;
         char **commande_split;
-
         if (!list->cmd)
             return NULL;
-
         commande_split = ft_split_garbage(list->cmd, ' ');
         if (!commande_split)
             return NULL;
-
         while (commande_split[++i])
         {
             t_cmd *cmd = add_new_cmd(commande_split, i);
             if (!cmd)
                 return NULL;
-
             // Aggiungi il nuovo comando alla nuova lista
             if (new_list == NULL)
-            {
                 new_list = cmd; // Se la nuova lista è vuota, il nuovo comando diventa la testa
-            }
             else
             {
                 t_cmd *tail = new_list;
@@ -1235,8 +1282,7 @@ t_cmd *add_cmd_for_redir(t_cmd *list)
         }
         list = list->next; // Passa al prossimo nodo nella lista originale
     }
-
-    return new_list; // Ritorna la nuova lista creata
+    return (new_list); // Ritorna la nuova lista creata
 }
 
 

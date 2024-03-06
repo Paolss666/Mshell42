@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirection_in_out.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:19:32 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 18:02:21 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 21:42:35 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i)
 	perror(" ");
 	(void)i;
 	(void)pipex;
-	// pipex->error = 1;
-	// printf("errrrrrror direct %d\n", pipex->error);
 	garbagge(FLUSH, NULL, EX);
 	garbagge(FLUSH, NULL, PARS);
 	garbagge(FLUSH, NULL, ENV);

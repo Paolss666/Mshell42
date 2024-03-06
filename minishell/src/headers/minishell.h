@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 18:16:12 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 23:05:09 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,12 +112,13 @@ typedef struct s_expand
 }					t_expand;
 
 
-typedef struct s_cd
+typedef struct s_l_cd
 {
-	char			*path;
-	int				index;
-	struct s_cd		*next;
-}					t_cd;
+	char			*home;
+	char			*old_pwd;
+	char			*pwd;
+}				t_l_cd;
+
 
 typedef struct 	s_envp
 {
@@ -176,14 +177,16 @@ int					kill_useless_quote(char *str);
 int					kill_double_quote(char *str, int i, int j, int flag);
 // int					remove_double_quotes(char *str);
 int 				check_if_only_space(char *s);
-// ----------- E	RRORI --------------- //
+
+// ----------- ERRORI EXEC --------------- //
 void				freeList(t_cmd *head);
 void 				free_list_to_pars(t_cmd **to_pars);
+int					is_directory(char *s);
 int					ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex);
 void 				ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i);
 void				ft_error_redir_file(int fd, t_execve *pipex, int i, t_cmd *to_pars);
-// void			ft_error_pipe2(int *fd, int i, t_cmd *to_pars);
-
+void				free_cmd_list(t_cmd *head);
+t_cmd				*free_cmds_list(t_cmd *head);
 // ----------- PARS --------------//
 void				ft_issatty(t_brain *brain);
 int					non_interactive_mode(t_brain *brain);
@@ -234,9 +237,10 @@ int 				split_by_quotes_and_spaces(char *str, char *tokens[]);
 int					handle_quotes(char **ptr, char quote, char *tokens[], int *i);
 int					find_missing_quote(char **ptr, char quote);
 void				find_and_terminate_token(char **ptr);
+// ------------ cd ----------- // 
 int					ft_pwd(t_cmd *to_pars);
 int					ft_cd(t_cmd *to_pars);
-int				ft_home_not_found(char *home);
+int					ft_home_not_found(char *home);
 char				*home_found(char *home);
 char				*old_pwd_not_found(char *pwd, t_envp *enviroment, t_exp *export);
 void				found_pwd_in_env_modif(t_envp *enviroment, char *new_pwd);
@@ -248,6 +252,12 @@ void				found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd);
 t_exp 				*old_exp_add_back(char *old_modif);
 t_envp 				*old_nev_add_back(char *old_pwd, char *name_variable);
 char				*ft_strnjoin(const char *s1, const char *s2, size_t n);
+// ------------ BUILDING ----------- // 
+// ------------ BUILDING ----------- // 
+
+// ------------ BUILDING ----------- // 
+
+// ------------ BUILDING ----------- // 
 int     			found_export(t_cmd *to_pars);
 int					found_unset(t_cmd *to_pars);
 int					found_exit(t_cmd *to_pars);

@@ -6,7 +6,7 @@
 #    By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/03 10:51:02 by npoalett         ###   ########.fr        #
+#    Updated: 2024/03/05 23:03:45 by npoalett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,10 +43,12 @@ SRC =	src/builtins/ft_pwd.c\
 		src/execve/ft_logic_exceve.c	 \
 		src/execve/ft_utils_exceve.c	 \
 		src/execve/ft_redirection_in_out.c \
+		src/execve/ft_error_print.c \
 		src/parsing/ft_non_inter.c \
 		src/parsing/parsing_commandes.c \
 		src/parsing/garbage_logic.c \
 		src/parsing/garbage.c \
+		src/parsing/ft_free_all_list.c \
 		src/parsing/split_garbage.c \
 		src/parsing/ft_split_quotes_gb.c \
 		src/signal/set_signal_action.c\

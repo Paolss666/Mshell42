@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 08:36:48 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/03 08:39:19 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/05 21:31:55 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	logic_shlvl_exit_exp(t_exp *export)
 	if (!temp1 || garbagge(ADD, temp1, ENV))
 		return (garbagge(FREE, export->name, ENV), (void)0);
 	n = ft_atoi(temp1);
-	if(n > 0)
-		n = -1;
 	temp = ft_itoa(n);
 	if (!temp || garbagge(ADD, temp, ENV))
 		return (garbagge(FREE, temp1, ENV),
@@ -53,8 +51,6 @@ void	logic_shlvl_exit_env(t_envp *enviroment)
 		if (ft_strcmp(enviroment->name, "SHLVL") == 0)
 		{
 			n = ft_atoi(enviroment->value);
-			if(n > 0)
-				n = n -1;
 			enviroment->value = ft_itoa(n);
 			if (!enviroment->value || garbagge(ADD, enviroment->value, ENV))
 				return ((void)0);

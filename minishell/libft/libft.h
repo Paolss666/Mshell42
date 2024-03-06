@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:40:46 by npaolett          #+#    #+#             */
-/*   Updated: 2023/11/23 14:28:16 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/05 20:59:00 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int					ft_print_int(int n);
 int					ft_print_hex(unsigned int n, const char *base);
 int					ft_print_char(char c);
 int					ft_eval_format(va_list args, const char format);
-
+char				*ft_strstr(const char *haystack, const char *needle);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strdup(const char *s);

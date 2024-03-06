@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 12:28:46 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 17:25:42 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/05 23:59:54 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ void	exit_process(t_cmd *to_pars)
 		to_pars->next->cmd = ft_clean_exit(to_pars->next->cmd);
 		if (atoi(to_pars->next->cmd) < 0)
 		{
-			return_value = atoi(to_pars->next->cmd);
+			return_value = ft_atoi(to_pars->next->cmd);
 			garbagge(FLUSH, NULL, ALL);
 			exit((256 + return_value) % 256);
 		}
-		return_value = atoi(to_pars->next->cmd);
+		return_value = ft_atoi(to_pars->next->cmd);
 		garbagge(FLUSH, NULL, ALL);
 		exit((return_value % 256));
 	}

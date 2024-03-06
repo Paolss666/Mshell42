@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_cd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:55:59 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 18:12:38 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/05 20:25:13 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,22 @@
 void	found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd)
 {
 	char	*name_variable;
-	t_envp	*tmp;
 
 	if(!old_pwd)
 		return ;
-	tmp = enviroment;
 	name_variable = ft_strjoin("=", old_pwd);
 	if (!name_variable || garbagge(ADD, name_variable, ENV))
 		return ((void)0);
-	while (tmp != NULL)
+	while (enviroment != NULL)
 	{
-		if (ft_strcmp(tmp->name, "OLDPWD") == 0)
+		if (ft_strcmp(enviroment->name, "OLDPWD") == 0)
 			break ;
-		if (!tmp->next)
+		if (!enviroment->next)
 		{
-			tmp->next = old_nev_add_back(old_pwd, name_variable);
+			enviroment->next = old_nev_add_back(old_pwd, name_variable);
 			return ;
 		}
-		tmp = tmp->next;
+		enviroment = enviroment->next;
 	}
 	enviroment->value = ft_strdup(old_pwd);
 	if (!enviroment->value || garbagge(ADD, enviroment->value, ENV))
@@ -48,25 +46,23 @@ void	found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd)
 void	found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd)
 {
 	char	*old_modif;
-	t_exp	*tmp;
 
-	tmp = export;
 	if(!old_pwd)
 		return ;
 	old_modif = ft_strjoin(old_pwd, "\"");
 	if (!old_modif || garbagge(ADD, old_modif, ENV))
 		return ((void)0);
-	while (tmp != NULL)
+	while (export != NULL)
 	{
-		if (ft_strncmp(tmp->path, "export OLDPWD",
+		if (ft_strncmp(export->path, "export OLDPWD",
 				ft_strlen("export OLDPWD")) == 0)
 			break ;
-		if (!tmp->next)
+		if (!export->next)
 		{
-			tmp->next = old_exp_add_back(old_modif);
+			export->next = old_exp_add_back(old_modif);
 			return ;
 		}
-		tmp = tmp->next;
+		export = export->next;
 	}
 	export->value = ft_strjoin("=\"", old_modif);
 	if (!export->value || garbagge(ADD, export->value, ENV))
