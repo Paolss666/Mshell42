@@ -6,7 +6,7 @@
 /*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 15:10:10 by armeyer           #+#    #+#             */
-/*   Updated: 2024/02/26 15:06:08 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/06 13:32:46 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,11 +122,13 @@ int	ft_error_pipe(char *str)
 	if (count == 0)
 		return (0);
 	i = 0;
-	if (ft_error_pipe_no_word(str, i, count))
-		return (2);
 	if (ft_error_pipe_syntax(str, i, j))
 		return (2);
 	if (ft_error_pipe_in_pipe(str))
+		return (2);
+	if (ft_redir_before_pipe(str))
+		return (2);
+	if (ft_error_pipe_no_word(str, i, count))
 		return (2);
 	return (0);
 }

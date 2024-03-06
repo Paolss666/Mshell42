@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 17:24:17 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 21:48:51 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 16:08:03 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)())
 	t_list	*cur;
 	t_list	*prev;
 
-	if (begin_list == NULL || *begin_list == NULL)
-		return ;
 	cur = *begin_list;
 	prev = NULL;
 	while (cur != NULL)
@@ -88,29 +86,3 @@ int	logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb)
 		ft_lstadd_back(c, node);
 	return (0);
 }
-
-
-	// if (rule == ADD)
-	// {
-	// 	node = ft_lstnew(p);
-	// 	if (!node)
-	// 		return (free(p), 1);
-	// 	if (list == PARS)
-	// 		ft_lstadd_back(&a, node);
-	// 	else if (list == EX)
-	// 		ft_lstadd_back(&b, node);
-	// 	else if (list == ENV)
-	// 		ft_lstadd_back(&c, node);
-	// }
-	// else if (rule == FLUSH)
-	// 	logic_garbage_clear(list, a, b, c);
-	// else if (rule == FREE)
-	// {
-	// 	if (list == PARS)
-	// 		ft_list_remove_if(&a, p, cmp);
-	// 	else if (list == EX)
-	// 		ft_list_remove_if(&b, p, cmp);
-	// 	else if (list == ENV)
-	// 		ft_list_remove_if(&c, p, cmp);
-	// }
-	// return (0);

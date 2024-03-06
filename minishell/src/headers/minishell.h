@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 23:05:09 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 15:22:11 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,13 @@ typedef struct s_v
 	char	*modif_variable;
 } 			t_v;
 
+typedef struct s_cmd
+{
+	char			*cmd;
+	int				count;
+	struct s_cmd	*next;
+}					t_cmd;
+
 typedef struct s_execve
 {
 	pid_t		pid[1024];
@@ -90,6 +97,7 @@ typedef struct s_execve
 	int			current_pipe;
 	int			token;
 	int			error;
+	t_cmd		*cmd_err;
 	char		*get_g_path;
 	char		**good_cmd;
 }				t_execve;
@@ -97,12 +105,6 @@ typedef struct s_execve
 
 // ------ commande -- //
 
-typedef struct s_cmd
-{
-	char			*cmd;
-	int				count;
-	struct s_cmd	*next;
-}					t_cmd;
 
 typedef struct s_expand
 {
@@ -127,6 +129,15 @@ typedef struct 	s_envp
 	char			*value;
 	struct s_envp 	*next;
 }					t_envp;
+
+
+typedef	struct s_for_re
+{
+	int		spaces_before;
+    int		spaces_after;
+    int		j_after_count;
+	int		len;
+}				t_for_re;
 
 
 typedef struct 	s_exp
@@ -210,7 +221,11 @@ int					logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
 // ----------- PIPE // REDIRECTION --------------//
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int error_status);
 void				parent(int *fd, int i, t_execve *pipex);
-void				child(t_cmd *new_to_pars, int i, t_execve *pipex, int j, t_envp *enviroment);
+// void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex,  int j, t_envp *enviroment);
+void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex);
+// void				child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex);
+// void	child(t_cmd *new_to_pars, int i, t_execve *pipex, int j, t_envp *enviroment, t_cmd *cmd_err);
+// void				child(t_cmd *new_to_pars, int i, t_execve *pipex, int j, t_envp *enviroment);
 /* void				child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j); */
 // int	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, t_envp *eniviroment);
 int					read_here_doc(int fd, t_file *file, t_envp *enviroment);
@@ -225,8 +240,7 @@ int     			ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 char 				**envp_list_to_new_env(t_envp *enviroment);
 int					len_liste_exp(t_exp *enviromet);
 char				*ft_good_path_access(t_cmd	*to_pars, t_envp *enviroment, t_execve *pipex);
-int					execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
-						t_envp *enviroment);
+int					execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars, t_envp *enviroment);
 
 // ----------- REDIRECTION ------- //
 int					found_infile_or_endfile(t_cmd *to_pars);
@@ -326,16 +340,26 @@ int					found_dollar_alone(char *s);
 int    				check_forb_logic(int i, char c, char *str);
 int					check_alone(char *s);
 int					ft_only_pipe(char *str);
+int					special_redir_case(char *str);
 int					ft_error_pipe_in_pipe(char *str);
 int					ft_error_pipe_no_word(char *str, int i, int count);
 void				ft_exit(t_cmd   *to_pars, t_envp *env, t_exp *exp);
+void				purify(char *str);
 int					error_manager(char *str);
 int					ft_error_case_1(char c);
 int					ft_error_blank(char *str);
 int					ft_error_shift_operator(char *str);
-int					ft_error_directoryE(char *str);
+// int					ft_error_directoryE(char *str);
+int					count_redir(char *str, char c);
+int					ft_redir_before_pipe(char *str);
+int					contradicting_redir(char *str);
+int					ft_check_multiple_operator(char *str);
+int					ft_error_bracket(char *str);
+int					too_many_redirection(char *str);
+int					check_multipless_left(char *str);
 int					ft_error_pipe(char *str);
 int					ft_error_operand(char *str, char *error_message);
+int					check_multiple_right(char *str);
 // char				*epur_str(char *to_epur);
 void				ft_handle_quote(char *str);
 int					ft_count_sign(char *str, char c);

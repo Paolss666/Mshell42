@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error_print.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 22:54:39 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/05 23:33:36 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 15:55:35 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,12 @@ int	logic_split_for_commande(char *cmd, t_execve *pipex)
 {
 	if (ft_strchr(cmd, '/'))
 	{
-		if(is_directory(cmd))
+		if (is_directory(cmd))
 		{
 			ft_putstr_fd("bash : ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": Is a directory\n", 2);
-	/* 		pipex->error = 126; */
-			return(126);
+			return (126);
 		}
 		else
 		{
@@ -131,7 +130,7 @@ int	check_for_logic_err(t_execve *pipex, t_cmd *to_pars, char **cmd)
 	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\"'))
 	{
 		ft_error_quotes(pipex, cmd[0]);
-		return(pipex->error) ;
+		return (pipex->error) ;
 	}
 	else if (to_pars->cmd && ft_strchr(to_pars->cmd, '\''))
 	{
@@ -139,23 +138,28 @@ int	check_for_logic_err(t_execve *pipex, t_cmd *to_pars, char **cmd)
 		return (pipex->error);
 	}
 	pipex->error = logic_split_for_commande(cmd[0], pipex);
-	return(pipex->error);
+	return (pipex->error);
 }
 
 int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 {
-	char **cmd;
+	char	**cmd;
+	char	*err;
 
 	pipex->error = 127;
-	cmd = ft_split_garbage(to_pars->cmd, ' ');
-	if(!cmd)
+	if (pipex->token)
+		err = to_pars->cmd;
+	else
+		err = pipex->cmd_err->cmd;
+	cmd = ft_split_garbage(err, ' ');
+	if (!cmd)
 		return (garbagge(FLUSH, NULL, ALL), exit (10), 0);
-	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
-		split_by_quotes_and_spaces(to_pars->cmd, cmd);
-	if (ft_strcmp(to_pars->cmd, " ") == 0)
+	if (ft_strchr(err, '\'') || ft_strchr(err, '\"'))
+		split_by_quotes_and_spaces(err, cmd);
+	if (ft_strcmp(err, " ") == 0)
 	{
 		ft_putstr_fd("bash : ", 2);
-		ft_putstr_fd(to_pars->cmd, 2);
+		ft_putstr_fd(err, 2);
 		ft_putstr_fd(": command not found\n", 2);	
 		pipex->error = 127;
 		return (pipex->error);

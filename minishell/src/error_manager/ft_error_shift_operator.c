@@ -6,7 +6,7 @@
 /*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:03:04 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/05 12:18:51 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/06 14:16:57 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	unexpected_pipe(char *str)
 				if (no_word(str, i))
 					return (1);
 			}
+			if (str[i + 1] && str[i + 1] == '|' && str[i + 2] && str[i + 2] == '<')
+				return (2);
 		}
 		if (c == '*' && (str[i] == '\'' || str[i] == '\"'))
 		{
@@ -94,6 +96,10 @@ int	ft_error_shift_operator_2(char *str)
 	int	i;
 
 	i = 0;
+	if (too_many_redirection(str))
+		return (1);
+	if (contradicting_redir(str))
+		return (1);
 	while (str[i])
 	{
 		if (str[i] == '>' || str[i] == '<')
@@ -106,6 +112,8 @@ int	ft_error_shift_operator_2(char *str)
 		}
 		i++;
 	}
+	if (ft_check_multiple_operator(str))
+		return (1);
 	return (0);
 }
 
@@ -124,9 +132,14 @@ int	ft_error_shift_operator(char *str)
 	}
 	if (!count)
 		return (0);
-	if (unexpected_pipe(str))
+	if (unexpected_pipe(str) == 1)
 	{
 		ft_printf("bash: syntax error near unexpected token 'newline'\n");
+		return (2);
+	}
+	if (unexpected_pipe(str) == 2)
+	{
+		ft_printf("bash: syntax error near unexpected token '|'\n");
 		return (2);
 	}
 	if (ft_error_shift_operator_2(str))

@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_logic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:47:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 11:04:42 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 16:05:48 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-t_gb	*init_gb(void)
+t_gb	*init_gb(int list, void *p)
 {
-	t_gb *gb;
+	t_gb	*gb;
 
 	gb = (t_gb *)malloc(sizeof(t_gb));
 	if (gb)
 	{
-		gb->list = 0;
-		gb->p = 0;
+		gb->list = list;
+		gb->p = p;
 	}
 	return (gb);
 }
@@ -32,10 +32,9 @@ int	garbagge(int rule, void *p, int list)
 	static t_list	*c = NULL;
 	t_gb			*gb;
 
-	gb = init_gb();
+	gb = init_gb(list, p);
 	if (!gb)
 		return (1);
-	(gb->list = list, gb->p = p);
 	if (rule == ADD)
 	{
 		if (logic_add_back(&a, &b, &c, gb))
@@ -52,6 +51,5 @@ int	garbagge(int rule, void *p, int list)
 		else if (list == ENV)
 			ft_list_remove_if(&c, p, cmp);
 	}
-	free(gb);
-	return (0);
+	return (free(gb), 0);
 }

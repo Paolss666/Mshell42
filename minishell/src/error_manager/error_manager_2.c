@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 14:23:17 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/05 12:29:43 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/06 15:42:39 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ int    check_forb_logic(int i, char c, char *str)
             if (str[i] == '"' && c == '\v')
                 c = '"';
         }
-        if (c != '\v' && str[i + 1])
+        if(str[i] && str[i + 1] && c != '\v')
         {
             i++;
-            while (str[i] != '\0' && str[i] != c)
+            while (str[i] != '\0' && str[i + 1] && str[i] != c)
                 i++;
             if (str[i] == c)
                 c = '\v';

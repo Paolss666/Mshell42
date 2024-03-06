@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_quotes_gb.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 17:47:00 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 22:26:03 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 10:41:56 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void find_and_terminate_token(char **ptr)
 // Errore: mancante virgoletta di chiusura
 // La virgoletta di chiusura è stata trovata correttamente
 // Errore: mancante virgoletta di chiusura
+
 int find_missing_quote(char **ptr, char quote)
 {
     while (**ptr != '\0' && **ptr != quote)
@@ -43,12 +44,16 @@ int find_missing_quote(char **ptr, char quote)
 
 int handle_quotes(char **ptr, char quote, char *tokens[], int *i)
 {
-    (*ptr)++;  // Passa oltre la virgoletta
-    tokens[(*i)++] = *ptr;  // Aggiunge il punto di inizio del token
-    if (find_missing_quote(ptr, quote) == -1)
-        return (-1);  // Errore: mancante virgoletta di chiusura
+    if(*ptr && tokens[(*i)])
+    {
+        (*ptr)++;  // Passa oltre la virgoletta
+        tokens[(*i)++] = *ptr;  // Aggiunge il punto di inizio del token
+        if (find_missing_quote(ptr, quote) == -1)
+            return (-1);  // Errore: mancante virgoletta di chiusura
+    }
     **ptr = '\0';  // Termina il token alla virgoletta di chiusura
-    (*ptr)++;  // Passa oltre la virgoletta di chiusura
+    if(*ptr)
+        (*ptr)++;  // Passa oltre la virgoletta di chiusura
     return (0);  // Operazione completata con successo
 }
 
@@ -76,6 +81,6 @@ int split_by_quotes_and_spaces(char *str, char *tokens[])
 			find_and_terminate_token(&ptr);
         }
     }
-    tokens[i] = NULL;  // Termina l'array con un puntatore NULL
+    // tokens[i] = NULL;  // Termina l'array con un puntatore NULL
     return (i);  // Restituisce il numero di token trovati
 }

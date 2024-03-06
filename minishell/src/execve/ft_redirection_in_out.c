@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirection_in_out.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:19:32 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 21:42:35 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 15:54:54 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@ void ft_error_not_found_directory(t_file *file_list, t_execve *pipex, int i)
 	ft_putstr_fd("bash : ", 2),
 	ft_putstr_fd(file_list->nome_file, 2);
 	perror(" ");
-	(void)i;
-	(void)pipex;
+	close(pipex->fd[0]);
+	close(pipex->fd[1]);
+	close(pipex->tmp_fd[i][0]);
+	close(pipex->tmp_fd[i][1]);
 	garbagge(FLUSH, NULL, EX);
 	garbagge(FLUSH, NULL, PARS);
 	garbagge(FLUSH, NULL, ENV);
@@ -46,7 +48,7 @@ void	ft_error_redir_file(int fd, t_execve *pipex, int i, t_cmd *to_pars)
 
 void	ft_open_redir_in(t_file *file_list, t_execve *pipex, int i)
 {
-	int fd_1;
+	int	fd_1;
 
 	fd_1 = open(file_list->nome_file, O_WRONLY | O_CREAT | O_TRUNC,
 			0666);

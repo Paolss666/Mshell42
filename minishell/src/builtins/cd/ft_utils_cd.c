@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_cd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:55:59 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 20:25:13 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 16:12:43 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd)
 {
 	char	*old_modif;
 
-	if(!old_pwd)
+	if (!old_pwd)
 		return ;
 	old_modif = ft_strjoin(old_pwd, "\"");
 	if (!old_modif || garbagge(ADD, old_modif, ENV))

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+         #
+#    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/05 23:03:45 by npoalett         ###   ########.fr        #
+#    Updated: 2024/03/06 15:22:39 by npaolett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,12 +61,17 @@ SRC =	src/builtins/ft_pwd.c\
 		src/error_manager/ft_error_case_1.c \
 		src/error_manager/ft_error_blank.c    \
 		src/error_manager/ft_error_shift_operator.c\
+		src/error_manager/ft_error_shift_operator2.c\
+		src/error_manager/ft_error_shift_operator3.c\
+		src/error_manager/ft_error_shift_operator4.c\
 		src/error_manager/ft_error_pipe.c		\
 		src/error_manager/ft_error_operand.c	\
 		src/error_manager/ft_count_sign.c		\
 		src/error_manager/ft_error_parenthesis.c\
 		src/error_manager/ft_error_semicol.c \
 		src/error_manager/ft_error_stx.c   \
+		src/error_manager/ft_error_bracket.c\
+		src/error_manager/purify.c\
 
 OBJ = $(SRC:.c=.o)
 # OBJ_BONUS = $(SRC_BONUS:.c=.o)

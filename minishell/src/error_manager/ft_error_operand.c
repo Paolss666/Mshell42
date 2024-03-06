@@ -6,7 +6,7 @@
 /*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 14:53:13 by armeyer           #+#    #+#             */
-/*   Updated: 2024/02/26 14:55:01 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/06 14:05:25 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	ft_error_operand(char *str, char *error_message)
 	int		index;
 
 	index = 0;
-	if (ft_count_sign(str, '&') % 2 == 1)
+	if (count_redir(str, '&') % 2 == 1)
 	{
 		ft_printf("bash syntax error near unexpected token '&'\n");
 		return (2);
