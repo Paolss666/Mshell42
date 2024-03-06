@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 16:12:31 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/06 16:26:20 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -498,7 +498,6 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *e
 		found_export_in_pipe(new_to_pars->cmd, pipex);
 	if (new_to_pars && new_to_pars->cmd
 		&& (!ft_strncmp(new_to_pars->cmd, "exit", ft_strlen("exit"))
-			|| !ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd"))
 			|| !ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset"))))
 		found_exit_in_pipe(new_to_pars);
 	if (new_to_pars && new_to_pars->cmd
@@ -1352,8 +1351,8 @@ int	found_infile_or_endfile(t_cmd *to_pars)
 			return (3);
 		if (ft_strncmp(to_pars->cmd, "<<",ft_strlen("<<")) == 0)
 			return (4);
-		if (ft_strncmp(to_pars->cmd, "|", ft_strlen("|")) == 0)
-			return (5);
+		// if (ft_strncmp(to_pars->cmd, "|", ft_strlen("|")) == 0)
+		// 	return (5);
 		to_pars = to_pars->next;
 	}
 	return (0);

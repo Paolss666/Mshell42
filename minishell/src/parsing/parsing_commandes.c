@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 14:13:53 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/06 16:57:14 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -384,8 +384,10 @@ void	found_shlv(t_envp *enviroment, t_exp *export)
 void replace_quotes(char *str) {
     int i = 0;
 
-    while (str[i]) {
-        if (str[i] == '\'' || str[i] == '"') {
+    while (str[i])
+	{
+        if (str[i] == '\'' || str[i] == '"')
+		{
             str[i] = '\v';
         }
         i++;
@@ -576,8 +578,8 @@ int	logic_check_type_quotes(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' && (str[i + 1] == '\v'
-			|| str[i + 1] == '\0' || is_valid_variable_char(str[i + 1]))))
+		if ((str[i] == '\'' && (str[i + 1] == '\v' || str[i + 1] == '\0'
+				|| is_valid_variable_char(str[i + 1]))))
 			return (2);
 		if (str[i] == '\"' && (str[i + 1] == '\v' || str[i + 1] == '\0'))
 			return (3);
@@ -649,15 +651,15 @@ int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int er
 {
 	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
 		error_status = found_dollar_print_variable(to_pars, error_status);
-	else if (found_echo(to_pars) && found_count_pipe(to_pars))
-			error_status = ft_execve(to_pars, enviroment, export, error_status);
-	else if (found_echo(to_pars) && !found_count_pipe(to_pars)
-			&& found_infile_or_endfile(to_pars))
-		error_status = ft_execve(to_pars, enviroment, export, error_status);
-	else if (found_echo(to_pars) && found_count_pipe(to_pars)
-			&& found_infile_or_endfile(to_pars))
-		error_status = ft_execve(to_pars, enviroment, export, error_status);
-	else if (!found_token(to_pars) && !found_infile_or_endfile(to_pars))
+	// else if (found_echo(to_pars) && found_count_pipe(to_pars))
+	// 		error_status = ft_execve(to_pars, enviroment, export, error_status);
+	// else if (found_echo(to_pars) && !found_count_pipe(to_pars)
+	// 		&& found_infile_or_endfile(to_pars))
+	// 	error_status = ft_execve(to_pars, enviroment, export, error_status);
+	// else if (found_echo(to_pars) && found_count_pipe(to_pars)
+	// 		&& found_infile_or_endfile(to_pars))
+	// 	error_status = ft_execve(to_pars, enviroment, export, error_status);
+	else if (!found_token(to_pars) /* && !found_infile_or_endfile(to_pars) */)
 		error_status = ft_execve(to_pars, enviroment, export, error_status);
 	else
 		error_status  = ft_execve(to_pars, enviroment, export, error_status);
@@ -679,22 +681,62 @@ int	ft_found_pwd(t_cmd *to_pars)
 int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
+	print_list(to_pars);
 	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
+	{
 		ft_pwd(to_pars);
+		return (0);
+	}
 	else if (!found_count_pipe(to_pars) && found_unset(to_pars))
+	{
 		unset_delete_variable(to_pars, &enviroment, &export);
+		return (0);
+	}
 	else if (!found_count_pipe(to_pars) && to_pars && !to_pars->next && found_export(to_pars))
+	{
 		print_export_list(export);
+		return (0);
+	}
 	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
+	{
 		print_list_envp(enviroment);
+		return (0);
+	}
 	else if (found_export(to_pars) && to_pars->next && !found_count_pipe(to_pars))
+	{
 		error_status = add_export_env(to_pars, &enviroment, &export);
-	else if (found_exit(to_pars) && !found_count_pipe(to_pars))
+		return (error_status);
+	}
+	else if (!found_count_pipe(to_pars) && found_exit(to_pars))
+	{
 		ft_exit(to_pars, enviroment, export);
-	else if (ft_cd(to_pars) && !found_count_pipe(to_pars))
+		return (error_status);
+	}
+	else if (!found_count_pipe(to_pars) && ft_cd(to_pars))
+	{
 		error_status = found_cd_pwd_update(to_pars, enviroment, export);
+		return (error_status);
+	}
+	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
+	{
+		error_status = found_dollar_print_variable(to_pars, error_status);
+		return (error_status);
+	}
+	// else if (found_echo(to_pars) && found_count_pipe(to_pars))
+	// 		error_status = ft_execve(to_pars, enviroment, export, error_status);
+	// else if (found_echo(to_pars) && !found_count_pipe(to_pars)
+	// 		&& found_infile_or_endfile(to_pars))
+	// 	error_status = ft_execve(to_pars, enviroment, export, error_status);
+	// else if (found_echo(to_pars) && found_count_pipe(to_pars)
+	// 		&& found_infile_or_endfile(to_pars))
+	// 	error_status = ft_execve(to_pars, enviroment, export, error_status);
+	else if (!found_token(to_pars) && !found_infile_or_endfile(to_pars))
+	{
+		error_status = ft_execve(to_pars, enviroment, export, error_status);
+		return (error_status);
+	}
 	else
-		error_status = brain_echo_execve(to_pars, enviroment, export, error_status);
+		error_status  = ft_execve(to_pars, enviroment, export, error_status);
 	return (error_status);
 }
 
@@ -720,6 +762,7 @@ int	main_brain(char **env, t_brain *brain)
 		brain->error = 0;
 	brain->prev_err = brain->error;
 	brain->error = 0;
+	printf("line %s\n", brain->line);
 	if (!brain->to_pars && brain->line)
 		brain->to_pars = add_cmd_star(brain->to_pars, brain->line);
 	if (brain->to_pars)
@@ -733,15 +776,32 @@ int	main_brain(char **env, t_brain *brain)
 	return (brain->error);
 }
 
+char	*replace_v(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == ' ')
+			s[i] = '\v';
+		i++;
+	}
+	return (s);
+}
+
+
 void	head_minishell(char **env, int temp_error, t_brain *brain)
 {
 	set_signal_action(1);
 	brain->line = display_prompt();
 	if (!brain->line)
 		(garbagge(FLUSH, NULL, ALL), printf("exit\n"), exit(130));
+	// printf("%s\n",brain->line);
 	if (brain->error)
 		temp_error = brain->error;
 	brain->error = error_manager(brain->line);
+	// replace_v(brain->line);
 	if (!brain->error || g_signal_received)
 	{
 		brain->error = temp_error;
@@ -770,7 +830,7 @@ int	main(int ac, char **av, char **env)
 
 	((void)av, (void)ac);
 	brain = init_brain();
-	if(!brain)
+	if (!brain)
 		return (124);
 	g_signal_received = 0;
 	temp_error = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 20:38:25 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/06 16:18:56 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	found_cd_pwd_update(t_cmd *to_pars, t_envp *enviroment, t_exp *export)
 
 	err = 0;
 	cd = (t_l_cd *)malloc(sizeof(t_l_cd));
-	if(!cd || garbagge(ADD, cd, ENV))
+	if (!cd || garbagge(ADD, cd, ENV))
 		(garbagge(FLUSH, NULL, ALL), exit(99));
 	cd->pwd = getcwd(NULL, 0);
 	if (garbagge(ADD, cd->pwd, ENV))
@@ -108,7 +108,8 @@ int	found_cd_pwd_update(t_cmd *to_pars, t_envp *enviroment, t_exp *export)
 	cd->old_pwd = found_variable_env(enviroment, "OLDPWD");
 	if (cd->old_pwd)
 	{
-		cd->old_pwd = ft_substr(cd->old_pwd, ft_strlen("OLDPWD="), ft_strlen(cd->old_pwd));
+		cd->old_pwd = ft_substr(cd->old_pwd, ft_strlen("OLDPWD="),
+				ft_strlen(cd->old_pwd));
 		if (garbagge(ADD, cd->old_pwd, ENV))
 			return (3);
 	}
