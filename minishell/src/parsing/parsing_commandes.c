@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 15:07:39 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:36:00 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -984,7 +984,7 @@ int	main(int ac, char **av, char **env)
 	g_signal_received = 0;
 	temp_error = 0;
 	if (ac != 1)
-		return (ft_putstr_fd("Don't need arguments\n", 2), 1);
+		return (ft_putstr_fd("Don't need arguments\n", 2), garbagge(FLUSH, NULL, ALL), 1);
 	ft_issatty(brain);
 	while (1)
 		head_minishell(env, temp_error, brain);

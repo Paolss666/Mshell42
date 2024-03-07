@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 16:11:25 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 17:00:32 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,6 +316,18 @@ void	found_echo_in_pipe(t_cmd *new_to_pars)
 	exit(0);
 }
 
+void	found_echo_in_pipe_flag(t_cmd *new_to_pars)
+{
+	char	*echo;
+
+	echo = ft_substr(new_to_pars->cmd, 8, ft_strlen(new_to_pars->cmd));
+	if (!echo || garbagge(ADD, echo, PARS))
+		return (garbagge(FLUSH, NULL, ALL),exit(1));
+	printf("%s", echo);
+	garbagge(FLUSH, NULL, ALL);
+	exit(0);
+}
+
 void	print_env_array(char **str_array)
 {
 	int	i;
@@ -483,6 +495,11 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *e
 	child_check_path_ifnt_error(new_to_pars, enviroment, pipex);
 	if (pipex->n_pipe - 1 > 0)
 		close_if_plus_zero(pipex);
+	else if (new_to_pars->cmd && ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
+		echo_flag_funny(new_to_pars, new_to_pars, pipex->error);
+	if (new_to_pars && new_to_pars->cmd 
+		&& (ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0))
+		found_echo_in_pipe_flag(new_to_pars);
 	if (new_to_pars && new_to_pars->cmd 
 		&& (ft_strncmp(new_to_pars->cmd, "echo ", ft_strlen("echo ")) == 0))
 		found_echo_in_pipe(new_to_pars);

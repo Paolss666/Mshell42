@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 14:53:33 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:56:18 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,7 @@ char 				**envp_list_to_new_env(t_envp *enviroment);
 int					len_liste_exp(t_exp *enviromet);
 char				*ft_good_path_access(t_cmd	*to_pars, t_envp *enviroment, t_execve *pipex);
 int					execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars, t_envp *enviroment);
-
+int	echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd, int error_status);
 // ----------- REDIRECTION ------- //
 int					found_infile_or_endfile(t_cmd *to_pars);
 char				*direction_in_out_file(t_cmd	*to_pars);

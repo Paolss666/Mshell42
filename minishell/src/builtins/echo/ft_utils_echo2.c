@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_echo2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:23:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 22:13:09 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:55:53 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ char *find_next_non_n_token(const char *cmd)
 int	echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd, int error_status)
 {
 	char *str;
-	
+
 	str = find_next_non_n_token(to_pars->cmd);
 	if(!str)
 		error_status = logic_print_echo_flag(to_pars, error_status);
@@ -179,7 +179,12 @@ int	found_dollar_print_variable(t_cmd *to_pars, int error_status)
 			error_status = found_echo_not_flag(arg_cmd);
 		}
 		else if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo -n") == 0)
+		{
+			arg_cmd = to_pars->next;
+			if (!arg_cmd)
+				return (0);
 			error_status = logic_print_echo_flag(to_pars, error_status);
+		}
 		else if (to_pars->cmd && ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
 				error_status = echo_flag_funny(to_pars, arg_cmd, error_status);
 		to_pars = to_pars->next;

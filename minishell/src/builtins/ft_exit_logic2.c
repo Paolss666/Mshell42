@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit_logic2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 14:35:12 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/04 17:23:07 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/07 17:06:43 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ int	check_for_max_int(char *str)
 	digit = 0;
 	i = 0;
 	nb = ft_atol(str, i, parity, digit);
-	if (nb == 0)
-		return (1);
 	if (nb < -9223372036854775807)
 		return (1);
 	if (nb > 9223372036854775807)
