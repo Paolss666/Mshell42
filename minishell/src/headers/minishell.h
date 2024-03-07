@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 15:22:11 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 00:23:04 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ int					found_infile_or_endfile(t_cmd *to_pars);
 char				*direction_in_out_file(t_cmd	*to_pars);
 
 // ------------ BUILDING ----------- // 
-int 				split_by_quotes_and_spaces(char *str, char *tokens[]);
+int 				split_by_quotes_and_spaces(char *str, char *tokens[], int flag);
 int					handle_quotes(char **ptr, char quote, char *tokens[], int *i);
 int					find_missing_quote(char **ptr, char quote);
 void				find_and_terminate_token(char **ptr);

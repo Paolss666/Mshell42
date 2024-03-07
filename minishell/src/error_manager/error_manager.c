@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_manager.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:02:33 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 16:49:49 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/06 17:39:12 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,21 +92,15 @@ int	check_forbiden_quote(char *str)
 
 int	error_manager(char *str)
 {
-	char	*pur;
 	int		error;
 
-	pur = NULL;
 	if (!str)
 		return (0);
-	pur = ft_strdup(str);
-	if (!pur)
-		return (1);
-	purify(pur);
-	error = check_forbiden_quote(pur);
+	error = check_forbiden_quote(str);
 	if (error)
-		return (free(pur), error);
-	error = is_error(pur);
+		return (error);
+	error = is_error(str);
 	if (error)
-		return (free(pur), error);
-	return (free(pur), 0);
+		return (error);
+	return (0);
 }

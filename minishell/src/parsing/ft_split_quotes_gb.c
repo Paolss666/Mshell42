@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_quotes_gb.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 17:47:00 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 10:41:56 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 00:39:25 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void find_and_terminate_token(char **ptr)
 
 // Continua a scorrere finché non trovi un'altra virgoletta
 // Errore: mancante virgoletta di chiusura
-// La virgoletta di chiusura è stata trovata correttamente
+// La virgoletta di chiusura è stata trovata
 // Errore: mancante virgoletta di chiusura
 
 int find_missing_quote(char **ptr, char quote)
@@ -57,7 +57,18 @@ int handle_quotes(char **ptr, char quote, char *tokens[], int *i)
     return (0);  // Operazione completata con successo
 }
 
-int split_by_quotes_and_spaces(char *str, char *tokens[])
+int handle_quotes_with(char **ptr, char quote, char *tokens[], int *i)
+{
+   /*  (*ptr)++;   */// Passa oltre la virgoletta
+    tokens[(*i)++] = *ptr;  // Aggiunge il punto di inizio del token
+    if (find_missing_quote(ptr, quote) == -1)
+        return (-1);  // Errore: mancante virgoletta di chiusura
+    **ptr = '\0';  // Termina il token alla virgoletta di chiusura
+    (*ptr)++;  // Passa oltre la virgoletta di chiusura
+    return (0);  // Operazione completata con successo
+}
+
+int split_by_quotes_and_spaces(char *str, char *tokens[], int flag)
 {
     int i;
     char *ptr;
@@ -72,8 +83,14 @@ int split_by_quotes_and_spaces(char *str, char *tokens[])
             break;
         if (*ptr == '"' || *ptr == '\'')
 		{
-		    if (handle_quotes(&ptr, *ptr, tokens, &i) == -1)
-		        return (-1);  // Errore: mancante virgoletta di chiusur
+            if (flag)
+            {
+                if (handle_quotes_with(&ptr, *ptr, tokens, &i) == - 1)
+                    return(-1);
+            }
+            else
+                if (handle_quotes(&ptr, *ptr, tokens, &i) == -1)
+		            return (-1);  // Errore: mancante virgoletta di chiusur
 		}
 		else
 		{

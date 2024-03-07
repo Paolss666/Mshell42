@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error_shift_operator3.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 14:26:08 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/06 14:10:03 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/06 17:47:19 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,13 @@ int	count_redir(char *str, char c)
 	int	count;
 
 	i = 0;
-	count = 0;
 	temp = 0;
 	while (str[i] != '\0')
 	{
 		count = 0;
-		if (str[i] == c)
+		if (str[i + 1] && str[i] == c)
 		{
-			while (str[i] == c)
+			while (str[i] && str[i] == c)
 			{
 				count++;
 				i++;
@@ -80,6 +79,8 @@ int	too_many_redirection(char *str)
 {
 	int		count;
 
+	if(!str)
+		return (0);
 	count = count_redir(str, '>');
 	if (too_many_redir_right(count))
 		return (1);

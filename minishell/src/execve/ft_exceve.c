@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 16:26:20 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 00:25:12 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -524,7 +524,7 @@ void	child(t_cmd *new_to_pars, t_execve *pipex, int i, t_envp *enviroment)
 			return (perror("error split"), (void)0);
 		if (ft_strchr(new_to_pars->cmd, '\'')
 			|| ft_strchr(new_to_pars->cmd, '\"'))
-			split_by_quotes_and_spaces(tmp, pipex->good_cmd);
+			split_by_quotes_and_spaces(tmp, pipex->good_cmd, 0);
 	}
 	redirection(pipex->fd, pipex->current_pipe, pipex);
 	built_in_child_execve(new_to_pars, pipex, i, enviroment);
