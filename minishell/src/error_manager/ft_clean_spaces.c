@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_clean_spaces.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 14:23:05 by armeyer           #+#    #+#             */
-/*   Updated: 2024/02/28 19:17:11 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/07 12:18:38 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,4 @@ void	replace_spaces(char *str)
 		}
 		i++;
 	}
-}
-
-void	ft_handle_quote(char *str)
-{
-	replace_spaces(str);
 }

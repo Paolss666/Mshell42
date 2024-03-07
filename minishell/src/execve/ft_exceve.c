@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 00:25:12 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:11:25 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,11 @@ void	creation_cmd(t_cmd **current_commande, const char *new_cmd)
 
 void creation_cmd_empty(t_cmd **current_commande, const char *new_cmd)
 {
-    t_cmd *new_node = (t_cmd *)malloc(sizeof(t_cmd));
-	if(!new_node || garbagge(ADD, new_node, PARS))
+    t_cmd	*new_node;
+	t_cmd	*temp;
+
+	new_node = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!new_node || garbagge(ADD, new_node, PARS))
 		(garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE));
     new_node->next = NULL;
     if (new_cmd)
@@ -100,7 +103,7 @@ void creation_cmd_empty(t_cmd **current_commande, const char *new_cmd)
         *current_commande = new_node;
     else
     {
-        t_cmd *temp = *current_commande;
+        temp = *current_commande;
         while (temp->next != NULL)
             temp = temp->next;
         temp->next = new_node;
@@ -127,75 +130,67 @@ void	add_command_to_list_token(t_cmd **command_list, t_cmd *command)
 	}
 }
 
-
-/* void		logi_parse_add_empty(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list)
+void handle_pipe_case(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list, t_cmd *current_commande)
 {
-	t_cmd *next_temp = temp->next;
-    if (!prev_temp || (prev_temp && ft_strcmp(temp->cmd, "|") == 0 && ft_strcmp(prev_temp->cmd, "|") == 0))
-    {
-        // Se c'è un comando dopo la pipe, aggiungi la pipe alla lista
-        t_cmd *empty_command = NULL;
-        creation_cmd_empty(&empty_command, NULL);
-        add_command_to_list_token(&command_list, empty_command);
-		current_command = NULL;
-    }
-	if (!next_temp)
-	{
-        t_cmd *empty_command = NULL;
-        creation_cmd_empty(&empty_command, NULL);
-        add_command_to_list_token(&command_list, empty_command);
-		current_command = NULL;
-	}
+    t_cmd *next_temp;
+	t_cmd *empty_command;
 
-} */
+	next_temp = temp->next;
+    if (!prev_temp || (prev_temp && ft_strcmp(temp->cmd, "|") == 0
+		&& ft_strcmp(prev_temp->cmd, "|") == 0))
+    {
+        empty_command = NULL;
+        creation_cmd_empty(&empty_command, NULL);
+        add_command_to_list_token(&command_list, empty_command);
+        current_commande = NULL;
+    }
+    if (!next_temp)
+    {
+        empty_command = NULL;
+        creation_cmd_empty(&empty_command, NULL);
+        add_command_to_list_token(&command_list, empty_command);
+        current_commande = NULL;
+    }
+}
+
+t_cmd	*loop_p_for_token(t_cmd *command_list, t_cmd *temp, t_cmd *prev_temp, t_cmd *current_command)
+{
+	while (temp)
+	{
+		if (ft_strcmp(temp->cmd, "|") != 0 && temp->cmd)
+		{
+			creation_cmd(&current_command, temp->cmd);
+			prev_temp = temp;
+			temp = temp->next;
+			if (!temp || (temp && ft_strcmp(temp->cmd, "|") == 0))
+			{
+				add_command_to_list_token(&command_list, current_command);
+				current_command = NULL;
+			}
+			continue ;
+		}
+		else
+			handle_pipe_case(temp, prev_temp, command_list, current_command);
+		prev_temp = temp;
+        temp = temp->next;
+	}
+	return (command_list);
+}
 
 t_cmd *parse_for_token(t_cmd *to_pars)
 {
-    t_cmd *command_list = NULL;
-    t_cmd *temp = to_pars;
-	t_cmd *prev_temp = NULL;
-    t_cmd *current_command = NULL;
+	t_cmd	*command_list;
+	t_cmd	*temp;
+	t_cmd	*prev_temp;
+	t_cmd	*current_command;
 
-    while (temp)
-    {
-        // Se il comando non è una pipe, aggiungi il comando corrente alla lista
-        if (ft_strcmp(temp->cmd, "|") != 0 && temp->cmd)
-        {
-            creation_cmd(&current_command, temp->cmd);
-			prev_temp = temp;
-        	temp = temp->next;
-			if ( !temp || (temp && ft_strcmp(temp->cmd, "|") == 0)) {
-            	add_command_to_list_token(&command_list, current_command);
-				current_command = NULL;
-			}
-			continue;
-        }
-        else
-        {
-            // Se il comando è una pipe, controlla solo il comando successivo
-            t_cmd *next_temp = temp->next;
-
-            if (!prev_temp || (prev_temp && ft_strcmp(temp->cmd, "|") == 0 && ft_strcmp(prev_temp->cmd, "|") == 0))
-            {
-                // Se c'è un comando dopo la pipe, aggiungi la pipe alla lista
-                t_cmd *empty_command = NULL;
-                creation_cmd_empty(&empty_command, NULL);
-                add_command_to_list_token(&command_list, empty_command);
-				current_command = NULL;
-            }
-			if (!next_temp)
-			{
-                t_cmd *empty_command = NULL;
-                creation_cmd_empty(&empty_command, NULL);
-                add_command_to_list_token(&command_list, empty_command);
-				current_command = NULL;
-			}
-        }
-        // Passa al prossimo nodo
-		prev_temp = temp;
-        temp = temp->next;
-    }
-    return (command_list);
+	temp = to_pars;
+	command_list = NULL;
+	prev_temp = NULL;
+	current_command = NULL;
+	command_list = loop_p_for_token(command_list,
+			temp, prev_temp, current_command);
+	return (command_list);
 }
 
 
@@ -338,14 +333,14 @@ void	print_env_array(char **str_array)
 const char *found_in_env_char(char **envi)
 {
 	int			i;
-	const char *f;
+	const char	*f;
 
 	i = -1;
-	while(envi[++i])
+	while (envi[++i])
 	{
 		f = ft_strnstr(envi[i], "PWD=", ft_strlen("PWD="));
-		if(f)
-			return(f);
+		if (f)
+			return (f);
 	}
 	return (NULL);
 }
@@ -364,6 +359,7 @@ void	found_pwd_in_pipe(t_execve *pipex)
 int	if_not_numeric(char *s)
 {
 	int	i;
+
 	i = 0;
 	if (s[i] == '-')
 		i++;
@@ -497,13 +493,14 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *e
 		&& (!ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))))
 		found_export_in_pipe(new_to_pars->cmd, pipex);
 	if (new_to_pars && new_to_pars->cmd
-		&& (!ft_strncmp(new_to_pars->cmd, "exit", ft_strlen("exit"))
-			|| !ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset"))))
+		&& (!ft_strncmp(new_to_pars->cmd, "exit", ft_strlen("exit"))))
 		found_exit_in_pipe(new_to_pars);
 	if (new_to_pars && new_to_pars->cmd
 		&& (ft_strncmp(new_to_pars->cmd, "pwd", ft_strlen("pwd")) == 0))
 		found_pwd_in_pipe(pipex);
-	else if (!new_to_pars || !new_to_pars->cmd)
+	else if (!new_to_pars || !new_to_pars->cmd
+		|| !ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset"))
+		|| !ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd")))
 		(garbagge(FLUSH, NULL, ALL), exit(1));
 	else
 		pass_execve(pipex->good_cmd, pipex->get_g_path, pipex, j);
@@ -1164,42 +1161,45 @@ char *check_redir_for_split(char *cmd)
 
 	esp = init_esp(cmd);
     result = (char *)malloc((esp->len + 2) * sizeof(char));
-	if(!result || garbagge(ADD, result, PARS))
+	if (!result || garbagge(ADD, result, PARS))
 		(garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE));
-    ft_strcpy(result, cmd, ft_strlen(cmd) + 1);
+	ft_strcpy(result, cmd, ft_strlen(cmd) + 1);
 	i = -1;
-    while (result[++i])
+	while (result[++i])
 	{
-        if (result[i] == '<' || result[i] == '>')
+		if (result[i] == '<' || result[i] == '>')
 		{
-            count_spaces_before_and_after(result, i, esp);
-            if (esp->spaces_before <= 3 && esp->spaces_after <= 3
-				&& (result[esp->j_after_count] == '<' || result[esp->j_after_count] == '>'))
+			count_spaces_before_and_after(result, i, esp);
+			if (esp->spaces_before <= 3 && esp->spaces_after <= 3
+				&& (result[esp->j_after_count] == '<'
+					|| result[esp->j_after_count] == '>'))
 			{
-                ft_memmove(result + i + 1, result + i + 1 + esp->spaces_after, esp->len - i - esp->spaces_after + 1);
-                esp->len -= esp->spaces_after;
-            }
-        }
-    }
+				ft_memmove(result + i + 1, result + i + 1 + esp->spaces_after
+					, esp->len - i - esp->spaces_after + 1);
+				esp->len -= esp->spaces_after;
+			}
+		}
+	}
 	return (result);
 }
 
 void add_spaces_around_token(char *token, char **new_token, char *last_char)
 {
 	*last_char = '\0';
-    if (*last_char != ' ')
-        *(*new_token)++ = ' ';
-    *(*new_token)++ = *token;
-    if ((*(token + 1) != ' ' && *(token + 1) != '\0') && (*token == '<' || *token == '>' || *token == '|'))
-        *(*new_token)++ = ' ';
-    *last_char = *token;
+	if (*last_char != ' ')
+		*(*new_token)++ = ' ';
+	*(*new_token)++ = *token;
+	if ((*(token + 1) != ' ' && *(token + 1) != '\0')
+		&& (*token == '<' || *token == '>' || *token == '|'))
+		*(*new_token)++ = ' ';
+	*last_char = *token;
 }
 
 char	*new_cmd_for_token(char *token)
 {
 	char	*new_com;
 
-	new_com = (char *)malloc(ft_strlen(token) * 2 + 1);
+	new_com = (char *)malloc(ft_strlen(token) * 2 + 2);
 	if (!new_com || garbagge(ADD, new_com, PARS))
 		(garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE));
 	return (new_com);
@@ -1265,15 +1265,15 @@ t_cmd *add_cmd_for_redir(t_cmd *list)
     {
         i = -1;
         if (!list->cmd)
-            return NULL;
+            return (NULL);
         commande_split = ft_split_garbage(list->cmd, ' ');
         if (!commande_split)
-            return NULL;
+            return (NULL);
         while (commande_split[++i])
         {
             cmd = add_new_cmd(commande_split, i);
             if (!cmd)
-                return NULL;
+                return (NULL);
 			append_to_list_red(&new_list, cmd);
         }
         list = list->next;
@@ -1312,6 +1312,24 @@ int	brain_execute_pipe_command(t_cmd *new_to_pars, t_execve *pipex, t_envp *envi
 	return (n);
 }
 
+t_cmd *copy_node(t_cmd *original)
+{
+    if (!original)
+	{
+        return NULL;
+	}
+    t_cmd *copy = (t_cmd *)malloc(sizeof(t_cmd));
+	if(!copy || garbagge(ADD, copy, PARS))
+	{
+		// printf("return null 2");
+        return NULL; // Gestione errore: malloc fallita
+	}
+    copy->cmd = original->cmd; // Esempio, sostituisci "data" con il campo che contiene i dati
+    copy->next = copy_node(original->next); // Copia il nodo successivo ricorsivamente
+    // printf("Hello \n");
+	// print_list(copy);
+	return (copy);
+}
 
 int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
@@ -1323,9 +1341,12 @@ int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_statu
 	if (!to_pars)
 		return (0);
 	new_to_pars = parsing_before_pipe_red(to_pars);
-	// print_list(new_to_pars);
 	pipex = init_structure(enviroment, new_to_pars, export, error_status);
-	pipex->cmd_err = to_pars;
+	if (!pipex)
+		return (1);
+	pipex->cmd_err = NULL;
+	pipex->cmd_err = copy_node(to_pars);
+	print_list(pipex->cmd_err);
 	new_to_pars = remove_redirections(new_to_pars);
 	new_to_pars = parse_for_token(new_to_pars);
 	n = brain_execute_pipe_command(new_to_pars, pipex, enviroment);
@@ -1351,8 +1372,6 @@ int	found_infile_or_endfile(t_cmd *to_pars)
 			return (3);
 		if (ft_strncmp(to_pars->cmd, "<<",ft_strlen("<<")) == 0)
 			return (4);
-		// if (ft_strncmp(to_pars->cmd, "|", ft_strlen("|")) == 0)
-		// 	return (5);
 		to_pars = to_pars->next;
 	}
 	return (0);

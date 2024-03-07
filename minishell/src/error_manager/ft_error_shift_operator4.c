@@ -6,7 +6,7 @@
 /*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 11:41:27 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/06 14:25:57 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/07 13:02:31 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@ int	contradicting_redir(char *str)
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '>' || str[i] == '<')
+		if (str[i + 1] && (str[i] == '>' || str[i] == '<'))
 		{
-			index = i;
 			c = str[i];
 			i++;
-			while (str[i] == ' ' || str[i] == '\v' || str[i] == '\t')
+			index = i;
+			while (str[i + 1]
+				&& (str[i] == ' ' || str[i] == '\v' || str[i] == '\t'))
 				i++;
 			if (index != i && (str[i] == '<' || str[i] == '>'))
 			{

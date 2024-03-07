@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 00:23:04 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/07 14:53:33 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,6 @@ void				close_all_fd_tmp(t_execve *pipex, int n);
 int					garbagge(int rule, void *p, int list);
 
 void    			set_signal_action(int sig_case);
-int					ft_error_directoryx(char *str);
 /* void				ft_clean_spaces(char *str); */
 int					count_quote(char *str, char c, char d);
 /* void				change_quote_in_star(char *str); */
@@ -348,7 +347,9 @@ void				purify(char *str);
 int					error_manager(char *str);
 int					ft_error_case_1(char c);
 int					ft_error_blank(char *str);
-int					ft_error_shift_operator(char *str);
+int					ft_error_shift_operator(char *str, int i, int count);
+int					ft_error_backslash(char *str);
+void				replace_spaces(char *str);
 // int					ft_error_directoryE(char *str);
 int					count_redir(char *str, char c);
 int					ft_redir_before_pipe(char *str);

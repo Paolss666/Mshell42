@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_manager_2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 14:23:17 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/06 15:42:39 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 12:50:12 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,26 +56,26 @@ int	check_if_only_space(char *s)
 	return (1);
 }
 
-int    check_forb_logic(int i, char c, char *str)
+int	check_forb_logic(int i, char c, char *str)
 {
-    while (str[i] != '\0')
-    {
-        if (str[i] == '\'' && c == '\v')
-            c = '\'';
-        else
-        {
-            if (str[i] == '"' && c == '\v')
-                c = '"';
-        }
-        if(str[i] && str[i + 1] && c != '\v')
-        {
-            i++;
-            while (str[i] != '\0' && str[i + 1] && str[i] != c)
-                i++;
-            if (str[i] == c)
-                c = '\v';
-        }
-        i++;
-    }
-    return (c);
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\'' && c == '\v')
+			c = '\'';
+		else
+		{
+			if (str[i] == '"' && c == '\v')
+			c = '"';
+		}
+		if (str[i] && str[i + 1] && c != '\v')
+		{
+			i++;
+			while (str[i] != '\0' && str[i + 1] && str[i] != c)
+				i++;
+			if (str[i] == c)
+				c = '\v';
+		}
+		i++;
+	}
+	return (c);
 }

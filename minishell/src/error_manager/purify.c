@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   purify.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 14:26:56 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/06 15:29:45 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 12:41:07 by armeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ void	purify(char *str)
 	while (str[i] != '\0')
 	{
 		if ((str[i] == '\'' || str[i] == '\"') && c == '*')
-			c = str[i];
-		if (c != '*')
 		{
-			while (str[i] != '\0' && str[i + 1] && str[i] != c)
-			{
-				str[i] = '*';
-				i++;
-			}
-			if (str[i] && str[i] == 'c')
-				c = '*';
+			c = str[i];
+			i++;
 		}
+		while (c != '*' && str[i] != c && str[i] != '\0')
+		{
+			str[i] = '*';
+			i++;
+		}
+		if (str[i] != '\0')
+			c = '*';
 		i++;
 	}
 }
