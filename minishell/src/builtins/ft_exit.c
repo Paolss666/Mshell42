@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 12:28:46 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 23:59:54 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 18:11:44 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,27 @@ int	found_exit(t_cmd *to_pars)
 	return (0);
 }
 
-void	too_many_args(t_cmd *to_pars)
+int	too_many_args(t_cmd *to_pars)
 {
+	// printf("new_to_aprs cmd %s\n", to_pars->next->cmd);
 	if (ft_is_valid_number(to_pars->next->cmd))
 	{
 		ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("bash: exit: too many arguments\n", 2);
+		return (1);
 	}
 	else
 	{
 		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("bash: ", 2);
 		ft_putstr_fd(to_pars->next->cmd, 2);
-		ft_putstr_fd("bash: numeric argument required\n", 2);
+		ft_putstr_fd(" numeric argument required\n", 2);
 		garbagge(FLUSH, NULL, ALL);
 		exit(2);
 	}
 }
 
-void	exit_process(t_cmd *to_pars)
+int	exit_process(t_cmd *to_pars)
 {
 	int	return_value;
 
@@ -65,6 +68,8 @@ void	exit_process(t_cmd *to_pars)
 		if (atoi(to_pars->next->cmd) < 0)
 		{
 			return_value = ft_atoi(to_pars->next->cmd);
+			if (return_value == 0)
+				exit(0);
 			garbagge(FLUSH, NULL, ALL);
 			exit((256 + return_value) % 256);
 		}
@@ -73,14 +78,20 @@ void	exit_process(t_cmd *to_pars)
 		exit((return_value % 256));
 	}
 	else
-		ft_exit_ls(to_pars);
+		return (ft_exit_ls(to_pars));
+	return (0);
+
 }
 
-void	ft_exit(t_cmd *to_pars, t_envp *env, t_exp *exp)
+int	ft_exit(t_cmd *to_pars, t_envp *env, t_exp *exp)
 {
+	int	i;
+
+	i = 0;
 	found_shlv_exit(env, exp);
+	// printf("new_to_aprs cmd %s\n", to_pars->next->cmd);
 	if (!ft_strncmp("exit -", to_pars->cmd, ft_strlen("exit -")))
-		ft_exit_neg(to_pars);
+		i = ft_exit_neg(to_pars);
 	else
 	{
 		if (!ft_strcmp(to_pars->cmd, "exit") && !to_pars->next)
@@ -90,8 +101,9 @@ void	ft_exit(t_cmd *to_pars, t_envp *env, t_exp *exp)
 			exit(0);
 		}
 		if (to_pars && to_pars->next && to_pars->next->next)
-			too_many_args(to_pars);
+			i = too_many_args(to_pars);
 		else if (!ft_strcmp("exit", to_pars->cmd) && to_pars->next)
-			exit_process(to_pars);
+			i = exit_process(to_pars);
 	}
+	return (i);
 }

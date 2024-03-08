@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:52:41 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 10:58:34 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 12:09:29 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ t_exp	*init_export(t_envp *enviroment)
 	new_export = (t_exp *)malloc(sizeof(t_exp));
 	if (!new_export || garbagge(ADD, new_export, ENV))
 		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE), NULL);
-	printf("la\n");
 	new_export->path = modif_path_for_export(enviroment);
 	if (!new_export || garbagge(ADD, new_export->path, ENV))
 		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE), NULL);
@@ -125,8 +124,7 @@ t_exp	*add_env_with_export(t_envp *enviroment)
 
 	export_list = NULL;
 	current_export = NULL;
-	/* print_list_envp(enviroment); */
-	if(!enviroment)
+	if (!enviroment)
 		return (NULL);
 	while (enviroment != NULL)
 	{

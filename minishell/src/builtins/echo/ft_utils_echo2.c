@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_echo2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:23:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 23:59:56 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:37:37 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,13 @@ int	found_echo_not_flag(t_cmd *arg_cmd)
 {
 	char	*expanded_value;
 	int		print_argument;
+	// char *cmd;
 
 	print_argument = 1;
 	expanded_value = NULL;
 	while (arg_cmd)
 	{
+		// printf("arg_cmd->cmd %s\n", arg_cmd->cmd);
 		if (logic_display_error(arg_cmd))
 			break ;
 		if (ft_strcmp(arg_cmd->cmd, "$") == 0 && arg_cmd->next)

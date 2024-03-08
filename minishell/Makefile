@@ -6,7 +6,7 @@
 #    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/07 14:38:23 by npaolett         ###   ########.fr        #
+#    Updated: 2024/03/08 20:35:10 by npaolett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,6 +72,9 @@ SRC =	src/builtins/ft_pwd.c\
 		src/error_manager/ft_error_stx.c   \
 		src/error_manager/ft_error_bracket.c\
 		src/error_manager/purify.c\
+		src/parsing/split_gogo_utils.c \
+		src/parsing/split_gogo.c\
+		src/parsing/split_gogo_quote.c \
 
 OBJ = $(SRC:.c=.o)
 # OBJ_BONUS = $(SRC_BONUS:.c=.o)

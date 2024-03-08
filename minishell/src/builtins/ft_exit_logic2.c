@@ -6,13 +6,13 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 14:35:12 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/07 17:06:43 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/08 18:19:04 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-long int	ft_atol(const char *nptr, int i, int parity, int digit)
+long long int	ft_atol(const char *nptr, int i, int parity, int digit)
 {
 	long long int	number;
 
@@ -36,13 +36,14 @@ long int	ft_atol(const char *nptr, int i, int parity, int digit)
 	if (digit > 19)
 		return (0);
 	if (parity % 2 == 0)
-		return ((long int)number);
-	return ((long int)number * -1);
+		return ((long long int)number);
+	return ((long long int)number * -1);
 }
+/* il faut que < minINT ......08 */
 
 int	check_for_max_int(char *str)
 {
-	long int		nb;
+	long long int		nb;
 	int				i;
 	int				parity;
 	int				digit;
@@ -51,6 +52,8 @@ int	check_for_max_int(char *str)
 	digit = 0;
 	i = 0;
 	nb = ft_atol(str, i, parity, digit);
+	if (nb  == 0)
+		return (1);
 	if (nb < -9223372036854775807)
 		return (1);
 	if (nb > 9223372036854775807)
@@ -75,8 +78,20 @@ char	*ft_clean_exit(char *str)
 	return (str);
 }
 
-void	ft_exit_ls(t_cmd *to_pars)
+int	ft_exit_ls(t_cmd *to_pars)
 {
+	if (to_pars->next)
+	{
+		char	**split = ft_split(to_pars->next->cmd, ' ');
+		if (split[1])
+		{
+			ft_putstr_fd("exit: \n", 2);
+			ft_putstr_fd("bash: ", 2);
+			ft_putstr_fd("exit:", 2);
+			ft_putstr_fd(" : too many arguments \n", 2);
+			return (1);
+		}
+	}
 	ft_putstr_fd("exit\n", 2);
 	ft_putstr_fd("bash: ", 2);
 	ft_putstr_fd("exit: ", 2);

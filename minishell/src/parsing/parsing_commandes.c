@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 11:00:20 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 21:12:09 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,17 @@ char	*display_prompt(void)
 	char	*line;
 
 	line = NULL;
-	line = readline(COLOR_RED "Mshell$ " RESET_COLOR);
-	if (!line || garbagge(ADD, line, PARS))
-		return (NULL);
-	if (line)
-		add_history(line); // working history
-	return (line);
+	while (1)
+	{
+		line = readline(COLOR_RED "Mshell$ " RESET_COLOR);
+		if (!line || garbagge(ADD, line, PARS))
+			return (NULL);
+		if (!line[0])
+			continue ;
+		if (line)
+			add_history(line); // working history
+		return (line);
+	}
 }
 
 
@@ -474,7 +479,7 @@ int contains_only_spaces(const char *str)
 }
 
 char	*ft_good_path_access(t_cmd *to_pars, t_envp *enviroment,
-		t_execve *pipex)
+		t_execve *pipex) // MODIF GAGA
 {
 	char	**env_split;
 	char	**with_flag;
@@ -486,11 +491,12 @@ char	*ft_good_path_access(t_cmd *to_pars, t_envp *enviroment,
 		return (NULL);
 	found_in_env = NULL;
 	env_split = NULL;
-	with_flag = ft_split_garbage(to_pars->cmd, ' ');
+	with_flag = ft_split_garbage_gogo(to_pars->cmd, ' ');
+	// with_flag = ft_split_garbage(to_pars->cmd, ' ');
 	if(!with_flag)
 		return (NULL);
-	if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
-		split_by_quotes_and_spaces(tmp, with_flag, 0);
+	// if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
+	// 	split_by_quotes_and_spaces(tmp, with_flag, 0);
 	if((tmp[0] == '\'' && ft_strlen(tmp) == 1) || (tmp[0] == '\"' && ft_strlen(tmp) == 1))
 		return (NULL);
 	found_in_env = found_path_envp_list(enviroment);
@@ -582,6 +588,7 @@ int has_both_quotes(const char *str)
 	sngl = 0;
 	db = 0;
 	i = 0;
+	printf("HAS BOTH QUOTE str %s\n", str);
 	while (str[i])
 	{
 		if (str[i] == '\'')
@@ -734,10 +741,14 @@ char	*ft_found_all_qo(char **split, int r_st, t_envp *environment)
 
 	j = 0;
 	joined = NULL;
+	printf("\n\n\nDEBUT FOUND_ALL_GO\n");
+	print_string_array(split);
 	while (split[j])
 	{
-		if (logic_check_type_quotes(split[j]) == 3)
+		if (j == 0)
+		// if (logic_check_type_quotes(split[j]) == 3)
 		{
+			printf("echo split %s\n", split[j]);
 			if (joined)
 			{
 				joined = ft_strjoin(joined,
@@ -752,22 +763,28 @@ char	*ft_found_all_qo(char **split, int r_st, t_envp *environment)
 			joined = logic_sgl_q(joined, split[j]);
 		j++;
 	}
+	printf("joined %s\n", joined );
+	printf("FIN FOUND_ALL_GO\n\n\n\n");
 	return (joined);
 }
 
 char	*exp_in_all_quotes(t_cmd *current, t_envp *environment, int r_st)
 {
 	char	*cmd;
-	int		n;
+	// int		n;
 	char	**split;
-	int		i;
+	// int		i;
 
-	n = count_quotes_f_spl(current->cmd);
-	split = (char **)malloc(sizeof(char *) * (n + 1));
-	if (!split || garbagge(ADD, split, PARS))
-		(garbagge(FLUSH, NULL, ALL), exit(99));
-	i = split_quotes(current->cmd, split);
-	split[i] = NULL;
+	// n = count_quotes_f_spl(current->cmd);
+	// split = (char **)malloc(sizeof(char *) * (n + 2));
+	// if (!split || garbagge(ADD, split, PARS))
+	// 	(garbagge(FLUSH, NULL, ALL), exit(99));
+	// i = split_quotes(current->cmd, split);
+	// split[i] = NULL;
+	split = ft_split_garbage_gogo_quote(current->cmd, ' ');
+	print_string_array(split);
+	printf("PARSING_CMD\n");
+	// split = ft_split_garbage_gogo(current->cmd, ' ');
 	cmd = ft_found_all_qo(split, r_st, environment);
 	garbagge(FREE, current->cmd, PARS);
 	return (cmd);
@@ -825,8 +842,10 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 
 int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
-	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
+	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars)) {
+		printf("****************************************brain_echo_execve\n");	
 		error_status = found_dollar_print_variable(to_pars, error_status);
+	}
 	// else if (found_echo(to_pars) && found_count_pipe(to_pars))
 	// 		error_status = ft_execve(to_pars, enviroment, export, error_status);
 	// else if (found_echo(to_pars) && !found_count_pipe(to_pars)
@@ -862,6 +881,7 @@ int	ft_found_pwd(t_cmd *to_pars)
 	// 		&& found_infile_or_endfile(to_pars))
 	// 	error_status = ft_execve(to_pars, enviroment, export, error_status); */
 
+
 int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
@@ -879,7 +899,7 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 		&& to_pars->next && !found_count_pipe(to_pars))
 		return (add_export_env(to_pars, &enviroment, &export));
 	if (!found_count_pipe(to_pars) && found_exit(to_pars))
-		ft_exit(to_pars, enviroment, export);
+		return (ft_exit(to_pars, enviroment, export));
 	if (!found_count_pipe(to_pars) && ft_cd(to_pars))
 		return (found_cd_pwd_update(to_pars, enviroment, export));
 	if (found_echo(to_pars)

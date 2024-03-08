@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 23:27:31 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 18:20:27 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,27 @@ extern int	g_signal_received;
 
 int found_count_pipe(t_cmd *cmd)
 {
-    int pipe_count;
+    int pipe_count = 0;
+	char *str;
+    int flag = 0; // Inizializziamo il flag a 0 per indicare che non siamo all'interno di singoli o doppi apici
 
-	pipe_count = 0;
-    while (cmd != NULL)
+	while (cmd != NULL)
     {
-        char *str = cmd->cmd;
+        str = cmd->cmd;
         while (*str != '\0')
         {
-            if (*str == '|')
-                pipe_count++;
+            if (*str == '\'' || *str == '\"')
+                flag = !flag; // Cambiamo lo stato del flag quando troviamo apici singoli o doppi
+            if (*str == '|' && flag == 0)
+                pipe_count++; // Contiamo solo se non siamo all'interno di apici singoli o doppi
             str++;
         }
         cmd = cmd->next;
     }
-    return (pipe_count);
+    // printf("count pipe => %d\n", pipe_count);
+    return pipe_count;
 }
+
 
 char	*create_temp_buffer(const char *str1, const char *str2)
 {
@@ -419,7 +424,7 @@ void	found_exit_in_pipe(t_cmd *ntp)
 		exit((256 + n) % 256);
 	}
 	garbagge(FLUSH, NULL, ALL);
-	exit(1);
+	exit(0);
 }
 
 void	found_export_in_pipe(char *cmd, t_execve *pipe)
@@ -473,6 +478,7 @@ void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execv
 		&& ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset")))
 	{
 		pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
+		printf("commandde bizzare %s\n", pipex->get_g_path);
 		if (!pipex->get_g_path)
 		{
 			j = ft_error_commande_not_to_pars(new_to_pars, pipex);
@@ -529,14 +535,17 @@ void	child(t_cmd *new_to_pars, t_execve *pipex, int i, t_envp *enviroment)
 	if (new_to_pars && new_to_pars->cmd)
 	{
 		tmp = ft_strdup(new_to_pars->cmd);
+		printf("tmp %s\n", tmp);
 		if (!tmp || garbagge(ADD, tmp, PARS))
 			return ((void)0);
-		pipex->good_cmd = ft_split_garbage(new_to_pars->cmd, ' ');
+		// pipex->good_cmd = ft_split_garbage(new_to_pars->cmd, ' ');
+		printf("child\n");
+		pipex->good_cmd = ft_split_garbage_gogo(new_to_pars->cmd, ' ');
 		if (!pipex->good_cmd)
 			return (perror("error split"), (void)0);
-		if (ft_strchr(new_to_pars->cmd, '\'')
-			|| ft_strchr(new_to_pars->cmd, '\"'))
-			split_by_quotes_and_spaces(tmp, pipex->good_cmd, 0);
+		// if (ft_strchr(new_to_pars->cmd, '\'')
+		// 	|| ft_strchr(new_to_pars->cmd, '\"'))
+		// 	split_by_quotes_and_spaces(tmp, pipex->good_cmd, 0);
 	}
 	redirection(pipex->fd, pipex->current_pipe, pipex);
 	built_in_child_execve(new_to_pars, pipex, i, enviroment);

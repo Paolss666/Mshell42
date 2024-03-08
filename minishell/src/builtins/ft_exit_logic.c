@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit_logic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armeyer <armeyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 18:14:14 by armeyer           #+#    #+#             */
-/*   Updated: 2024/03/04 17:08:38 by armeyer          ###   ########.fr       */
+/*   Updated: 2024/03/08 17:54:43 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,27 @@ void	too_much_arg_neg(void)
 	exit(2);
 }
 
-void	ft_exit_neg(t_cmd *to_pars)
+int	check_plus_arg_neg(void)
+{
+	ft_putstr_fd("exit: \n", 2);
+	ft_putstr_fd("bash: ", 2);
+	ft_putstr_fd("exit:", 2);
+	ft_putstr_fd(" : too many arguments \n", 2);
+	return (1);
+}
+
+int	ft_exit_neg(t_cmd *to_pars)
 {
 	int				i;
 	char			**tab;
 
 	i = 1;
 	tab = ft_split_garbage(to_pars->cmd, ' ');
-	tab[1][0] = '0';
 	while (tab[1][i] != '\0')
 	{
+		if (tab[2] || to_pars->next)
+			if (check_plus_arg_neg())
+				return (1);
 		if (ft_isdigit(tab[1][i]) == 0 || check_for_max_int(tab[1]))
 		{
 			ft_putstr_fd("exit: \n", 2);
@@ -101,4 +112,5 @@ void	ft_exit_neg(t_cmd *to_pars)
 	ft_putstr_fd("exit\n", 2);
 	garbagge(FLUSH, NULL, ALL);
 	exit((256 - i) % 256);
+	return (0);
 }

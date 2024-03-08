@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 16:18:56 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/08 12:11:51 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,12 @@ int	found_cd_oldpwd(t_exp *export, t_envp *enviroment, t_l_cd *cd)
 {
 	cd->pwd = getcwd(NULL, 0);
 	if (!cd->pwd || garbagge(ADD, cd->pwd, ENV) || !cd->home)
-		return (perror(" "), 1);
+	{
+		ft_putstr_fd("bash :", 2);
+		ft_putstr_fd("cd :", 2);
+		ft_putstr_fd("OLDPWD not set\n", 2);
+		return (1);
+	}
 	if (cd->old_pwd && chdir(cd->old_pwd) == 0)
 		print_old_and_go(cd, enviroment, export);
 	else

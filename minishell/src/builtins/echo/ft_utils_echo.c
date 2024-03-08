@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:07 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 00:03:12 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 14:03:25 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,36 +56,103 @@ char *get_first_non_n_token(const char *cmd)
     return (NULL);
 }
 
-
-int	found_echo(t_cmd *to_pars)
+int ft_check_flag(char *flag, int i, int j) // modif gaga
 {
-	char	*vl;
-
-	vl = NULL;
-	while (to_pars != NULL)
-	{
-		if (ft_strcmp(to_pars->cmd, "echo") == 0)
-			return (1);
-		if (ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
-			return (2);
-		if (ft_strncmp(to_pars->cmd, "echo -", 6) == 0)
-		{
-			vl = ft_substr(to_pars->cmd, 4, ft_strlen(to_pars->cmd));
-			if(!vl || garbagge(ADD, vl, PARS))
-				return (-1);
-			remove_q(vl);
-			printf("%s", vl); 
-			/* garbagge(FREE, to_pars->cmd, PARS); */
-			to_pars->cmd = NULL;
-			to_pars->cmd = ft_strdup("echo");
-			if(!to_pars->cmd || garbagge(ADD, to_pars->cmd, PARS))
-				return (-1);
-			return (1);
-		}
-		to_pars = to_pars->next;
-	}
-	return (0);
+    while (flag[i])
+    {
+        if (flag[i] != 'n' && flag[i] != '\0')
+        {
+            if (flag[i] == ' ' && flag[i + 1] 
+                && flag[i + 1] == '-' && flag[i + 2])
+				{
+					j = i + 1;
+					printf("pas ok\n");
+                	return (ft_check_flag(flag, i + 2, j));
+				}
+			printf("pas ok\n");
+			if (j == 0)
+            	return (-2);
+			return (j);
+        }
+        i++;
+    }
+    return (-1);
 }
+
+int    found_echo(t_cmd *to_pars) // modif gaga
+{
+    char    *vl;
+	int j;
+
+    vl = NULL;
+    while (to_pars != NULL)
+    {
+        if (ft_strcmp(to_pars->cmd, "echo") == 0)
+            return (1);
+        if (ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0) {
+            if (ft_check_flag(to_pars->cmd + 6, 0, 0) == -1)
+                return (2);
+        }
+        if (ft_strncmp(to_pars->cmd, "echo -", 6) == 0)
+        {
+            vl = ft_substr(to_pars->cmd, 5, ft_strlen(to_pars->cmd));
+            if(!vl || garbagge(ADD, vl, PARS))
+                return (-1);
+            remove_q(vl);
+			printf("vl %s\n", vl);
+			j = ft_check_flag(vl + 1, 0, 0);
+			if (j > -1)
+			{
+				if (j > -1)
+					printf("%s ", vl + j + 1);
+				to_pars->cmd = NULL;
+            	to_pars->cmd = ft_strdup("echo -n");
+			}
+			else
+			{
+            	printf("%s ", vl); 
+            /* garbagge(FREE, to_pars->cmd, PARS); */
+            	to_pars->cmd = NULL;
+            	to_pars->cmd = ft_strdup("echo");
+			}
+            if(!to_pars->cmd || garbagge(ADD, to_pars->cmd, PARS))
+                return (-1);
+            return (1);
+        }
+        to_pars = to_pars->next;
+    }
+    return (0);
+}
+
+// int	found_echo(t_cmd *to_pars)
+// {
+// 	char	*vl;
+
+// 	vl = NULL;
+// 	while (to_pars != NULL)
+// 	{
+// 		if (ft_strcmp(to_pars->cmd, "echo") == 0)
+// 			return (1);
+// 		if (ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
+// 			return (2);
+// 		if (ft_strncmp(to_pars->cmd, "echo -", 6) == 0)
+// 		{
+// 			vl = ft_substr(to_pars->cmd, 4, ft_strlen(to_pars->cmd));
+// 			if(!vl || garbagge(ADD, vl, PARS))
+// 				return (-1);
+// 			remove_q(vl);
+// 			printf("%s", vl); 
+// 			/* garbagge(FREE, to_pars->cmd, PARS); */
+// 			to_pars->cmd = NULL;
+// 			to_pars->cmd = ft_strdup("echo");
+// 			if(!to_pars->cmd || garbagge(ADD, to_pars->cmd, PARS))
+// 				return (-1);
+// 			return (1);
+// 		}
+// 		to_pars = to_pars->next;
+// 	}
+// 	return (0);
+// }
 
 int	valid_variable_char(char c)
 {

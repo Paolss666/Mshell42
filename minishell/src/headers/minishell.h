@@ -6,11 +6,9 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 16:56:18 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/08 21:55:04 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -164,6 +162,12 @@ typedef struct s_gb
 	void		*p;
 }				t_gb;
 
+typedef struct s_quote
+{
+	int d_q;
+	int s_q;
+}				t_quote;
+
 
 // ----------- UT --------------- //
 
@@ -283,8 +287,8 @@ int					has_number(char *str);
 int					before_num_is_right(char *str);
 int					after_num_is_right(char *str);
 void				too_much_arg_neg(void);
-void				ft_exit_neg(t_cmd *to_pars);
-void				ft_exit_ls(t_cmd *to_pars);
+int					ft_exit_neg(t_cmd *to_pars);
+int					ft_exit_ls(t_cmd *to_pars);
 int					check_for_max_int(char *str);
 // int					print_pwd(t_envp *envp);
 int					found_echo(t_cmd *to_pars);
@@ -309,6 +313,7 @@ char				*expand_last_dollar(char *expanded_value, char *value);
 char				*expanded_var_value(char *var_value, char *expanded_value);
 void				process_expand(char **value, char **expanded_value, t_expand *expand,
 						t_envp *environment);
+void				join_not_expand(char **value, char **expanded_value);
 int					ft_envp(t_cmd *to_pars);
 int					found_count_pipe(t_cmd *cmd);
 int					valid_variable_char(char c);
@@ -342,7 +347,7 @@ int					ft_only_pipe(char *str);
 int					special_redir_case(char *str);
 int					ft_error_pipe_in_pipe(char *str);
 int					ft_error_pipe_no_word(char *str, int i, int count);
-void				ft_exit(t_cmd   *to_pars, t_envp *env, t_exp *exp);
+int				ft_exit(t_cmd   *to_pars, t_envp *env, t_exp *exp);
 void				purify(char *str);
 int					error_manager(char *str);
 int					ft_error_case_1(char c);
@@ -369,6 +374,14 @@ int					ft_error_semicol(char *str);
 int					ft_error_stx(char *str);
 int					is_error(char *to_epur);
 /* int 				check_only_single_space(char *s); */
+
+char				**ft_split_garbage_gogo(char const *s, char c);
+void	ft_strlcpy_msh(char *token, const char *src, size_t size, size_t *k);
+size_t	ft_strl(const char *s);
+int ft_isspace(char c);
+void ft_inc_quote(char c, int *d_q,  int *s_q);
+int	ft_count_word(const char *s);
+char	**ft_split_garbage_gogo_quote(char const *s, char c);
 
 
 #endif

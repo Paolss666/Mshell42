@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:27:26 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 10:58:38 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 12:08:55 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ char	*found_shlvl_init(char *env)
 	return(NULL);
 }
 
-
 t_envp	*create_enviroment(char **env, int i)
 {
 	int		len;
@@ -63,9 +62,9 @@ t_envp	*create_enviroment(char **env, int i)
 	len = 0;
 	current = (t_envp *)malloc(sizeof(t_envp));
 	if (!current || garbagge(ADD, current, ENV))
-		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE),NULL);
+		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE), NULL);
 	shlvl = found_shlvl_init(env[i]);
-	if(shlvl)
+	if (shlvl)
 		env[i] = shlvl;
 	current->path = env[i];
 	current->value = ft_strdup(ft_strchr(current->path, '=') + 1);
@@ -79,7 +78,28 @@ t_envp	*create_enviroment(char **env, int i)
 	return (current);
 }
 
+char	**creation_env(void)
+{
+	char	*pwd;
+	char	**env;
 
+	env = (char **)malloc(sizeof(char *) * 4);
+	if (!env || garbagge(ADD, env, PARS))
+		return (NULL);
+	pwd = getcwd(NULL, 0);
+	garbagge(ADD, pwd, ENV);
+	env[0] = ft_strjoin("PWD=", pwd);
+	if (!env[0] || garbagge(ADD, env[0], ENV))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	env[1] = ft_strdup("SHLVL=0");
+	if (!env[1] || garbagge(ADD, env[1], ENV))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	env[2] = ft_strdup("_=/usr/bin/");
+	if (!env[2] || garbagge(ADD, env[2], ENV))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	env[3] = NULL;
+	return (env);
+}
 
 t_envp	*found_and_add_env(char **env, t_envp *enviroment)
 {
@@ -90,15 +110,7 @@ t_envp	*found_and_add_env(char **env, t_envp *enviroment)
 	i = -1;
 	current = NULL;
 	if (!env || env[0] == NULL)
-	{
-		env = (char **)malloc(sizeof(char *) * 4);
-		if (!env || garbagge(ADD, env, PARS))
-			return (NULL);
-		env[0] =  ft_strdup("USER=npaolett");
-		env[1] = ft_strdup("SHLVL=0");
-		env[2] = ft_strdup("_=/usr/bin/");
-		env[3] = NULL;
-	}
+		env = creation_env();
 	while (env && env[++i])
 	{
 		current = create_enviroment(env, i);
