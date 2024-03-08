@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 17:00:32 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 23:27:31 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void	add_command_to_list_token(t_cmd **command_list, t_cmd *command)
 	}
 }
 
-void handle_pipe_case(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list, t_cmd *current_commande)
+void handle_pipe_case(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list)
 {
     t_cmd *next_temp;
 	t_cmd *empty_command;
@@ -142,14 +142,12 @@ void handle_pipe_case(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list, t_cmd 
         empty_command = NULL;
         creation_cmd_empty(&empty_command, NULL);
         add_command_to_list_token(&command_list, empty_command);
-        current_commande = NULL;
     }
     if (!next_temp)
     {
         empty_command = NULL;
         creation_cmd_empty(&empty_command, NULL);
         add_command_to_list_token(&command_list, empty_command);
-        current_commande = NULL;
     }
 }
 
@@ -170,7 +168,7 @@ t_cmd	*loop_p_for_token(t_cmd *command_list, t_cmd *temp, t_cmd *prev_temp, t_cm
 			continue ;
 		}
 		else
-			handle_pipe_case(temp, prev_temp, command_list, current_command);
+			handle_pipe_case(temp, prev_temp, command_list);
 		prev_temp = temp;
         temp = temp->next;
 	}

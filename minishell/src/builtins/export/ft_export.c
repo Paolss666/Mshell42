@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:52:41 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/03 14:08:08 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 10:58:34 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,18 @@ t_exp	*init_export(t_envp *enviroment)
 
 	new_export = (t_exp *)malloc(sizeof(t_exp));
 	if (!new_export || garbagge(ADD, new_export, ENV))
-		return (perror("ERROR: t_exp"), exit(EXIT_FAILURE), NULL);
+		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE), NULL);
+	printf("la\n");
 	new_export->path = modif_path_for_export(enviroment);
 	if (!new_export || garbagge(ADD, new_export->path, ENV))
-		return (NULL);
+		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE), NULL);
 	new_export->path = ft_strjoin(new_export->path, "\"");
 	if (!new_export->path || garbagge(ADD, new_export->path, ENV))
-		return (NULL);
+		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE), NULL);
 	new_export->name = NULL;
 	new_export->value = ft_strdup(ft_strchr(new_export->path, '='));
 	if (!new_export->value || garbagge(ADD, new_export->value, ENV))
-		return (garbagge(FREE, new_export->path, ENV), exit(EXIT_FAILURE),
-			NULL);
+		return (garbagge(FLUSH, NULL, ALL), exit(EXIT_FAILURE), NULL);
 	new_export->next = NULL;
 	return (new_export);
 }
@@ -125,6 +125,9 @@ t_exp	*add_env_with_export(t_envp *enviroment)
 
 	export_list = NULL;
 	current_export = NULL;
+	/* print_list_envp(enviroment); */
+	if(!enviroment)
+		return (NULL);
 	while (enviroment != NULL)
 	{
 		new_export = init_export(enviroment);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_echo2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:23:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 16:55:53 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 23:59:56 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ int	echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd, int error_status)
 		error_status = logic_print_echo_flag(to_pars, error_status);
 	else
 	{
-		printf("%s ", str);
+		printf("%s", str);
 		arg_cmd = to_pars->next;
 		error_status = found_echo_not_flag(arg_cmd);
 	}

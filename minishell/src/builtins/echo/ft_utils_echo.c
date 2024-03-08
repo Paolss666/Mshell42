@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:07 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 21:24:33 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:03:12 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char *get_first_non_n_token(const char *cmd)
     const char *next_command;
     const char *first_delimiter;
     const char *next_command_start;
-    size_t token_length;
+    size_t		token_length;
 
     token = "echo -n";
     delimiter = " ";
@@ -70,11 +70,11 @@ int	found_echo(t_cmd *to_pars)
 			return (2);
 		if (ft_strncmp(to_pars->cmd, "echo -", 6) == 0)
 		{
-			vl = ft_substr(to_pars->cmd, 5, ft_strlen(to_pars->cmd));
+			vl = ft_substr(to_pars->cmd, 4, ft_strlen(to_pars->cmd));
 			if(!vl || garbagge(ADD, vl, PARS))
 				return (-1);
 			remove_q(vl);
-			printf("%s ", vl); 
+			printf("%s", vl); 
 			/* garbagge(FREE, to_pars->cmd, PARS); */
 			to_pars->cmd = NULL;
 			to_pars->cmd = ft_strdup("echo");

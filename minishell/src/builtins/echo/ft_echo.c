@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/04 18:21:29 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/07 23:40:55 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	*creation_var_name(int start, int i, char *arg_value)
 	len = i - start;
 	var_name = (char *)malloc(sizeof(char) * (len + 1));
 	if (!var_name || garbagge(ADD, var_name, ENV))
-		return (ft_putstr_fd("FAIL MALLOC\n", 2), NULL);
+		return (NULL);
 	ft_strlcpy(var_name, arg_value + start, len + 1);
 	return (var_name);
 }

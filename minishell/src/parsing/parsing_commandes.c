@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/07 16:36:00 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/08 11:00:20 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -799,6 +799,8 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 
 	i = 1;
 	current = *to_pars;
+	if(!environment)
+		return (NULL);
 	while (current)
 	{
 		if (ft_strcmp(current->cmd, "$") == 0 && current->next)
@@ -865,20 +867,20 @@ int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int erro
 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
 	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
 		return (ft_pwd(to_pars), error_status);
-	else if (!found_count_pipe(to_pars) && found_unset(to_pars))
+	if (!found_count_pipe(to_pars) && found_unset(to_pars))
 		return (unset_delete_variable(to_pars, &enviroment, &export)
 			, error_status);
-	else if (!found_count_pipe(to_pars) && to_pars
+	if (!found_count_pipe(to_pars) && to_pars
 		&& !to_pars->next && found_export(to_pars))
 		return (print_export_list(export), error_status);
-	else if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
+	if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
 		return (print_list_envp(enviroment), error_status);
-	else if (found_export(to_pars)
+	if (found_export(to_pars)
 		&& to_pars->next && !found_count_pipe(to_pars))
 		return (add_export_env(to_pars, &enviroment, &export));
-	else if (!found_count_pipe(to_pars) && found_exit(to_pars))
+	if (!found_count_pipe(to_pars) && found_exit(to_pars))
 		ft_exit(to_pars, enviroment, export);
-	else if (!found_count_pipe(to_pars) && ft_cd(to_pars))
+	if (!found_count_pipe(to_pars) && ft_cd(to_pars))
 		return (found_cd_pwd_update(to_pars, enviroment, export));
 	if (found_echo(to_pars)
 		&& !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
@@ -911,8 +913,6 @@ int	main_brain(char **env, t_brain *brain)
 	if (brain->error == 999)
 		brain->error = 0;
 	brain->prev_err = brain->error;
-	brain->error = 0;
-/* 	printf("line %s\n", brain->line); */
 	if (!brain->to_pars && brain->line)
 		brain->to_pars = add_cmd_star(brain->to_pars, brain->line);
 	if (brain->to_pars)
