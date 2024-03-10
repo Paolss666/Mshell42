@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 21:55:04 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/09 15:48:42 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ typedef struct s_quote
 {
 	int d_q;
 	int s_q;
+	size_t	j;
+	size_t	i;
 }				t_quote;
 
 
@@ -376,12 +378,12 @@ int					is_error(char *to_epur);
 /* int 				check_only_single_space(char *s); */
 
 char				**ft_split_garbage_gogo(char const *s, char c);
-void	ft_strlcpy_msh(char *token, const char *src, size_t size, size_t *k);
-size_t	ft_strl(const char *s);
-int ft_isspace(char c);
-void ft_inc_quote(char c, int *d_q,  int *s_q);
-int	ft_count_word(const char *s);
-char	**ft_split_garbage_gogo_quote(char const *s, char c);
-
+void				ft_strlcpy_msh(char *token, const char *src, size_t size, size_t *k);
+size_t				ft_strl(const char *s);
+int					ft_isspace(char c);
+void				ft_inc_quote(char c, int *d_q,  int *s_q);
+int					ft_count_word(const char *s);
+char				**ft_split_garbage_gogo_quote(char const *s, char c);
+t_quote 			ini_for_quote(void);
 
 #endif

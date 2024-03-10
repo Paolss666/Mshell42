@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 21:12:09 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:40:48 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -588,7 +588,6 @@ int has_both_quotes(const char *str)
 	sngl = 0;
 	db = 0;
 	i = 0;
-	printf("HAS BOTH QUOTE str %s\n", str);
 	while (str[i])
 	{
 		if (str[i] == '\'')
@@ -782,8 +781,6 @@ char	*exp_in_all_quotes(t_cmd *current, t_envp *environment, int r_st)
 	// i = split_quotes(current->cmd, split);
 	// split[i] = NULL;
 	split = ft_split_garbage_gogo_quote(current->cmd, ' ');
-	print_string_array(split);
-	printf("PARSING_CMD\n");
 	// split = ft_split_garbage_gogo(current->cmd, ' ');
 	cmd = ft_found_all_qo(split, r_st, environment);
 	garbagge(FREE, current->cmd, PARS);
@@ -840,9 +837,10 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 }
 
 
-int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
+/* int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 {
-	if (found_echo(to_pars) && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars)) {
+	if (found_echo(to_pars) == 1 && !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
+	{
 		printf("****************************************brain_echo_execve\n");	
 		error_status = found_dollar_print_variable(to_pars, error_status);
 	}
@@ -854,12 +852,12 @@ int		brain_echo_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int er
 	// else if (found_echo(to_pars) && found_count_pipe(to_pars)
 	// 		&& found_infile_or_endfile(to_pars))
 	// 	error_status = ft_execve(to_pars, enviroment, export, error_status);
-	if (!found_token(to_pars) /* && !found_infile_or_endfile(to_pars) */)
+	if (!found_token(to_pars)  && !found_infile_or_endfile(to_pars) )
 		error_status = ft_execve(to_pars, enviroment, export, error_status);
 	else
 		error_status  = ft_execve(to_pars, enviroment, export, error_status);
 	return	(error_status);
-}
+} */
 
 int	ft_found_pwd(t_cmd *to_pars)
 {

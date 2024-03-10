@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 22:13:20 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/09 15:35:10 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	print_not_found(int print_argument, t_cmd *arg_cmd)
 	char *cmd;
 	int count;
 
-	// printf("print_not_found\n");
 	if (print_argument && arg_cmd->cmd != NULL && arg_cmd->cmd[0] != '\0')
 	{
 		count = ft_strl(arg_cmd->cmd);
@@ -27,23 +26,9 @@ int	print_not_found(int print_argument, t_cmd *arg_cmd)
 		if (garbagge(ADD, cmd, PARS))
 			(garbagge(FLUSH, NULL, ALL), exit(99));
 		ft_strlcpy_msh(cmd, arg_cmd->cmd, count + 1, NULL);
-		// if (arg_cmd->cmd && arg_cmd->cmd[0] && !check_if_only_space(arg_cmd->cmd))
-		// {
-		// 	// remove_q(arg_cmd->cmd);
-		// 	printf("%s", arg_cmd->cmd);
-		// 	if (arg_cmd->next)
-		// 		printf(" ");
-		// 	// printf("%s ", arg_cmd->cmd);
-		// }
-		// else 
-		// {
-			// remove_q(arg_cmd->cmd);
-			// if (cmd[0])
-				printf("%s", cmd);
-			if (arg_cmd->next)
-				printf(" ");
-			// printf("%s ", arg_cmd->cmd);
-		// }
+		printf("%s", cmd);
+		if (arg_cmd->next)
+			printf(" ");
 		return (print_argument);
 	}
 	else
@@ -73,8 +58,7 @@ int	logic_display_error(t_cmd *arg_cmd)
 		if (garbagge(ADD, cmd, PARS))
 			(garbagge(FLUSH, NULL, ALL), exit(99));
 		ft_strlcpy_msh(cmd, arg_cmd->cmd, count + 1, NULL);
-		// if (cmd[0])
-				printf("%s", cmd);
+		printf("%s", cmd);
 		return (1);
 	}
 	return (0);

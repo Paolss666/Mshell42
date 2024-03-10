@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error_print.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 22:54:39 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/08 17:31:44 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/10 15:03:59 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,17 +151,14 @@ int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 		err = to_pars->cmd;
 	else
 		err = pipex->cmd_err->cmd;
-	printf("ft_error_commande_not_to_pars\n");
 	cmd = ft_split_garbage_gogo(err, ' ');
-	// cmd = ft_split_garbage(err, ' ');
 	if (!cmd)
 		return (garbagge(FLUSH, NULL, ALL), exit (10), 0);
-	// if (ft_strchr(err, '\'') || ft_strchr(err, '\"'))
-	// 	split_by_quotes_and_spaces(err, cmd, 0);
-	if (ft_strcmp(err, " ") == 0)
+	print_string_array(cmd);
+	if (ft_strcmp(to_pars->cmd, " ") == 0)
 	{
 		ft_putstr_fd("bash : ", 2);
-		ft_putstr_fd(err, 2);
+		ft_putstr_fd(to_pars->cmd, 2);
 		ft_putstr_fd(": command not found\n", 2);	
 		pipex->error = 127;
 		return (pipex->error);

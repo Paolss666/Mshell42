@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:07 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 14:03:25 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:24:24 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int    found_echo(t_cmd *to_pars) // modif gaga
     while (to_pars != NULL)
     {
         if (ft_strcmp(to_pars->cmd, "echo") == 0)
-            return (1);
+            return (printf("sono qua\n"), 1);
         if (ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0) {
             if (ft_check_flag(to_pars->cmd + 6, 0, 0) == -1)
                 return (2);
@@ -111,7 +111,6 @@ int    found_echo(t_cmd *to_pars) // modif gaga
 			else
 			{
             	printf("%s ", vl); 
-            /* garbagge(FREE, to_pars->cmd, PARS); */
             	to_pars->cmd = NULL;
             	to_pars->cmd = ft_strdup("echo");
 			}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 18:20:27 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:40:01 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,25 +310,43 @@ void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex, int
 void	found_echo_in_pipe(t_cmd *new_to_pars)
 {
 	char	*echo;
-
+	char	*cmd;
+	int		count;
+	
 	echo = ft_substr(new_to_pars->cmd, 5, ft_strlen(new_to_pars->cmd));
 	if (!echo || garbagge(ADD, echo, PARS))
 		return (garbagge(FLUSH, NULL, ALL),exit(1));
-	printf("%s\n", echo);
-	garbagge(FLUSH, NULL, ALL);
-	exit(0);
+	count = ft_strl(echo);
+	cmd = malloc(count + 1);
+	if (garbagge(ADD, cmd, PARS))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	ft_strlcpy_msh(cmd, echo, count + 1, NULL);
+	printf("%s\n", cmd);
+	if (new_to_pars->next)
+		printf(" ");
+ 	garbagge(FLUSH, NULL, ALL);
+	exit(1); 
 }
 
 void	found_echo_in_pipe_flag(t_cmd *new_to_pars)
 {
 	char	*echo;
-
-	echo = ft_substr(new_to_pars->cmd, 8, ft_strlen(new_to_pars->cmd));
+	char	*cmd;
+	int		count;
+	
+	echo = ft_substr(new_to_pars->cmd, 5, ft_strlen(new_to_pars->cmd));
 	if (!echo || garbagge(ADD, echo, PARS))
 		return (garbagge(FLUSH, NULL, ALL),exit(1));
-	printf("%s", echo);
+	count = ft_strl(echo);
+	cmd = malloc(count + 1);
+	if (garbagge(ADD, cmd, PARS))
+		(garbagge(FLUSH, NULL, ALL), exit(99));
+	ft_strlcpy_msh(cmd, echo, count + 1, NULL);
+	printf("%s", cmd);
+	if (new_to_pars->next)
+		printf(" ");
 	garbagge(FLUSH, NULL, ALL);
-	exit(0);
+	exit(1); 
 }
 
 void	print_env_array(char **str_array)
@@ -478,7 +496,6 @@ void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execv
 		&& ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset")))
 	{
 		pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
-		printf("commandde bizzare %s\n", pipex->get_g_path);
 		if (!pipex->get_g_path)
 		{
 			j = ft_error_commande_not_to_pars(new_to_pars, pipex);
@@ -501,16 +518,16 @@ void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *e
 		close_if_plus_zero(pipex);
 	else if (new_to_pars->cmd && ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
 		echo_flag_funny(new_to_pars, new_to_pars, pipex->error);
-	if (new_to_pars && new_to_pars->cmd 
+	if (new_to_pars && new_to_pars->cmd && new_to_pars->next
 		&& (ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0))
 		found_echo_in_pipe_flag(new_to_pars);
-	if (new_to_pars && new_to_pars->cmd 
+	if (new_to_pars && new_to_pars->cmd && new_to_pars->next
 		&& (ft_strncmp(new_to_pars->cmd, "echo ", ft_strlen("echo ")) == 0))
 		found_echo_in_pipe(new_to_pars);
-	if (new_to_pars && new_to_pars->cmd
+	if (new_to_pars && new_to_pars->cmd 
 		&& (!ft_strncmp(new_to_pars->cmd, "env ", ft_strlen("env"))))
 		found_env_in_pipe(new_to_pars->cmd, pipex);
-	if (new_to_pars && new_to_pars->cmd
+	if (new_to_pars && new_to_pars->cmd 
 		&& (!ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))))
 		found_export_in_pipe(new_to_pars->cmd, pipex);
 	if (new_to_pars && new_to_pars->cmd
@@ -535,17 +552,11 @@ void	child(t_cmd *new_to_pars, t_execve *pipex, int i, t_envp *enviroment)
 	if (new_to_pars && new_to_pars->cmd)
 	{
 		tmp = ft_strdup(new_to_pars->cmd);
-		printf("tmp %s\n", tmp);
 		if (!tmp || garbagge(ADD, tmp, PARS))
 			return ((void)0);
-		// pipex->good_cmd = ft_split_garbage(new_to_pars->cmd, ' ');
-		printf("child\n");
 		pipex->good_cmd = ft_split_garbage_gogo(new_to_pars->cmd, ' ');
 		if (!pipex->good_cmd)
 			return (perror("error split"), (void)0);
-		// if (ft_strchr(new_to_pars->cmd, '\'')
-		// 	|| ft_strchr(new_to_pars->cmd, '\"'))
-		// 	split_by_quotes_and_spaces(tmp, pipex->good_cmd, 0);
 	}
 	redirection(pipex->fd, pipex->current_pipe, pipex);
 	built_in_child_execve(new_to_pars, pipex, i, enviroment);
@@ -1344,14 +1355,9 @@ t_cmd *copy_node(t_cmd *original)
 	}
     t_cmd *copy = (t_cmd *)malloc(sizeof(t_cmd));
 	if(!copy || garbagge(ADD, copy, PARS))
-	{
-		// printf("return null 2");
         return NULL; // Gestione errore: malloc fallita
-	}
     copy->cmd = original->cmd; // Esempio, sostituisci "data" con il campo che contiene i dati
     copy->next = copy_node(original->next); // Copia il nodo successivo ricorsivamente
-    // printf("Hello \n");
-	// print_list(copy);
 	return (copy);
 }
 
