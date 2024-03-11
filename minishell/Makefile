@@ -6,7 +6,7 @@
 #    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/11 14:07:36 by npaolett         ###   ########.fr        #
+#    Updated: 2024/03/11 14:18:41 by npaolett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ SRC =	src/builtins/ft_pwd.c\
 		src/execve/ft_redirection_in_out.c \
 		src/execve/ft_redir_open_err_et_err.c \
 		src/execve/ft_error_print.c \
+		src/execve/ft_here_doc.c \
 		src/parsing/ft_non_inter.c \
 		src/parsing/parsing_commandes.c \
 		src/parsing/garbage_logic.c \

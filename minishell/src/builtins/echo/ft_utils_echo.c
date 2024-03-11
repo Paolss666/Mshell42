@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:07 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 12:46:14 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:17:36 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ int    found_echo(t_cmd *to_pars) // MODIF GAGA
         if(!vl || garbagge(ADD, vl, PARS))
             return (-1);
         remove_q(vl);
-        printf("vl %s\n", vl);
         j = ft_check_flag(vl + 1, 0, 0);
         if (j > -1)
         {

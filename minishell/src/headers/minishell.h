@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 14:02:43 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:17:09 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,8 @@ void    child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_ex
 /* void				child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, int j); */
 // int	child(t_cmd *new_to_pars, int i, char *get_good_path, t_execve *pipex, t_envp *eniviroment);
 int					read_here_doc(int fd, t_file *file, t_envp *enviroment);
+int					ft_found_here_doc(t_file *new_node, char *here_doc, int fd_here_doc_input,
+						int fd_here_doc_output, t_envp *enviroment);
 void				redirection(int *fd, int i, t_execve *pipex);
 void				redirection_simple(int *fd, int i, t_execve *pipex);
 void				redirection_simple1(int *fd, int i, t_execve *pipex);
