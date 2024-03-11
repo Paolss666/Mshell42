@@ -6,12 +6,11 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:27:26 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 12:08:55 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 12:49:48 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
 
 char	*ft_strcpy(char *dest, const char *src, size_t size)
 {
@@ -29,34 +28,10 @@ char	*ft_strcpy(char *dest, const char *src, size_t size)
 	return (dest);
 }
 
-char	*found_shlvl_init(char *env)
-{
-	int	n;
-	char *value;
-
-	value = NULL;
-	n = 0;
-	if(!env)
-		return (NULL);
-	if((ft_strncmp(env, "SHLVL=", 6) == 0))
-	{
-		value  = ft_strchr(env, '=') + 1;
-		n = ft_atoi(value) + 1;
-		value  = ft_itoa(n);
-		if(!value || garbagge(ADD, value, ENV))
-			return (NULL);
-		env = ft_strjoin("SHLVL=", value);
-		if (!env || garbagge(ADD, env, ENV))
-			return(garbagge(FLUSH, NULL, ALL), exit(124), NULL);
-		return(env);
-	}
-	return(NULL);
-}
-
 t_envp	*create_enviroment(char **env, int i)
 {
 	int		len;
-	t_envp *current;
+	t_envp	*current;
 	char	*shlvl;
 
 	len = 0;
@@ -127,44 +102,21 @@ t_envp	*found_and_add_env(char **env, t_envp *enviroment)
 	return (enviroment);
 }
 
-int ft_envp(t_cmd *to_pars)
+int	ft_envp(t_cmd *to_pars)
 {
-    t_cmd *next;
+	t_cmd	*next;
 
-    while (to_pars != NULL)
-    {
-        if (ft_strcmp(to_pars->cmd, "env") == 0)
-        {
-            next = to_pars->next;
-            if (!next)
-                return 2;
-            else
-                return 1;
-        }
-        to_pars = to_pars->next;
-    }
-    return 0;
-}
-
-void	print_list_envp(t_envp *head)
-{
-	t_envp	*current;
-
-	if (!head)
+	while (to_pars != NULL)
 	{
-		current = (t_envp *)malloc(sizeof(t_envp));
-		if (!current || garbagge(ADD, current, ENV))
-			return ((void)0);
-		current->name = NULL;
-		current->path = NULL;
-		current->value = NULL;
-		head = current;
-		return ((void)0);
+		if (ft_strcmp(to_pars->cmd, "env") == 0)
+		{
+			next = to_pars->next;
+			if (!next)
+				return (2);
+			else
+				return (1);
+		}
+		to_pars = to_pars->next;
 	}
-	current = head;
-	while (current != NULL)
-	{
-		printf("%s\n", current->path);
-		current = current->next;
-	}
+	return (0);
 }

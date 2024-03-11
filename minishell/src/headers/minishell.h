@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 11:43:33 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:02:43 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct s_execve
 	t_cmd		*cmd_err;
 	char		*get_g_path;
 	char		**good_cmd;
+	int			for_h;
 }				t_execve;
 
 
@@ -177,7 +178,7 @@ void 				remove_q(char *s);
 void				print_list(t_cmd *head);
 void 				print_string_array(char **array);
 void				ft_free_tab_garbage(char **tab);
-t_cmd	*add_new_cmd(char **commande_split, int i);
+t_cmd				*add_new_cmd(char **commande_split, int i);
 // ----------- E	RROR --------------- //
 void 				close_if_open(int fd);
 void				close_all_fd_tmp(t_execve *pipex, int n);
@@ -316,8 +317,10 @@ char				*expand_last_dollar(char *expanded_value, char *value);
 char				*expanded_var_value(char *var_value, char *expanded_value);
 void				process_expand(char **value, char **expanded_value, t_expand *expand,
 						t_envp *environment);
+// char	*expnad_join_dollar(char *expanded_value, char *dollar);
 void				join_not_expand(char **value, char **expanded_value);
 int					ft_envp(t_cmd *to_pars);
+char				*found_shlvl_init(char *env);
 int					found_count_pipe(t_cmd *cmd);
 int					valid_variable_char(char c);
 t_envp				*found_and_add_env(char **env, t_envp *enviroment);
@@ -325,7 +328,7 @@ int					found_cd_pwd_update(t_cmd *to_pars, t_envp *enviroment, t_exp *export);
 /* void				add_export_env(t_cmd *to_pars, t_envp **enviroment); */
 int					found_dollar_print_variable(t_cmd *to_pars, int error_status);
 int					logic_found_dollar_interrogation(t_cmd *current, int error_status);
-// char *logic_print_variable(const char *input, t_envp *environment) ;
+					// char *logic_print_variable(const char *input, t_envp *environment) ;
 void				logic_expand_variable(int i, t_envp *enviroment, t_cmd *current, int e_st);
 // void							logic_print_variable(int start, int	i, t_envp *enviroment, t_cmd *arg_cmd);
 char				*logic_print_variable(int i, t_envp *enviroment,t_cmd *arg_cmd, int e_st);

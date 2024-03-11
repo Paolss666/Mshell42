@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 22:54:39 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/11 11:39:55 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:47:02 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,6 @@ int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex)
 	cmd = ft_split_garbage_gogo(err, ' ');
 	if (!cmd)
 		return (garbagge(FLUSH, NULL, ALL), exit (10), 0);
-	print_string_array(cmd);
 	if (ft_strcmp(to_pars->cmd, " ") == 0)
 	{
 		ft_putstr_fd("bash : ", 2);

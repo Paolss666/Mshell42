@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:23:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 11:40:35 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 12:47:17 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,11 @@ int	found_echo_not_flag(t_cmd *arg_cmd)
 {
 	char	*expanded_value;
 	int		print_argument;
-	// char *cmd;
 
 	print_argument = 1;
 	expanded_value = NULL;
 	while (arg_cmd)
 	{
-		// printf("arg_cmd->cmd %s\n", arg_cmd->cmd);
 		if (logic_display_error(arg_cmd))
 			break ;
 		if (ft_strcmp(arg_cmd->cmd, "$") == 0 && arg_cmd->next)
@@ -155,7 +153,7 @@ int	echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd, int error_status)
 	char *str;
 
 	str = find_next_non_n_token(to_pars->cmd);
-	if(!str)
+	if (!str)
 		error_status = logic_print_echo_flag(to_pars, error_status);
 	else
 	{
@@ -169,8 +167,9 @@ int	echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd, int error_status)
 int    found_dollar_print_variable(t_cmd *to_pars, int error_status) // MODIF GAGA
 {
     t_cmd    *arg_cmd;
-    int c_pipe = found_count_pipe(to_pars);
+    int c_pipe;
 
+	c_pipe = found_count_pipe(to_pars);
     while (to_pars)
     {
         if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo") == 0)
@@ -196,29 +195,4 @@ int    found_dollar_print_variable(t_cmd *to_pars, int error_status) // MODIF GA
     return (error_status);
 }
 
-// int	found_dollar_print_variable(t_cmd *to_pars, int error_status)
-// {
-// 	t_cmd	*arg_cmd;
 
-// 	while (to_pars)
-// 	{
-// 		if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo") == 0)
-// 		{
-// 			arg_cmd = to_pars->next;
-// 			if (!arg_cmd)
-// 				return (printf("\n"), 0);
-// 			error_status = found_echo_not_flag(arg_cmd);
-// 		}
-// 		else if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo -n") == 0)
-// 		{
-// 			arg_cmd = to_pars->next;
-// 			if (!arg_cmd)
-// 				return (0);
-// 			error_status = logic_print_echo_flag(to_pars, error_status);
-// 		}
-// 		else if (to_pars->cmd && ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
-// 				error_status = echo_flag_funny(to_pars, arg_cmd, error_status);
-// 		to_pars = to_pars->next;
-// 	}
-// 	return (error_status);
-// }

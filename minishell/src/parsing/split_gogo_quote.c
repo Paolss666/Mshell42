@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_gogo_quote.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 20:33:34 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/09 15:52:36 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 12:31:14 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static void	ft_array(char **array, const char *s, char c)
 {
 	size_t		i;
 	size_t		j;
-    int      count;
+    int			count;
 	size_t		n_words;
 
     (void) c;

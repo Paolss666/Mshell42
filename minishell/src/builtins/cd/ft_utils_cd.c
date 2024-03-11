@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:55:59 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 16:12:43 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 12:44:16 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd)
 void	change_env_export_old_pwd(t_envp *enviroment, t_exp *export,
 		char *old_pwd)
 {
-	if(!old_pwd)
+	if (!old_pwd)
 		return ;
 	if (!enviroment || !export)
 		return (ft_putstr_fd("env ou EXPO not\n", 2), (void)0);

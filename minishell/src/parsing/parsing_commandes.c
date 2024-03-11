@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 11:39:47 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:57:44 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,46 @@
 
 int			g_signal_received = 0;
 
-char	*display_prompt(void)
+int        ft_check_only_quote(char *line)
 {
-	char	*line;
+    int    i;
+    t_quote q;
 
-	line = NULL;
-	while (1)
-	{
-		line = readline(COLOR_RED "Mshell$ " RESET_COLOR);
-		if (!line || garbagge(ADD, line, PARS))
-			return (NULL);
-		if (!line[0])
-			continue ;
-		if (line)
-			add_history(line); // working history
-		return (line);
-	}
+    i = 0;
+    q.d_q = 0;
+    q.s_q = 0;
+    while (line[i])
+    {
+        if (line[i] != '\'' && line[i] != '"')
+            return (1);
+        else
+            ft_inc_quote(line[i], &q.d_q, &q.s_q);
+        i++;
+    }
+    if (q.d_q % 2 == 0 && q.s_q % 2 == 0)
+        return (0);
+    return (1);
+}
+
+char    *display_prompt(void)
+{
+    char    *line;
+
+    line = NULL;
+    while (1)
+    {
+        line = readline(COLOR_RED "Mshell$ " RESET_COLOR);
+        if (!line || garbagge(ADD, line, PARS))
+            return (NULL);
+        if (!line[0] || !ft_check_only_quote(line)) {
+            garbagge(FREE, line, PARS);
+            line = NULL;            
+            continue ;
+        }
+        if (line)
+            add_history(line); // working history
+        return (line);
+    }
 }
 
 
@@ -317,7 +341,6 @@ void	logic_found_shlvl_env(t_envp *enviroment)
 		if (ft_strcmp(enviroment->name, "SHLVL") == 0)
 		{
 			n = ft_atoi(enviroment->value) + 1;
-/* 			printf("n %d\n", n); */
 			enviroment->value = ft_itoa(n);
 			if (!enviroment->value || garbagge(ADD, enviroment->value, ENV))
 				return ((void)0);
@@ -328,7 +351,6 @@ void	logic_found_shlvl_env(t_envp *enviroment)
 			if (!enviroment->path || garbagge(ADD, enviroment->path, ENV))
 				return ((void)0);
 			garbagge(FREE, tmp, ENV);
-/* 			printf("enviroment->path %s\n", enviroment->path); */
 			return ((void)0);
 		}
 		enviroment = enviroment->next;
@@ -492,12 +514,10 @@ char	*ft_good_path_access(t_cmd *to_pars, t_envp *enviroment,
 	found_in_env = NULL;
 	env_split = NULL;
 	with_flag = ft_split_garbage_gogo(to_pars->cmd, ' ');
-	// with_flag = ft_split_garbage(to_pars->cmd, ' ');
-	if(!with_flag)
+	if (!with_flag)
 		return (NULL);
-	// if(ft_strchr(to_pars->cmd, '\'') || ft_strchr(to_pars->cmd, '\"'))
-	// 	split_by_quotes_and_spaces(tmp, with_flag, 0);
-	if((tmp[0] == '\'' && ft_strlen(tmp) == 1) || (tmp[0] == '\"' && ft_strlen(tmp) == 1))
+	if ((tmp[0] == '\'' && ft_strlen(tmp) == 1)
+		|| (tmp[0] == '\"' && ft_strlen(tmp) == 1))
 		return (NULL);
 	found_in_env = found_path_envp_list(enviroment);
 	env_split = ft_split_garbage(found_in_env, ':');
@@ -740,14 +760,10 @@ char	*ft_found_all_qo(char **split, int r_st, t_envp *environment)
 
 	j = 0;
 	joined = NULL;
-	printf("\n\n\nDEBUT FOUND_ALL_GO\n");
-	print_string_array(split);
 	while (split[j])
 	{
 		if (j == 0)
-		// if (logic_check_type_quotes(split[j]) == 3)
 		{
-			printf("echo split %s\n", split[j]);
 			if (joined)
 			{
 				joined = ft_strjoin(joined,
@@ -762,26 +778,17 @@ char	*ft_found_all_qo(char **split, int r_st, t_envp *environment)
 			joined = logic_sgl_q(joined, split[j]);
 		j++;
 	}
-	printf("joined %s\n", joined );
-	printf("FIN FOUND_ALL_GO\n\n\n\n");
 	return (joined);
 }
 
 char	*exp_in_all_quotes(t_cmd *current, t_envp *environment, int r_st)
 {
 	char	*cmd;
-	// int		n;
 	char	**split;
-	// int		i;
 
-	// n = count_quotes_f_spl(current->cmd);
-	// split = (char **)malloc(sizeof(char *) * (n + 2));
-	// if (!split || garbagge(ADD, split, PARS))
-	// 	(garbagge(FLUSH, NULL, ALL), exit(99));
-	// i = split_quotes(current->cmd, split);
-	// split[i] = NULL;
 	split = ft_split_garbage_gogo_quote(current->cmd, ' ');
-	// split = ft_split_garbage_gogo(current->cmd, ' ');
+	if (!split)
+		(garbagge(FLUSH, NULL, ALL), exit(99));
 	cmd = ft_found_all_qo(split, r_st, environment);
 	garbagge(FREE, current->cmd, PARS);
 	return (cmd);
@@ -813,7 +820,7 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 
 	i = 1;
 	current = *to_pars;
-	if(!environment)
+	if (!environment)
 		return (NULL);
 	while (current)
 	{
@@ -828,7 +835,6 @@ t_cmd	*expand_dollar(t_cmd **to_pars, t_envp *environment, int error_status)
 			current = current->next;
 		}
 		logic_exp_quotes(error_status, i, environment, current);
-/* 		printf("check -f due queotes%d\n", logic_check_type_quotes(current->cmd)); */
 		if (logic_check_type_quotes(current->cmd) == 2)
 			current->cmd = current->cmd;
 		current = current->next;
@@ -900,9 +906,10 @@ int        minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, in
     if (!found_count_pipe(to_pars) && ft_cd(to_pars))
         return (found_cd_pwd_update(to_pars, enviroment, export));
     if (!found_count_pipe(to_pars) && found_echo(to_pars) // MODIF GAGA
-        && !found_infile_or_endfile(to_pars)) {
-        found_echo(to_pars);            
-        error_status = found_dollar_print_variable(to_pars, error_status);
+        && !found_infile_or_endfile(to_pars))
+		{
+        	found_echo(to_pars);            
+        	error_status = found_dollar_print_variable(to_pars, error_status);
         }
     else if (!found_token(to_pars) && !found_infile_or_endfile(to_pars))
         error_status = ft_execve(to_pars, enviroment, export, error_status);
@@ -910,6 +917,8 @@ int        minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, in
         error_status  = ft_execve(to_pars, enviroment, export, error_status);
     return (error_status);
 }
+
+
 
 // int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
 // {
@@ -996,7 +1005,6 @@ void	head_minishell(char **env, int temp_error, t_brain *brain)
 	brain->line = display_prompt();
 	if (!brain->line)
 		(garbagge(FLUSH, NULL, ALL), printf("exit\n"), exit(130));
-	// printf("%s\n",brain->line);
 	if (brain->error)
 		temp_error = brain->error;
 	brain->error = error_manager(brain->line);
@@ -1033,7 +1041,8 @@ int	main(int ac, char **av, char **env)
 	g_signal_received = 0;
 	temp_error = 0;
 	if (ac != 1)
-		return (ft_putstr_fd("Don't need arguments\n", 2), garbagge(FLUSH, NULL, ALL), 1);
+		return (ft_putstr_fd("Don't need arguments\n", 2),
+			garbagge(FLUSH, NULL, ALL), 1);
 	ft_issatty(brain);
 	while (1)
 		head_minishell(env, temp_error, brain);

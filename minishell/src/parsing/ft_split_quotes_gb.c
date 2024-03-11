@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 17:47:00 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 15:03:39 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 12:35:10 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,7 @@ int handle_quotes(char **ptr, char quote, char *tokens[], int *i)
 
 int handle_quotes_with(char **ptr, char quote, char *tokens[], int *i)
 {
-   /*  (*ptr)++;   */// Passa oltre la virgoletta
-    printf("tokens[*i] = %s\n", tokens[*i]);
     tokens[(*i)++] = *ptr;  // Aggiunge il punto di inizio del token
-    printf("tokens[*i] = %s\n", tokens[*i]);
     if (find_missing_quote(ptr, quote) == -1)
         return (-1);  // Errore: mancante virgoletta di chiusura
     **ptr = '\0';  // Termina il token alla virgoletta di chiusura
@@ -77,18 +74,14 @@ int split_by_quotes_and_spaces(char *str, char *tokens[], int flag)
 
 	i = 0;
 	ptr = str;
-    print_string_array(tokens);
-    printf("\n\nSPLIT str _%s_\n", str);
     while (*ptr != '\0')
 	{
-        printf("DEBUT BOUCLE token[%d] %s *ptr=|%c|\n", i,  tokens[i], *ptr);
         while (*ptr == ' ')
             ptr++;
         if (*ptr == '\0')
             break;
         if (*ptr == '"' || *ptr == '\'')
 		{
-            printf("IF QUOTE *ptr=|%c|\n", *ptr);
             if (flag)
             {
                 if (handle_quotes_with(&ptr, *ptr, tokens, &i) == - 1)
@@ -96,22 +89,15 @@ int split_by_quotes_and_spaces(char *str, char *tokens[], int flag)
             }
             else
             {
-                printf("ELSE DEBUT i %d, *ptr |%c|\n", i, *ptr);
                 if (handle_quotes(&ptr, *ptr, tokens, &i) == -1)
 		            return (-1);  // Errore: mancante virgoletta di chiusur
-                printf("ELSE DEBUT  i %d, *ptr |%c|\n", i, *ptr);
             }
 		}
 		else
 		{
-            printf("tokens[i] = %s\n", tokens[i]);
             tokens[i++] = ptr;  // Aggiunge il punto di inizio del token
-            printf("tokens[i] = %s\n", tokens[i]);
 			find_and_terminate_token(&ptr);
-            printf("FIN ELSE token[%d] %s\n", i - 1,  tokens[i - 1]);
         }
     }
-    print_string_array(tokens);
-    // tokens[i] = NULL;  // Termina l'array con un puntatore NULL
     return (i);  // Restituisce il numero di token trovati
 }

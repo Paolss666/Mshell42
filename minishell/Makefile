@@ -6,7 +6,7 @@
 #    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/08 20:35:10 by npaolett         ###   ########.fr        #
+#    Updated: 2024/03/11 14:07:36 by npaolett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,12 +23,14 @@ INCL = -I ./libft
 
 SRC =	src/builtins/ft_pwd.c\
 		src/builtins/env/ft_env.c \
+		src/builtins/env/ft_utils_env.c \
 		src/builtins/echo/ft_echo.c \
 		src/builtins/echo/ft_logic_echo.c \
 		src/builtins/echo/ft_logic_echo3.c \
 		src/builtins/echo/ft_utils_echo.c \
 		src/builtins/echo/ft_utils_echo2.c \
 		src/builtins/echo/ft_expand_value.c \
+		src/execve/ft_init_execve.c \
 		src/builtins/ft_exit.c  \
 		src/builtins/ft_exit_logic.c  \
 		src/builtins/ft_exit_logic2.c  \
@@ -43,6 +45,7 @@ SRC =	src/builtins/ft_pwd.c\
 		src/execve/ft_logic_exceve.c	 \
 		src/execve/ft_utils_exceve.c	 \
 		src/execve/ft_redirection_in_out.c \
+		src/execve/ft_redir_open_err_et_err.c \
 		src/execve/ft_error_print.c \
 		src/parsing/ft_non_inter.c \
 		src/parsing/parsing_commandes.c \
