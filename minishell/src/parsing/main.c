@@ -1,19 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/03 13:08:48 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 21:13:22 by npaolett         ###   ########.fr       */
+/*   Created: 2024/03/11 14:24:45 by npaolett          #+#    #+#             */
+/*   Updated: 2024/03/11 21:49:03 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	write(fd, s, ft_strlen(s));
-}
+#include "../headers/minishell.h"

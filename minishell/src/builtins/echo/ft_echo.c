@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 13:48:34 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:35:29 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,38 @@
 
 extern int	g_signal_received;
 
-int	print_not_found(int print_argument, t_cmd *arg_cmd)
-{
-	char *cmd;
-	int count;
 
+void remove_quote(char *s)
+{
+	char	*p;
+	char	*q;
+	t_quote	quote;
+
+	p = s;
+	q = s;
+	quote.d_q = 0;
+	quote.s_q = 0;
+	while (*p != '\0')
+	{
+		ft_inc_quote(*p, &quote.d_q, &quote.s_q);
+		if ((*p != '"' && *p != '\'')
+			|| ((quote.d_q % 2 == 1 && quote.s_q % 2 == 0 && *p == '\'')
+				|| (quote.s_q % 2 == 1 && quote.d_q % 2 == 0 && *p == '"')))
+		{
+			*q = *p;
+			q++;
+		}
+		p++;
+	}
+	*q = '\0';
+}
+
+int    print_not_found(int print_argument, t_cmd *arg_cmd)
+{
 	if (print_argument && arg_cmd->cmd != NULL && arg_cmd->cmd[0] != '\0')
 	{
-		count = ft_strl(arg_cmd->cmd);
-		cmd = malloc(count + 1);
-		if (garbagge(ADD, cmd, PARS))
-			(garbagge(FLUSH, NULL, ALL), exit(99));
-		ft_strlcpy_msh(cmd, arg_cmd->cmd, count + 1, NULL);
-		printf("%s", cmd);
+		remove_quote(arg_cmd->cmd);
+		printf("%s", arg_cmd->cmd);
 		if (arg_cmd->next)
 			printf(" ");
 		return (print_argument);
@@ -35,6 +54,7 @@ int	print_not_found(int print_argument, t_cmd *arg_cmd)
 		print_argument = 1;
 	return (print_argument);
 }
+
 
 int	logic_display_error(t_cmd *arg_cmd)
 {
@@ -118,145 +138,3 @@ char	*add_logic_garbage(char *var_value, char *found)
 	garbagge(FREE, found, PARS);
 	return (value_found);
 }
-
-// I caratteri validi per il nome di una variabile sono lettere,
-// Verifica se il carattere c è valido per il nome di una variabile
-// Trova il prossimo dollaro
-// Se non ci sono più dollari, aggiungi il resto della stringa e termina
-// Trova la parte della stringa prima del dollaro
-// Controlla se il dollaro è seguito da
-//uno spazio o da un carattere non valido per il nome della variabile
-// Aggiungi il dollaro alla stringa espansa senza espanderlo
-// Espandi la variabile
-// Se la variabile non è stata trovata,
-//aggiungi solo il dollaro all'expanded_value
-/* expanded_value = ft_strnjoin(expanded_value, dollar, 1); */
-
-char    *ft_expand_value(char *arg_value, int i, t_envp *environment,
-        int err)
-{
-    char        *value;
-    char        *expanded_value;
-    char        *dollar;
-    int            len_tot;
-    t_expand    *expand;
-    char *tmp;
-    t_quote        q;
-
-    value = arg_value;
-    q.d_q = 0;
-    q.s_q = 0;
-    expanded_value = ft_strdup("");
-    if (!expanded_value || garbagge(ADD, expanded_value, PARS))
-        return (NULL);
-    while (*value)
-    {
-        if (*value == '\'' || *value == '"')
-        {
-            ft_inc_quote(*value, &q.d_q, &q.s_q);
-            tmp = expanded_value;
-            expanded_value = ft_strnjoin(expanded_value, value, 1);
-            if (garbagge(ADD, expanded_value, PARS))
-                (garbagge(FLUSH, NULL, ALL), exit(99));
-            garbagge(FREE, tmp, PARS);
-            value++;
-            continue;
-        }
-        if (q.s_q % 2 == 0 && *value == '$')
-        {
-            dollar = ft_strchr(value, '$');
-            if (!dollar)
-            {
-                expanded_value = expand_last_dollar(expanded_value, value);
-                break ;
-            }
-            len_tot = dollar - value;
-            if (len_tot > 0)
-                expanded_value = cretion_sub_string(value, len_tot, expanded_value);
-            expand = init_structure_expand(i, err, dollar);
-        	process_expand(&value, &expanded_value, expand, environment);
-        }
-        else
-        {
-                tmp = expanded_value;
-                expanded_value = ft_strnjoin(expanded_value, value, 1);
-                if (garbagge(ADD, expanded_value, PARS))
-                    garbagge(FLUSH, NULL, ALL);
-                garbagge(FREE, tmp, PARS);
-                value++;
-        }
-    }
-    return (expanded_value);
-}
-
-// char	*ft_expand_value(char *arg_value, int i, t_envp *environment,
-// 		int err)
-// {
-// 	char		*value;
-// 	char		*expanded_value;
-// 	char		*dollar;
-// 	int			len_tot;
-// 	t_expand	*expand;
-// 	char *tmp;
-// 	t_quote		q;
-
-// 	value = arg_value;
-// 	q.d_q = 0;
-// 	q.s_q = 0;
-// 	expanded_value = ft_strdup("");
-// 	if (!expanded_value || garbagge(ADD, expanded_value, PARS))
-// 		return (NULL);
-// 	while (*value)
-// 	{
-// 		// printf("*value |%c| *value-1 |%c|\n", *value, value[-1]);
-// 		if (*value == '\'' || *value == '"')
-// 		{
-// 			ft_inc_quote(*value, &q.d_q, &q.s_q);
-// 			tmp = expanded_value;
-// 			expanded_value = ft_strnjoin(expanded_value, value, 1);
-// 			if (garbagge(ADD, expanded_value, PARS))
-// 				(garbagge(FLUSH, NULL, ALL), exit(99));
-// 			garbagge(FREE, tmp, PARS);
-// 			value++;
-// 			continue;
-// 		}
-// 		// if (q.s_q % 2 == 0)
-// 		// {
-// 		dollar = ft_strchr(value, '$');
-// 		if (!dollar)
-// 		{
-// 			expanded_value = expand_last_dollar(expanded_value, value);
-// 			break ;
-// 		}
-// 		len_tot = dollar - value;
-// 		if (q.s_q % 2 == 0)
-// 		{
-// 			printf("*value |%s|\n", value);
-// 			if (len_tot > 0)
-// 				expanded_value = cretion_sub_string(value, len_tot, expanded_value);
-// 			expand = init_structure_expand(i, err, dollar);
-// 			process_expand(&value, &expanded_value, expand, environment);
-// 		}
-// 		else
-// 			// join_not_expand(&value, &expanded_value);
-// 		{
-// 			// tmp = expanded_value;
-// 			// expanded_value = ft_strnjoin(expanded_value, value, 1);
-// 			// if (garbagge(ADD, expanded_value, PARS))
-// 			// 	(garbagge(FLUSH, NULL, ALL), exit(99));
-// 			// garbagge(FREE, tmp, PARS);
-// 			// value++;
-// 			while(*value && *value != '\'')
-// 			{
-// 				tmp = expanded_value;
-// 				expanded_value = ft_strnjoin(expanded_value, value, 1);
-// 				if (garbagge(ADD, expanded_value, PARS))
-// 					garbagge(FLUSH, NULL, ALL);
-// 				garbagge(FREE, tmp, PARS);
-// 				value++;
-// 			}
-// 		}
-// 	}
-// /* 	printf("var exp %s\n", expanded_value); */
-// 	return (expanded_value);
-// }

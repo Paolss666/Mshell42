@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 14:14:19 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 14:21:05 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 21:59:40 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*expand_dollar_here_doc(int fd, char *line, t_envp *environment)
 {
 	char	*no_dollar;
 
+	(void)fd;
 	no_dollar = line;
 	while (environment && line && line[0] == '$'
 		&& valid_variable_char(line[1]))
@@ -30,8 +31,6 @@ char	*expand_dollar_here_doc(int fd, char *line, t_envp *environment)
 		}
 		if (ft_strcmp(no_dollar, environment->name) == 0)
 		{
-			ft_putstr_fd(line, fd);
-			ft_putstr_fd("\n", fd);
 			line = ft_strdup(environment->value);
 			if (!line || garbagge(ADD, line, PARS))
 				return (garbagge(FREE, no_dollar, PARS), NULL);
@@ -54,6 +53,16 @@ void	found_cntr_c(int fd, t_file *file, char *line)
 	unlink(file->nome_file);
 	free(line);
 	set_signal_action(1);
+}
+
+void	ft_ctrld_here_doc(char *nome_file)
+{
+	garbagge(FREE, NULL, ENV);
+	ft_putstr_fd("bash: warning: here-document delimited", 2);
+	ft_putstr_fd(" by end-of-file (wanted `", 2);
+	ft_putstr_fd(nome_file, 2);
+	ft_putstr_fd("')\n", 2);
+	g_signal_received = 0;
 }
 
 int	read_here_doc(int fd, t_file *file, t_envp *enviroment)
@@ -79,13 +88,9 @@ int	read_here_doc(int fd, t_file *file, t_envp *enviroment)
 		add_history(line);
 	}
 	if (!line)
-	{
-		garbagge(FREE, NULL, ENV);
-		g_signal_received = 127;
-	}
+		ft_ctrld_here_doc(file->nome_file);
 	return (close(fd), set_signal_action(1), 0);
 }
-
 
 int	create_here_doc_file(char *here_doc)
 {
@@ -100,26 +105,38 @@ int	create_here_doc_file(char *here_doc)
 	return (fd);
 }
 
-
-
-int	ft_found_here_doc(t_file *new_node, char *here_doc, int fd_here_doc_input,
-		int fd_here_doc_output, t_envp *enviroment)
+t_h_c	*h_c_init(void)
 {
+	t_h_c	*h_d;
+
+	h_d = (t_h_c *)malloc(sizeof(t_h_c));
+	if (!h_d || garbagge(ADD, h_d, ENV))
+		(garbagge(ADD, h_d, ENV), exit(99));
+	h_d->fd_here_doc_input = 0;
+	h_d->fd_here_doc_output = 0;
+	return (h_d);
+}
+
+int	ft_found_here_doc(t_file *new_node, char *here_doc, t_envp *enviroment)
+{
+	t_h_c	*h_d;
+
+	h_d = h_c_init();
 	new_node->here_doc = ft_strdup(here_doc);
 	if (!new_node->here_doc || garbagge(ADD, new_node->here_doc, EX))
 		return (2);
-	fd_here_doc_input = create_here_doc_file(new_node->here_doc);
-	fd_here_doc_output = dup(fd_here_doc_input);
-	if (fd_here_doc_output == -1)
+	h_d->fd_here_doc_input = create_here_doc_file(new_node->here_doc);
+	h_d->fd_here_doc_output = dup(h_d->fd_here_doc_input);
+	if (h_d->fd_here_doc_output == -1)
 		perror("fd_here_doc_output");
-	new_node->here_doc_fd = fd_here_doc_output;
-	if (read_here_doc(fd_here_doc_input, new_node, enviroment))
+	new_node->here_doc_fd = h_d->fd_here_doc_output;
+	if (read_here_doc(h_d->fd_here_doc_input, new_node, enviroment))
 	{
-		close(fd_here_doc_input);
-		close(fd_here_doc_output);
+		close(h_d->fd_here_doc_input);
+		close(h_d->fd_here_doc_output);
 		return (1);
 	}
-	close(fd_here_doc_input);
-	close(fd_here_doc_output);
+	close(h_d->fd_here_doc_input);
+	close(h_d->fd_here_doc_output);
 	return (0);
 }

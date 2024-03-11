@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 12:52:57 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/02 14:41:46 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 19:06:25 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	found_in_env_and_delete(t_envp **enviroment, t_cmd *to_pars)
 		garbagge(FREE, current->name, ENV);
 		garbagge(FREE, current->path, ENV);
 		garbagge(FREE, current->value, ENV);
-		garbagge(FREE,current, ENV);
+		garbagge(FREE, current, ENV);
 		current = *enviroment;
 	}
 }
@@ -64,6 +64,7 @@ void	found_in_export_and_delete(t_exp **export, t_cmd *to_pars)
 	t_exp	*prev_exp;
 	char	*cmd;
 
+	prev_exp = NULL;
 	cmd = ft_strjoin("export ", to_pars->cmd);
 	if (!cmd || garbagge(ADD, cmd, ENV))
 		return ((void)0);

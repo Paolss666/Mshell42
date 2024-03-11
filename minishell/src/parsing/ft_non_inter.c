@@ -3,31 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_non_inter.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 10:26:30 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/05 21:46:00 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 22:39:19 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-int	non_interactive_mode(t_brain *brain)
+int	non_interactive_mode(t_brain *brain, char **env)
 {
 	char	*line;
+	int		err;
 
 	line = get_next_line(STDIN_FILENO);
 	if (!line || garbagge(ADD, line, PARS))
 		(garbagge(FLUSH, NULL, ALL), exit(0));
 	line[ft_strlen(line) - 1] = '\0';
 	brain->line = line;
-	(get_next_line(0), garbagge(FLUSH, NULL, ALL), exit(1));
+	err = main_brain(env, brain);
+	get_next_line(0);
+	garbagge(FLUSH, NULL, ALL);
+	exit(err);
 }
 
-void	ft_issatty(t_brain *brain)
+void	ft_issatty(t_brain *brain, char **env)
 {
-	int		fd;
-	
+	int	fd;
+
 	if (isatty(0))
 	{
 		fd = open("/dev/stdin", O_RDWR);
@@ -38,5 +42,5 @@ void	ft_issatty(t_brain *brain)
 		close_if_open(fd);
 	}
 	if (!isatty(0))
-		non_interactive_mode(brain);
+		non_interactive_mode(brain, env);
 }

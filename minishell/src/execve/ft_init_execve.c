@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:43:18 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 14:13:38 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 21:18:09 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,14 @@ int	add_file_node(t_file **fileList, t_cmd *to_pars, char *here_doc,
 {
 	t_file	*new_node;
 	t_file	*temp;
-	int		fd_here_doc_input;
-	int		fd_here_doc_output;
 
 	temp = NULL;
 	new_node = NULL;
-	fd_here_doc_output = 0;
-	fd_here_doc_input = 0;
 	if (!new_node)
 		new_node = init_new_node_redir(new_node, to_pars);
 	if (here_doc)
 	{
-		if (ft_found_here_doc(new_node, here_doc, fd_here_doc_input,
-				fd_here_doc_output, enviroment) == 1)
+		if (ft_found_here_doc(new_node, here_doc, enviroment) == 1)
 			return (1);
 	}
 	else
@@ -130,20 +125,20 @@ char	**export_list_to_exp_env(t_exp *enviroment)
 
 void initialize_file_descriptors(t_execve *pipe)
 {
-    int i;
+	int	i;
 
 	i = 0;
 	pipe->get_g_path = NULL;
 	pipe->good_cmd = NULL;
 	pipe->for_h = 0;
-    while (i < pipe->n_pipe)
+	while (i < pipe->n_pipe)
 	{
-        pipe->tmp_fd[i][0] = 0;
-        pipe->tmp_fd[i][1] = 0;
-        i++;
-    }
-    pipe->fd[0] = 0;
-    pipe->fd[1] = 1;
+		pipe->tmp_fd[i][0] = 0;
+		pipe->tmp_fd[i][1] = 0;
+		i++;
+	}
+	pipe->fd[0] = 0;
+	pipe->fd[1] = 1;
 }
 
 int	found_redir(t_cmd *to_pars, t_envp *enviroment, t_file **file_list)

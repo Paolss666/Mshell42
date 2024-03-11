@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:23:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 12:47:17 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 22:41:50 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,20 +74,22 @@ size_t	funny_c_echo_logic(const char *cmd, size_t idx, size_t cmd_len)
 {
 	while (idx < cmd_len && cmd[idx] != '\0')
 	{
-	    if (cmd[idx] == '-' && cmd[idx + 1] == 'n') 
+		if (cmd[idx] == '-'
+			&& cmd[idx + 1] == 'n')
 		{
-	        idx++; 
-	        if (cmd[idx + 1] == 'n' || cmd[idx + 1] == ' ' || cmd[idx + 1] == '\0')
-	            idx += 2; 
+			idx++;
+			if (cmd[idx + 1] == 'n'
+				|| cmd[idx + 1] == ' ' || cmd[idx + 1] == '\0')
+				idx += 2;
 			else
-	            return (idx);
-	    } 
-		else 
-	        if (cmd[idx] != ' ' && cmd[idx] != 'n')
-	            return (idx);
-	    idx++;
+				return (idx);
+		}
+		else
+			if (cmd[idx] != ' ' && cmd[idx] != 'n')
+				return (idx);
+		idx++;
 	}
-	return(0);
+	return (0);
 }
 
 /* 	return (0); // "echo -n" non trovato, quindi non ci sono caratteri non validi
@@ -96,13 +98,12 @@ size_t	funny_c_echo_logic(const char *cmd, size_t idx, size_t cmd_len)
 
 size_t find_next_non_n_index(const char *cmd)
 {
-	const char *echo_n;
-	size_t echo_n_len;
-	const char *ptr;
-	size_t idx;
-	size_t cmd_len;
-	size_t find;
-	
+	const char	*echo_n;
+	size_t		echo_n_len;
+	const char	*ptr;
+	size_t		idx;
+	size_t		find;
+
 	echo_n = "echo ";
 	echo_n_len = ft_strlen(echo_n);
 	ptr = ft_strstr(cmd, echo_n);
@@ -110,8 +111,7 @@ size_t find_next_non_n_index(const char *cmd)
 		return (0);
 	ptr += echo_n_len;
 	idx = ptr - cmd;
-	cmd_len = ft_strlen(cmd);
-	find = funny_c_echo_logic(cmd, idx, cmd_len);
+	find = funny_c_echo_logic(cmd, idx, ft_strlen(cmd));
 	if (find)
 		return (find);
 	return (0);
@@ -119,32 +119,32 @@ size_t find_next_non_n_index(const char *cmd)
 
 char *ft_strcp_for_me(char *dest, const char *src)
 {
-    char *temp;
-	
+	char	*temp;
+
 	temp = dest;
-    while (*src != '\0')
-        *dest++ = *src++;
-    *dest = '\0';
-    return temp;
+	while (*src != '\0')
+		*dest++ = *src++;
+	*dest = '\0';
+	return (temp);
 }
 
 // Funzione che restituisce il token successivo non valido dopo "echo -n"
 char *find_next_non_n_token(const char *cmd)
 {
-    long unsigned int idx;
-	size_t cmd_len;
-	char *result;
-	
+	long unsigned int	idx;
+	size_t				cmd_len;
+	char				*result;
+
 	idx = find_next_non_n_index(cmd);
-    if (idx == 0)
-        return (NULL);
-    cmd_len = ft_strlen(cmd);
-    result = malloc(cmd_len - idx + 1);
+	if (idx == 0)
+		return (NULL);
+	cmd_len = ft_strlen(cmd);
+	result = malloc(cmd_len - idx + 1);
 	if (!result || garbagge(ADD, result, PARS))
 		return (NULL);
-    if (result != NULL)
-        ft_strcp_for_me(result, &cmd[idx]);
-    return result;
+	if (result != NULL)
+		ft_strcp_for_me(result, &cmd[idx]);
+	return (result);
 }
 
 
@@ -164,35 +164,37 @@ int	echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd, int error_status)
 	return (error_status);
 }
 
-int    found_dollar_print_variable(t_cmd *to_pars, int error_status) // MODIF GAGA
+int    found_dollar_print_variable(t_cmd *to_pars, int error_status, int c_pipe)
 {
-    t_cmd    *arg_cmd;
-    int c_pipe;
+	t_cmd	*arg_cmd;
 
-	c_pipe = found_count_pipe(to_pars);
-    while (to_pars)
-    {
-        if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo") == 0)
-        {
-            arg_cmd = to_pars->next;
-            if (!arg_cmd)
-                return (printf("\n"), 0);
-            error_status = found_echo_not_flag(arg_cmd);
-        }
-        else if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo -n") == 0)
-        {
-            arg_cmd = to_pars->next;
-            if (!arg_cmd)
-                return (0);
-            error_status = logic_print_echo_flag(to_pars, error_status);
-        }
-        else if (to_pars->cmd && ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
-                error_status = echo_flag_funny(to_pars, arg_cmd, error_status);
-        if (!c_pipe)
-            return (error_status);
-        to_pars = to_pars->next;
-    }
-    return (error_status);
+	while (to_pars)
+	{
+		if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo") == 0)
+		{
+			arg_cmd = to_pars->next;
+			if (!arg_cmd)
+				return (printf("\n"), 0);
+			error_status = found_echo_not_flag(arg_cmd);
+		}
+		else if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo -n") == 0)
+		{
+			arg_cmd = to_pars->next;
+			if (!arg_cmd)
+				return (0);
+			error_status = logic_print_echo_flag(to_pars, error_status);
+		}
+		else if (to_pars->cmd && ft_strncmp(to_pars->cmd, "echo -n",
+				ft_strlen("echo -n")) == 0)
+				error_status = echo_flag_funny(to_pars, arg_cmd, error_status);
+		if (!c_pipe)
+			return (error_status);
+		to_pars = to_pars->next;
+	}
+	return (error_status);
 }
+
+
+
 
 

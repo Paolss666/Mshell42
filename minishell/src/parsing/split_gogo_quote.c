@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 20:33:34 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 12:31:14 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 22:14:20 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,73 +38,63 @@ static int	ft_test(char c, const char *c1, const char *cm1, t_quote q)
 size_t	ft_strl_quote(const char *s)
 {
 	size_t	i;
-    size_t  c;
-    t_quote q;
+	size_t	c;
+	t_quote	q;
 
 	i = 0;
-    c = 0;
-    q.d_q = 0;
-    q.s_q = 0;
-    if (i == 0 && s[i])
-    {   
-        ft_inc_quote(s[i++], &q.d_q, &q.s_q);
-            c++;
-    }
-    while (s[i] && ft_test(s[i], &s[i + 1], &s[i - 1], q) == 0)
+	c = 0;
+	q.d_q = 0;
+	q.s_q = 0;
+	while (s[i] && ft_isspace(s[i]) == 0)
+		i++;
+	if (i == 0 && s[i])
 	{
-        ft_inc_quote(s[i++], &q.d_q, &q.s_q);
-            c++;
+		ft_inc_quote(s[i++], &q.d_q, &q.s_q);
+		c++;
+	}
+	while (s[i] && ft_test(s[i], &s[i + 1], &s[i - 1], q) == 0)
+	{
+		ft_inc_quote(s[i++], &q.d_q, &q.s_q);
+		c++;
 	}
 	return (c);
 }
 
-t_quote ini_for_quote(void)
-{
-	t_quote q;
-	
-	q.d_q = 0;
-    q.s_q = 0;
-	q.i = 0;
-	q.j = 0;
-	return (q);
-}
 
-void	ft_strlcpy_msh_quote(char *token, const char *src, size_t size, size_t *k)
+void	ft_strlcpy_msh_quote(char *token,
+	const char *src, size_t size, size_t *k)
 {
 	t_quote	q;
 
 	q = ini_for_quote();
 	while (size > 0 && src[q.i] && q.j < (size - 1))
 	{
-        if (q.i == 0 && src[q.i] )
-        {   
-            ft_inc_quote(src[q.i], &q.d_q, &q.s_q);
-            token[q.j++] = src[q.i++];
-        }
-        else if (src[q.i] && ft_test(src[q.i], &src[q.i + 1], &src[q.i - 1], q) == 0)
-        {
-        	ft_inc_quote(src[q.i], &q.d_q, &q.s_q);
-        	token[q.j++] = src[q.i++];
-        }
+		if (q.i == 0 && src[q.i])
+		{
+			ft_inc_quote(src[q.i], &q.d_q, &q.s_q);
+			token[q.j++] = src[q.i++];
+		}
+		else if (src[q.i]
+			&& ft_test(src[q.i], &src[q.i + 1], &src[q.i - 1], q) == 0)
+		{
+			ft_inc_quote(src[q.i], &q.d_q, &q.s_q);
+			token[q.j++] = src[q.i++];
+		}
 	}
 	token[q.j] = '\0';
-    if (k)
-	{
-        if (src[q.i])
-            *k += q.i + 1;
-        else
-            *k += q.i;
-    }
+	cook(k, q, src);
 }
 
 static void	ft_array(char **array, const char *s, char c)
 {
 	size_t		i;
 	size_t		j;
-    int			count;
+	size_t		count;
+	t_boolean	swtc;
 	size_t		n_words;
 
-    (void) c;
+	(void)c;
+	swtc = 0;
 	i = 0;
 	j = 0;
 	n_words = (ft_count_word(s));
@@ -112,12 +102,12 @@ static void	ft_array(char **array, const char *s, char c)
 		return ;
 	while (s[j] && i < n_words)
 	{
-        count = ft_strl_quote(&(s[j]));
+		count = ft_strl_quote(&(s[j]));
 		array[i] = (char *)malloc(count + 1);
 		if (!array[i] || garbagge(ADD, array[i], PARS))
 			return ;
-        if (count >= 0)
-		    ft_strlcpy_msh_quote(array[i], s + j, count + 1, &j);// penser a incrementer j
+		if (count >= 0)
+			ft_strlcpy_msh_quote(array[i], s + j, count + 1, &j);
 		i++;
 	}
 }
@@ -126,7 +116,7 @@ char	**ft_split_garbage_gogo_quote(char const *s, char c)
 {
 	char	**array;
 
-    (void) c;
+	(void)c;
 	array = (char **)malloc((ft_count_word(s) + 1) * sizeof(char *));
 	if (!array || garbagge(ADD, array, PARS))
 		return (NULL);

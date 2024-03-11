@@ -6,7 +6,7 @@
 #    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/11 14:18:41 by npaolett         ###   ########.fr        #
+#    Updated: 2024/03/11 21:28:58 by npaolett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ SRC =	src/builtins/ft_pwd.c\
 		src/builtins/cd/ft_logic_cd.c 	 \
 		src/builtins/cd/ft_logic_cd2.c 	 \
 		src/builtins/export/ft_export.c  \
+		src/builtins/export/ft_logic_export.c  \
 		src/builtins/ft_unset.c    \
 		src/execve/ft_exceve.c	 \
 		src/execve/ft_logic_exceve.c	 \
@@ -54,7 +55,6 @@ SRC =	src/builtins/ft_pwd.c\
 		src/parsing/garbage.c \
 		src/parsing/ft_free_all_list.c \
 		src/parsing/split_garbage.c \
-		src/parsing/ft_split_quotes_gb.c \
 		src/signal/set_signal_action.c\
 		src/error_manager/error_manager.c \
 		src/error_manager/error_manager_2.c \
@@ -79,6 +79,7 @@ SRC =	src/builtins/ft_pwd.c\
 		src/parsing/split_gogo_utils.c \
 		src/parsing/split_gogo.c\
 		src/parsing/split_gogo_quote.c \
+		src/parsing/main.c \
 
 OBJ = $(SRC:.c=.o)
 # OBJ_BONUS = $(SRC_BONUS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 12:28:46 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 18:11:44 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:31:09 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	found_exit(t_cmd *to_pars)
 
 int	too_many_args(t_cmd *to_pars)
 {
-	// printf("new_to_aprs cmd %s\n", to_pars->next->cmd);
 	if (ft_is_valid_number(to_pars->next->cmd))
 	{
 		ft_putstr_fd("exit\n", 2);
@@ -49,6 +48,8 @@ int	too_many_args(t_cmd *to_pars)
 	{
 		ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("bash: ", 2);
+		if (to_pars->next->cmd)
+			remove_quote(to_pars->next->cmd);
 		ft_putstr_fd(to_pars->next->cmd, 2);
 		ft_putstr_fd(" numeric argument required\n", 2);
 		garbagge(FLUSH, NULL, ALL);
@@ -61,6 +62,7 @@ int	exit_process(t_cmd *to_pars)
 	int	return_value;
 
 	return_value = 0;
+	remove_quote(to_pars->next->cmd);
 	if (ft_is_valid_number(to_pars->next->cmd))
 	{
 		ft_putstr_fd("exit\n", 1);
@@ -89,8 +91,8 @@ int	ft_exit(t_cmd *to_pars, t_envp *env, t_exp *exp)
 
 	i = 0;
 	found_shlv_exit(env, exp);
-	// printf("new_to_aprs cmd %s\n", to_pars->next->cmd);
-	if (!ft_strncmp("exit -", to_pars->cmd, ft_strlen("exit -")))
+	remove_quote(to_pars->cmd);
+	if (!ft_strncmp("exit -", to_pars->cmd, 6))
 		i = ft_exit_neg(to_pars);
 	else
 	{
