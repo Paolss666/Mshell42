@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exceve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/09 17:40:01 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:55:07 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,26 +328,65 @@ void	found_echo_in_pipe(t_cmd *new_to_pars)
 	exit(1); 
 }
 
-void	found_echo_in_pipe_flag(t_cmd *new_to_pars)
+int        ft_check_valid_flag_echo(char *s) // MODIF GAGA
 {
-	char	*echo;
-	char	*cmd;
-	int		count;
-	
-	echo = ft_substr(new_to_pars->cmd, 5, ft_strlen(new_to_pars->cmd));
-	if (!echo || garbagge(ADD, echo, PARS))
-		return (garbagge(FLUSH, NULL, ALL),exit(1));
-	count = ft_strl(echo);
-	cmd = malloc(count + 1);
-	if (garbagge(ADD, cmd, PARS))
-		(garbagge(FLUSH, NULL, ALL), exit(99));
-	ft_strlcpy_msh(cmd, echo, count + 1, NULL);
-	printf("%s", cmd);
-	if (new_to_pars->next)
-		printf(" ");
-	garbagge(FLUSH, NULL, ALL);
-	exit(1); 
+    int i;
+
+    i = 0;
+    if (s && s[i] == '-' && s[i + 1])
+    {
+        while (s[++i])
+        {
+            if (s[i] != 'n')
+                return (1);
+        }
+        return (0);
+    }
+    return (1);
 }
+
+void    found_echo_in_pipe_flag(char **tmp) // MODIF GAGA
+{
+    int i;
+
+    i = 0;
+    while (tmp[i])
+    {
+        if (ft_check_valid_flag_echo(tmp[i]))
+            break;
+        i++;
+    }
+    while (tmp[i])
+    {
+        printf("%s", tmp[i]);
+        if (tmp[i + 1])
+            printf(" ");
+        i++;
+    }
+    garbagge(FLUSH, NULL, ALL);
+    exit(0);
+}
+
+// void	found_echo_in_pipe_flag(t_cmd *new_to_pars)
+// {
+// 	char	*echo;
+// 	char	*cmd;
+// 	int		count;
+	
+// 	echo = ft_substr(new_to_pars->cmd, 5, ft_strlen(new_to_pars->cmd));
+// 	if (!echo || garbagge(ADD, echo, PARS))
+// 		return (garbagge(FLUSH, NULL, ALL),exit(1));
+// 	count = ft_strl(echo);
+// 	cmd = malloc(count + 1);
+// 	if (garbagge(ADD, cmd, PARS))
+// 		(garbagge(FLUSH, NULL, ALL), exit(99));
+// 	ft_strlcpy_msh(cmd, echo, count + 1, NULL);
+// 	printf("%s", cmd);
+// 	if (new_to_pars->next)
+// 		printf(" ");
+// 	garbagge(FLUSH, NULL, ALL);
+// 	exit(1); 
+// }
 
 void	print_env_array(char **str_array)
 {
@@ -483,66 +522,131 @@ void	found_env_in_pipe(char *cmd, t_execve *pipe)
 	exit(1);
 }
 
-void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex)
+void    child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex, char **tmp) // MODIF GAGA
 {
-	int	j;
+    int    j;
 
-	j = 0;
-	if (new_to_pars && new_to_pars->cmd
-		&& ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))
-		&& ft_strncmp(new_to_pars->cmd, "\'export\' ", ft_strlen("\'export\'")) 
-		&& ft_strncmp(new_to_pars->cmd, "exit ", ft_strlen("exit"))
-		&& ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd"))
-		&& ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset")))
-	{
-		pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
-		if (!pipex->get_g_path)
-		{
-			j = ft_error_commande_not_to_pars(new_to_pars, pipex);
-			if (j)
-			{
-				close(pipex->fd[0]);
-				close(pipex->fd[1]);
-				close(pipex->tmp_fd[pipex->current_pipe][0]);
-				close(pipex->tmp_fd[pipex->current_pipe][1]);
-				(garbagge(FLUSH, NULL, ALL), exit(j));
-			}
-		}
-	}
+    j = 0;
+    if (tmp && tmp[0]
+        && ft_strcmp(tmp[0], "echo") // MODIF GAGA
+        && ft_strcmp(tmp[0], "env") // MODIF GAGA
+        && ft_strcmp(tmp[0], "export")
+        && ft_strcmp(tmp[0], "exit")
+        && ft_strcmp(tmp[0], "pwd")
+        && ft_strcmp(tmp[0], "cd")
+        && ft_strcmp(tmp[0], "unset"))
+    {
+        pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
+        printf("commandde bizzare %s\n", pipex->get_g_path);
+        if (!pipex->get_g_path)
+        {
+            j = ft_error_commande_not_to_pars(new_to_pars, pipex);
+            if (j)
+            {
+                close(pipex->fd[0]);
+                close(pipex->fd[1]);
+                close(pipex->tmp_fd[pipex->current_pipe][0]);
+                close(pipex->tmp_fd[pipex->current_pipe][1]);
+                (garbagge(FLUSH, NULL, ALL), exit(j));
+            }
+        }
+    }
 }
 
-void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *enviroment)
+// void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex)
+// {
+// 	int	j;
+
+// 	j = 0;
+// 	if (new_to_pars && new_to_pars->cmd
+// 		&& ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))
+// 		&& ft_strncmp(new_to_pars->cmd, "\'export\' ", ft_strlen("\'export\'")) 
+// 		&& ft_strncmp(new_to_pars->cmd, "exit ", ft_strlen("exit"))
+// 		&& ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd"))
+// 		&& ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset")))
+// 	{
+// 		pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
+// 		if (!pipex->get_g_path)
+// 		{
+// 			j = ft_error_commande_not_to_pars(new_to_pars, pipex);
+// 			if (j)
+// 			{
+// 				close(pipex->fd[0]);
+// 				close(pipex->fd[1]);
+// 				close(pipex->tmp_fd[pipex->current_pipe][0]);
+// 				close(pipex->tmp_fd[pipex->current_pipe][1]);
+// 				(garbagge(FLUSH, NULL, ALL), exit(j));
+// 			}
+// 		}
+// 	}
+// }
+
+void    built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *enviroment)
 {
-	child_check_path_ifnt_error(new_to_pars, enviroment, pipex);
-	if (pipex->n_pipe - 1 > 0)
-		close_if_plus_zero(pipex);
-	else if (new_to_pars->cmd && ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
-		echo_flag_funny(new_to_pars, new_to_pars, pipex->error);
-	if (new_to_pars && new_to_pars->cmd && new_to_pars->next
-		&& (ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0))
-		found_echo_in_pipe_flag(new_to_pars);
-	if (new_to_pars && new_to_pars->cmd && new_to_pars->next
-		&& (ft_strncmp(new_to_pars->cmd, "echo ", ft_strlen("echo ")) == 0))
-		found_echo_in_pipe(new_to_pars);
-	if (new_to_pars && new_to_pars->cmd 
-		&& (!ft_strncmp(new_to_pars->cmd, "env ", ft_strlen("env"))))
-		found_env_in_pipe(new_to_pars->cmd, pipex);
-	if (new_to_pars && new_to_pars->cmd 
-		&& (!ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))))
-		found_export_in_pipe(new_to_pars->cmd, pipex);
-	if (new_to_pars && new_to_pars->cmd
-		&& (!ft_strncmp(new_to_pars->cmd, "exit", ft_strlen("exit"))))
-		found_exit_in_pipe(new_to_pars);
-	if (new_to_pars && new_to_pars->cmd
-		&& (ft_strncmp(new_to_pars->cmd, "pwd", ft_strlen("pwd")) == 0))
-		found_pwd_in_pipe(pipex);
-	else if (!new_to_pars || !new_to_pars->cmd
-		|| !ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset"))
-		|| !ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd")))
-		(garbagge(FLUSH, NULL, ALL), exit(1));
-	else
-		pass_execve(pipex->good_cmd, pipex->get_g_path, pipex, j);
+    char **tmp;
+    
+    tmp = NULL;
+    if (new_to_pars && new_to_pars->cmd)
+    {
+        tmp = ft_split_garbage_gogo(new_to_pars->cmd, ' ');
+        if (!tmp) // SECU A CHECKER AVEC NICO ( ne pas ajouter tmp au garbagge car split l a deja fait)
+            (garbagge(FLUSH, NULL, ALL), exit (99)); // SECU A CHECKER AVEC NICO
+    }
+    child_check_path_ifnt_error(new_to_pars, enviroment, pipex, tmp);
+    if (pipex->n_pipe - 1 > 0)
+        close_if_plus_zero(pipex);
+    if (tmp && tmp[0] && !ft_strcmp(tmp[0], "echo") && tmp[1] && !ft_check_valid_flag_echo(tmp[1]))
+        found_echo_in_pipe_flag(tmp + 1);
+    if (tmp && tmp[0] && !ft_strcmp(tmp[0], "echo"))
+        found_echo_in_pipe(new_to_pars);
+    if (tmp && tmp[0] && !ft_strcmp(tmp[0], "env"))
+        found_env_in_pipe(new_to_pars->cmd, pipex);
+    if (tmp && tmp[0] && !ft_strcmp(tmp[0], "export"))
+        found_export_in_pipe(new_to_pars->cmd, pipex);
+    if (tmp && tmp[0] && !ft_strcmp(tmp[0], "exit"))
+        found_exit_in_pipe(new_to_pars);
+    if (tmp && tmp[0] && !ft_strcmp(tmp[0], "pwd"))
+        found_pwd_in_pipe(pipex);
+    else if (!new_to_pars || !new_to_pars->cmd
+        || !ft_strcmp(tmp[0], "unset")
+        || !ft_strcmp(tmp[0], "cd"))
+        (garbagge(FLUSH, NULL, ALL), exit(1));
+    else
+        pass_execve(pipex->good_cmd, pipex->get_g_path, pipex, j);
 }
+
+// void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *enviroment)
+// {
+// 	child_check_path_ifnt_error(new_to_pars, enviroment, pipex);
+// 	if (pipex->n_pipe - 1 > 0)
+// 		close_if_plus_zero(pipex);
+// 	else if (new_to_pars->cmd && ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
+// 		echo_flag_funny(new_to_pars, new_to_pars, pipex->error);
+// 	if (new_to_pars && new_to_pars->cmd && new_to_pars->next
+// 		&& (ft_strncmp(new_to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0))
+// 		found_echo_in_pipe_flag(new_to_pars);
+// 	if (new_to_pars && new_to_pars->cmd && new_to_pars->next
+// 		&& (ft_strncmp(new_to_pars->cmd, "echo ", ft_strlen("echo ")) == 0))
+// 		found_echo_in_pipe(new_to_pars);
+// 	if (new_to_pars && new_to_pars->cmd 
+// 		&& (!ft_strncmp(new_to_pars->cmd, "env ", ft_strlen("env"))))
+// 		found_env_in_pipe(new_to_pars->cmd, pipex);
+// 	if (new_to_pars && new_to_pars->cmd 
+// 		&& (!ft_strncmp(new_to_pars->cmd, "export ", ft_strlen("export"))))
+// 		found_export_in_pipe(new_to_pars->cmd, pipex);
+// 	if (new_to_pars && new_to_pars->cmd
+// 		&& (!ft_strncmp(new_to_pars->cmd, "exit", ft_strlen("exit"))))
+// 		found_exit_in_pipe(new_to_pars);
+// 	if (new_to_pars && new_to_pars->cmd
+// 		&& (ft_strncmp(new_to_pars->cmd, "pwd", ft_strlen("pwd")) == 0))
+// 		found_pwd_in_pipe(pipex);
+// 	else if (!new_to_pars || !new_to_pars->cmd
+// 		|| !ft_strncmp(new_to_pars->cmd, "unset", ft_strlen("unset"))
+// 		|| !ft_strncmp(new_to_pars->cmd, "cd", ft_strlen("cd")))
+// 		(garbagge(FLUSH, NULL, ALL), exit(1));
+// 	else
+// 		pass_execve(pipex->good_cmd, pipex->get_g_path, pipex, j);
+// }
 
 
 void	child(t_cmd *new_to_pars, t_execve *pipex, int i, t_envp *enviroment)
@@ -699,6 +803,7 @@ int	read_here_doc(int fd, t_file *file, t_envp *enviroment)
 		line = ft_strdup(expand_dollar_here_doc(fd, line, enviroment));
 		if (!line || garbagge(ADD, line, ENV))
 			break ;
+		remove_q(file->nome_file);
 		if (ft_strcmp(line, file->nome_file) == 0)
 			break ;
 		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
@@ -1218,16 +1323,15 @@ char *check_redir_for_split(char *cmd)
 	return (result);
 }
 
-void add_spaces_around_token(char *token, char **new_token, char *last_char)
+void add_spaces_around_token(char *token, char **new_token, char *last_char) // MODIF GAGA
 {
-	*last_char = '\0';
-	if (*last_char != ' ')
-		*(*new_token)++ = ' ';
-	*(*new_token)++ = *token;
-	if ((*(token + 1) != ' ' && *(token + 1) != '\0')
-		&& (*token == '<' || *token == '>' || *token == '|'))
-		*(*new_token)++ = ' ';
-	*last_char = *token;
+    if (*last_char != -1 && *last_char != ' ' && *last_char != '"' && *last_char != '\'')
+        *(*new_token)++ = ' ';
+    *(*new_token)++ = *token;
+    if ((*(token + 1) != ' ' && *(token + 1) != '\0' && *(token + 1) != '"' && *(token + 1) != '\'')
+        && (*token == '<' || *token == '>' || *token == '|'))
+        *(*new_token)++ = ' ';
+    *last_char = *token;
 }
 
 char	*new_cmd_for_token(char *token)
@@ -1242,33 +1346,34 @@ char	*new_cmd_for_token(char *token)
 
 /* CHECK AVANT */
 
-void add_ep_redirection_and_pipes(t_cmd *head)
+void add_ep_redirection_and_pipes(t_cmd *head) // MODIF GAGA
 {
-	t_cmd	*current;
-	char	*new_com;
-	char	*token;
-	char	*new_token;
-	char	last_char;
+    t_cmd    *current;
+    char    *new_com;
+    char    *token;
+    char    *new_token;
+    char    last_char;
 
-	current = head;
-	while (current)
-	{
-		token = current->cmd;
+    current = head;
+    last_char = -1;
+    while (current)
+    {
+        token = current->cmd;
         new_com = new_cmd_for_token(token);
-		new_token = new_com;
-		while (*token)
-		{
-			if (*token == '<' || *token == '>' || *token == '|')
-				add_spaces_around_token(token, &new_token, &last_char);
-			else
-				*new_token++ = *token;
-			last_char = *token; // Aggiorna l'ultimo carattere aggiunto
-			token++;
-		}
-		*new_token = '\0';
-		current->cmd = check_redir_for_split(new_com);
-		current = current->next;
-	}
+        new_token = new_com;
+        while (*token)
+        {
+            if (*token == '<' || *token == '>' || *token == '|')
+                add_spaces_around_token(token, &new_token, &last_char);
+            else
+                *new_token++ = *token;
+            last_char = *token; // Aggiorna l'ultimo carattere aggiunto
+            token++;
+        }
+        *new_token = '\0';
+        current->cmd = check_redir_for_split(new_com);
+        current = current->next;
+    }
 }
 
 void	append_to_list_red(t_cmd **new_list, t_cmd *cmd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/09 15:35:10 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:43:16 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,79 +132,134 @@ char	*add_logic_garbage(char *var_value, char *found)
 //aggiungi solo il dollaro all'expanded_value
 /* expanded_value = ft_strnjoin(expanded_value, dollar, 1); */
 
-
-
-char	*ft_expand_value(char *arg_value, int i, t_envp *environment,
-		int err)
+char    *ft_expand_value(char *arg_value, int i, t_envp *environment,
+        int err)
 {
-	char		*value;
-	char		*expanded_value;
-	char		*dollar;
-	int			len_tot;
-	t_expand	*expand;
-	char *tmp;
-	t_quote		q;
+    char        *value;
+    char        *expanded_value;
+    char        *dollar;
+    int            len_tot;
+    t_expand    *expand;
+    char *tmp;
+    t_quote        q;
 
-	value = arg_value;
-	q.d_q = 0;
-	q.s_q = 0;
-	expanded_value = ft_strdup("");
-	if (!expanded_value || garbagge(ADD, expanded_value, PARS))
-		return (NULL);
-	while (*value)
-	{
-		// printf("*value |%c| *value-1 |%c|\n", *value, value[-1]);
-		if (*value == '\'' || *value == '"')
-		{
-			ft_inc_quote(*value, &q.d_q, &q.s_q);
-			tmp = expanded_value;
-			expanded_value = ft_strnjoin(expanded_value, value, 1);
-			if (garbagge(ADD, expanded_value, PARS))
-				(garbagge(FLUSH, NULL, ALL), exit(99));
-			garbagge(FREE, tmp, PARS);
-			value++;
-			continue;
-		}
-		// if (q.s_q % 2 == 0)
-		// {
-		dollar = ft_strchr(value, '$');
-		if (!dollar)
-		{
-			expanded_value = expand_last_dollar(expanded_value, value);
-			break ;
-		}
-		len_tot = dollar - value;
-		if (q.s_q % 2 == 0)
-		{
-			printf("*value |%s|\n", value);
-			if (len_tot > 0)
-				expanded_value = cretion_sub_string(value, len_tot, expanded_value);
-			expand = init_structure_expand(i, err, dollar);
-			process_expand(&value, &expanded_value, expand, environment);
-		}
-		else
-			// join_not_expand(&value, &expanded_value);
-		{
-			// tmp = expanded_value;
-			// expanded_value = ft_strnjoin(expanded_value, value, 1);
-			// if (garbagge(ADD, expanded_value, PARS))
-			// 	(garbagge(FLUSH, NULL, ALL), exit(99));
-			// garbagge(FREE, tmp, PARS);
-			// value++;
-			while(*value && *value != '\'')
-			{
-				tmp = expanded_value;
-				expanded_value = ft_strnjoin(expanded_value, value, 1);
-				if (garbagge(ADD, expanded_value, PARS))
-					garbagge(FLUSH, NULL, ALL);
-				garbagge(FREE, tmp, PARS);
-				value++;
-			}
-		}
-	}
-/* 	printf("var exp %s\n", expanded_value); */
-	return (expanded_value);
+    value = arg_value;
+    q.d_q = 0;
+    q.s_q = 0;
+    expanded_value = ft_strdup("");
+    if (!expanded_value || garbagge(ADD, expanded_value, PARS))
+        return (NULL);
+    while (*value)
+    {
+        if (*value == '\'' || *value == '"')
+        {
+            ft_inc_quote(*value, &q.d_q, &q.s_q);
+            tmp = expanded_value;
+            expanded_value = ft_strnjoin(expanded_value, value, 1);
+            if (garbagge(ADD, expanded_value, PARS))
+                (garbagge(FLUSH, NULL, ALL), exit(99));
+            garbagge(FREE, tmp, PARS);
+            value++;
+            continue;
+        }
+        if (q.s_q % 2 == 0 && *value == '$')
+        {
+            dollar = ft_strchr(value, '$');
+            if (!dollar)
+            {
+                expanded_value = expand_last_dollar(expanded_value, value);
+                break ;
+            }
+            len_tot = dollar - value;
+            if (len_tot > 0)
+                expanded_value = cretion_sub_string(value, len_tot, expanded_value);
+            expand = init_structure_expand(i, err, dollar);
+        process_expand(&value, &expanded_value, expand, environment);
+        }
+        else
+        {
+                tmp = expanded_value;
+                expanded_value = ft_strnjoin(expanded_value, value, 1);
+                if (garbagge(ADD, expanded_value, PARS))
+                    garbagge(FLUSH, NULL, ALL);
+                garbagge(FREE, tmp, PARS);
+                value++;
+        }
+    }
+    return (expanded_value);
 }
+
+// char	*ft_expand_value(char *arg_value, int i, t_envp *environment,
+// 		int err)
+// {
+// 	char		*value;
+// 	char		*expanded_value;
+// 	char		*dollar;
+// 	int			len_tot;
+// 	t_expand	*expand;
+// 	char *tmp;
+// 	t_quote		q;
+
+// 	value = arg_value;
+// 	q.d_q = 0;
+// 	q.s_q = 0;
+// 	expanded_value = ft_strdup("");
+// 	if (!expanded_value || garbagge(ADD, expanded_value, PARS))
+// 		return (NULL);
+// 	while (*value)
+// 	{
+// 		// printf("*value |%c| *value-1 |%c|\n", *value, value[-1]);
+// 		if (*value == '\'' || *value == '"')
+// 		{
+// 			ft_inc_quote(*value, &q.d_q, &q.s_q);
+// 			tmp = expanded_value;
+// 			expanded_value = ft_strnjoin(expanded_value, value, 1);
+// 			if (garbagge(ADD, expanded_value, PARS))
+// 				(garbagge(FLUSH, NULL, ALL), exit(99));
+// 			garbagge(FREE, tmp, PARS);
+// 			value++;
+// 			continue;
+// 		}
+// 		// if (q.s_q % 2 == 0)
+// 		// {
+// 		dollar = ft_strchr(value, '$');
+// 		if (!dollar)
+// 		{
+// 			expanded_value = expand_last_dollar(expanded_value, value);
+// 			break ;
+// 		}
+// 		len_tot = dollar - value;
+// 		if (q.s_q % 2 == 0)
+// 		{
+// 			printf("*value |%s|\n", value);
+// 			if (len_tot > 0)
+// 				expanded_value = cretion_sub_string(value, len_tot, expanded_value);
+// 			expand = init_structure_expand(i, err, dollar);
+// 			process_expand(&value, &expanded_value, expand, environment);
+// 		}
+// 		else
+// 			// join_not_expand(&value, &expanded_value);
+// 		{
+// 			// tmp = expanded_value;
+// 			// expanded_value = ft_strnjoin(expanded_value, value, 1);
+// 			// if (garbagge(ADD, expanded_value, PARS))
+// 			// 	(garbagge(FLUSH, NULL, ALL), exit(99));
+// 			// garbagge(FREE, tmp, PARS);
+// 			// value++;
+// 			while(*value && *value != '\'')
+// 			{
+// 				tmp = expanded_value;
+// 				expanded_value = ft_strnjoin(expanded_value, value, 1);
+// 				if (garbagge(ADD, expanded_value, PARS))
+// 					garbagge(FLUSH, NULL, ALL);
+// 				garbagge(FREE, tmp, PARS);
+// 				value++;
+// 			}
+// 		}
+// 	}
+// /* 	printf("var exp %s\n", expanded_value); */
+// 	return (expanded_value);
+// }
 
 // char	*ft_expand_value(char *arg_value, int i, t_envp *environment,
 // 		int err)

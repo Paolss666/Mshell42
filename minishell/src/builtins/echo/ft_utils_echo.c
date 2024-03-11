@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:07 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/09 17:24:24 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:22:39 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,49 +79,110 @@ int ft_check_flag(char *flag, int i, int j) // modif gaga
     return (-1);
 }
 
-int    found_echo(t_cmd *to_pars) // modif gaga
+int    found_echo(t_cmd *to_pars) // MODIF GAGA
 {
     char    *vl;
-	int j;
+    char *tmp;
+    int j;
 
     vl = NULL;
-    while (to_pars != NULL)
-    {
-        if (ft_strcmp(to_pars->cmd, "echo") == 0)
-            return (printf("sono qua\n"), 1);
-        if (ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0) {
-            if (ft_check_flag(to_pars->cmd + 6, 0, 0) == -1)
-                return (2);
-        }
-        if (ft_strncmp(to_pars->cmd, "echo -", 6) == 0)
+    // while (to_pars != NULL)
+    // {
+        tmp = ft_strdup(to_pars->cmd);
+        if(!tmp || garbagge(ADD, tmp, PARS))
+                (garbagge(FLUSH, NULL, ALL), exit(99));
+        remove_q(tmp);
+        if (ft_strcmp(tmp, "echo") == 0)
         {
-            vl = ft_substr(to_pars->cmd, 5, ft_strlen(to_pars->cmd));
+            to_pars->cmd = ft_strdup("echo");
+            if(!to_pars->cmd  || garbagge(ADD, to_pars->cmd , PARS))
+                (garbagge(FLUSH, NULL, ALL), exit(99));
+            return (garbagge(FREE, tmp, PARS), 1);
+        }
+        if (ft_strncmp(tmp, "echo -n", ft_strlen("echo -n")) == 0) {
+            if (ft_check_flag(tmp + 6, 0, 0) == -1)
+            {
+                to_pars->cmd = ft_strdup("echo -n");
+                if(!to_pars->cmd  || garbagge(ADD, to_pars->cmd , PARS))
+                    (garbagge(FLUSH, NULL, ALL), exit(99));
+                return (garbagge(FREE, tmp, PARS), 2);
+            }
+        }
+        if (ft_strncmp(tmp, "echo -", 6) == 0)
+        {
+            vl = ft_substr(tmp, 5, ft_strlen(tmp));
             if(!vl || garbagge(ADD, vl, PARS))
                 return (-1);
             remove_q(vl);
-			printf("vl %s\n", vl);
-			j = ft_check_flag(vl + 1, 0, 0);
-			if (j > -1)
-			{
-				if (j > -1)
-					printf("%s ", vl + j + 1);
-				to_pars->cmd = NULL;
-            	to_pars->cmd = ft_strdup("echo -n");
-			}
-			else
-			{
-            	printf("%s ", vl); 
-            	to_pars->cmd = NULL;
-            	to_pars->cmd = ft_strdup("echo");
-			}
+            printf("vl %s\n", vl);
+            j = ft_check_flag(vl + 1, 0, 0);
+            if (j > -1)
+            {
+                if (j > -1)
+                    printf("%s ", vl + j + 1);
+                to_pars->cmd = NULL;
+                to_pars->cmd = ft_strdup("echo -n");
+            }
+            else
+            {
+                printf("%s ", vl); 
+            /* garbagge(FREE, to_pars->cmd, PARS); */
+                to_pars->cmd = NULL;
+                to_pars->cmd = ft_strdup("echo");
+            }
             if(!to_pars->cmd || garbagge(ADD, to_pars->cmd, PARS))
                 return (-1);
-            return (1);
-        }
+            return (garbagge(FREE, tmp, PARS), 1);
+        // }
+        garbagge(FREE, tmp, PARS);
         to_pars = to_pars->next;
     }
     return (0);
 }
+
+// int    found_echo(t_cmd *to_pars) // modif gaga
+// {
+//     char    *vl;
+// 	int j;
+
+//     vl = NULL;
+//     while (to_pars != NULL)
+//     {
+//         if (ft_strcmp(to_pars->cmd, "echo") == 0)
+//             return (printf("sono qua\n"), 1);
+//         if (ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0) {
+//             if (ft_check_flag(to_pars->cmd + 6, 0, 0) == -1)
+//                 return (2);
+//         }
+//         if (ft_strncmp(to_pars->cmd, "echo -", 6) == 0)
+//         {
+//             vl = ft_substr(to_pars->cmd, 5, ft_strlen(to_pars->cmd));
+//             if(!vl || garbagge(ADD, vl, PARS))
+//                 return (-1);
+//             remove_q(vl);
+// 			printf("vl %s\n", vl);
+// 			j = ft_check_flag(vl + 1, 0, 0);
+// 			if (j > -1)
+// 			{
+// 				if (j > -1)
+// 					printf("%s ", vl + j + 1);
+// 				to_pars->cmd = NULL;
+//             	to_pars->cmd = ft_strdup("echo -n");
+// 			}
+// 			else
+// 			{
+//             	printf("%s ", vl); 
+//             	to_pars->cmd = NULL;
+//             	to_pars->cmd = ft_strdup("echo");
+// 			}
+//             if(!to_pars->cmd || garbagge(ADD, to_pars->cmd, PARS))
+//                 return (-1);
+//             return (1);
+//         }
+//         to_pars = to_pars->next;
+//     }
+//     return (0);
+// }
 
 // int	found_echo(t_cmd *to_pars)
 // {

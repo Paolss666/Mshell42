@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_echo2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:23:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/09 17:27:21 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:40:35 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,30 +166,59 @@ int	echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd, int error_status)
 	return (error_status);
 }
 
-
-int	found_dollar_print_variable(t_cmd *to_pars, int error_status)
+int    found_dollar_print_variable(t_cmd *to_pars, int error_status) // MODIF GAGA
 {
-	t_cmd	*arg_cmd;
+    t_cmd    *arg_cmd;
+    int c_pipe = found_count_pipe(to_pars);
 
-	while (to_pars)
-	{
-		if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo") == 0)
-		{
-			arg_cmd = to_pars->next;
-			if (!arg_cmd)
-				return (printf("\n"), 0);
-			error_status = found_echo_not_flag(arg_cmd);
-		}
-		else if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo -n") == 0)
-		{
-			arg_cmd = to_pars->next;
-			if (!arg_cmd)
-				return (0);
-			error_status = logic_print_echo_flag(to_pars, error_status);
-		}
-		else if (to_pars->cmd && ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
-				error_status = echo_flag_funny(to_pars, arg_cmd, error_status);
-		to_pars = to_pars->next;
-	}
-	return (error_status);
+    while (to_pars)
+    {
+        if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo") == 0)
+        {
+            arg_cmd = to_pars->next;
+            if (!arg_cmd)
+                return (printf("\n"), 0);
+            error_status = found_echo_not_flag(arg_cmd);
+        }
+        else if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo -n") == 0)
+        {
+            arg_cmd = to_pars->next;
+            if (!arg_cmd)
+                return (0);
+            error_status = logic_print_echo_flag(to_pars, error_status);
+        }
+        else if (to_pars->cmd && ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
+                error_status = echo_flag_funny(to_pars, arg_cmd, error_status);
+        if (!c_pipe)
+            return (error_status);
+        to_pars = to_pars->next;
+    }
+    return (error_status);
 }
+
+// int	found_dollar_print_variable(t_cmd *to_pars, int error_status)
+// {
+// 	t_cmd	*arg_cmd;
+
+// 	while (to_pars)
+// 	{
+// 		if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo") == 0)
+// 		{
+// 			arg_cmd = to_pars->next;
+// 			if (!arg_cmd)
+// 				return (printf("\n"), 0);
+// 			error_status = found_echo_not_flag(arg_cmd);
+// 		}
+// 		else if (to_pars->cmd && ft_strcmp(to_pars->cmd, "echo -n") == 0)
+// 		{
+// 			arg_cmd = to_pars->next;
+// 			if (!arg_cmd)
+// 				return (0);
+// 			error_status = logic_print_echo_flag(to_pars, error_status);
+// 		}
+// 		else if (to_pars->cmd && ft_strncmp(to_pars->cmd, "echo -n", ft_strlen("echo -n")) == 0)
+// 				error_status = echo_flag_funny(to_pars, arg_cmd, error_status);
+// 		to_pars = to_pars->next;
+// 	}
+// 	return (error_status);
+// }

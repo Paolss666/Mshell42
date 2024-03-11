@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_commandes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/09 17:40:48 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:39:47 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -879,36 +879,67 @@ int	ft_found_pwd(t_cmd *to_pars)
 	// 		&& found_infile_or_endfile(to_pars))
 	// 	error_status = ft_execve(to_pars, enviroment, export, error_status); */
 
-
-int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
+int        minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status) // MODIF GAGA
 {
-	to_pars = expand_dollar(&to_pars, enviroment, error_status);
-	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
-		return (ft_pwd(to_pars), error_status);
-	if (!found_count_pipe(to_pars) && found_unset(to_pars))
-		return (unset_delete_variable(to_pars, &enviroment, &export)
-			, error_status);
-	if (!found_count_pipe(to_pars) && to_pars
-		&& !to_pars->next && found_export(to_pars))
-		return (print_export_list(export), error_status);
-	if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
-		return (print_list_envp(enviroment), error_status);
-	if (found_export(to_pars)
-		&& to_pars->next && !found_count_pipe(to_pars))
-		return (add_export_env(to_pars, &enviroment, &export));
-	if (!found_count_pipe(to_pars) && found_exit(to_pars))
-		return (ft_exit(to_pars, enviroment, export));
-	if (!found_count_pipe(to_pars) && ft_cd(to_pars))
-		return (found_cd_pwd_update(to_pars, enviroment, export));
-	if (found_echo(to_pars)
-		&& !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
-		error_status = found_dollar_print_variable(to_pars, error_status);
-	else if (!found_token(to_pars) && !found_infile_or_endfile(to_pars))
-		error_status = ft_execve(to_pars, enviroment, export, error_status);
-	else
-		error_status  = ft_execve(to_pars, enviroment, export, error_status);
-	return (error_status);
+    to_pars = expand_dollar(&to_pars, enviroment, error_status);
+    if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
+        return (ft_pwd(to_pars), error_status);
+    if (!found_count_pipe(to_pars) && found_unset(to_pars))
+        return (unset_delete_variable(to_pars, &enviroment, &export)
+            , error_status);
+    if (!found_count_pipe(to_pars) && to_pars
+        && !to_pars->next && found_export(to_pars))
+        return (print_export_list(export), error_status);
+    if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
+        return (print_list_envp(enviroment), error_status);
+    if (found_export(to_pars)
+        && to_pars->next && !found_count_pipe(to_pars))
+        return (add_export_env(to_pars, &enviroment, &export));
+    if (!found_count_pipe(to_pars) && found_exit(to_pars))
+        return (ft_exit(to_pars, enviroment, export));
+    if (!found_count_pipe(to_pars) && ft_cd(to_pars))
+        return (found_cd_pwd_update(to_pars, enviroment, export));
+    if (!found_count_pipe(to_pars) && found_echo(to_pars) // MODIF GAGA
+        && !found_infile_or_endfile(to_pars)) {
+        found_echo(to_pars);            
+        error_status = found_dollar_print_variable(to_pars, error_status);
+        }
+    else if (!found_token(to_pars) && !found_infile_or_endfile(to_pars))
+        error_status = ft_execve(to_pars, enviroment, export, error_status);
+    else
+        error_status  = ft_execve(to_pars, enviroment, export, error_status);
+    return (error_status);
 }
+
+// int		minishell_brain(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
+// {
+// 	to_pars = expand_dollar(&to_pars, enviroment, error_status);
+// 	if (ft_found_pwd(to_pars) && !found_count_pipe(to_pars))
+// 		return (ft_pwd(to_pars), error_status);
+// 	if (!found_count_pipe(to_pars) && found_unset(to_pars))
+// 		return (unset_delete_variable(to_pars, &enviroment, &export)
+// 			, error_status);
+// 	if (!found_count_pipe(to_pars) && to_pars
+// 		&& !to_pars->next && found_export(to_pars))
+// 		return (print_export_list(export), error_status);
+// 	if (!found_count_pipe(to_pars) && ft_envp(to_pars) == 2)
+// 		return (print_list_envp(enviroment), error_status);
+// 	if (found_export(to_pars)
+// 		&& to_pars->next && !found_count_pipe(to_pars))
+// 		return (add_export_env(to_pars, &enviroment, &export));
+// 	if (!found_count_pipe(to_pars) && found_exit(to_pars))
+// 		return (ft_exit(to_pars, enviroment, export));
+// 	if (!found_count_pipe(to_pars) && ft_cd(to_pars))
+// 		return (found_cd_pwd_update(to_pars, enviroment, export));
+// 	if (found_echo(to_pars)
+// 		&& !found_count_pipe(to_pars) && !found_infile_or_endfile(to_pars))
+// 		error_status = found_dollar_print_variable(to_pars, error_status);
+// 	else if (!found_token(to_pars) && !found_infile_or_endfile(to_pars))
+// 		error_status = ft_execve(to_pars, enviroment, export, error_status);
+// 	else
+// 		error_status  = ft_execve(to_pars, enviroment, export, error_status);
+// 	return (error_status);
+// }
 
 
 t_brain	*init_brain(void)

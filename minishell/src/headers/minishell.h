@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/09 15:48:42 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:43:33 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,8 @@ int					logic_add_back(t_list **a, t_list **b, t_list **c, t_gb *gb);
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int error_status);
 void				parent(int *fd, int i, t_execve *pipex);
 // void	built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex,  int j, t_envp *enviroment);
-void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex);
+void    child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex, char **tmp);
+// void	child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex);
 // void				child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex);
 // void	child(t_cmd *new_to_pars, int i, t_execve *pipex, int j, t_envp *enviroment, t_cmd *cmd_err);
 // void				child(t_cmd *new_to_pars, int i, t_execve *pipex, int j, t_envp *enviroment);
