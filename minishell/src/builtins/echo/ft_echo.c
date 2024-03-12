@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:37 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 17:35:29 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:12:16 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,7 @@
 
 extern int	g_signal_received;
 
-
-void remove_quote(char *s)
-{
-	char	*p;
-	char	*q;
-	t_quote	quote;
-
-	p = s;
-	q = s;
-	quote.d_q = 0;
-	quote.s_q = 0;
-	while (*p != '\0')
-	{
-		ft_inc_quote(*p, &quote.d_q, &quote.s_q);
-		if ((*p != '"' && *p != '\'')
-			|| ((quote.d_q % 2 == 1 && quote.s_q % 2 == 0 && *p == '\'')
-				|| (quote.s_q % 2 == 1 && quote.d_q % 2 == 0 && *p == '"')))
-		{
-			*q = *p;
-			q++;
-		}
-		p++;
-	}
-	*q = '\0';
-}
-
-int    print_not_found(int print_argument, t_cmd *arg_cmd)
+int	print_not_found(int print_argument, t_cmd *arg_cmd)
 {
 	if (print_argument && arg_cmd->cmd != NULL && arg_cmd->cmd[0] != '\0')
 	{
@@ -54,7 +28,6 @@ int    print_not_found(int print_argument, t_cmd *arg_cmd)
 		print_argument = 1;
 	return (print_argument);
 }
-
 
 int	logic_display_error(t_cmd *arg_cmd)
 {

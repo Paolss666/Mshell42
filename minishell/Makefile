@@ -6,7 +6,7 @@
 #    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/11 21:28:58 by npaolett         ###   ########.fr        #
+#    Updated: 2024/03/12 01:09:19 by npaolett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,10 @@ SRC =	src/builtins/ft_pwd.c\
 		src/builtins/echo/ft_logic_echo3.c \
 		src/builtins/echo/ft_utils_echo.c \
 		src/builtins/echo/ft_utils_echo2.c \
+		src/builtins/echo/ft_utils_echo4.c \
+		src/builtins/echo/ft_utils_echo5.c \
 		src/builtins/echo/ft_expand_value.c \
+		src/builtins/echo/ft_utils_expand_value.c \
 		src/execve/ft_init_execve.c \
 		src/builtins/ft_exit.c  \
 		src/builtins/ft_exit_logic.c  \
@@ -41,14 +44,22 @@ SRC =	src/builtins/ft_pwd.c\
 		src/builtins/cd/ft_logic_cd2.c 	 \
 		src/builtins/export/ft_export.c  \
 		src/builtins/export/ft_logic_export.c  \
+		src/builtins/export/ft_utils_export.c  \
+		src/builtins/export/ft_utils_export2.c  \
+		src/builtins/export/ft_utils_export3.c  \
+		src/builtins/export/ft_utils_export4.c  \
+		src/builtins/export/ft_utils_export5.c  \
 		src/builtins/ft_unset.c    \
 		src/execve/ft_exceve.c	 \
+		src/execve/ft_utils_execve2.c	 \
 		src/execve/ft_logic_exceve.c	 \
 		src/execve/ft_utils_exceve.c	 \
 		src/execve/ft_redirection_in_out.c \
 		src/execve/ft_redir_open_err_et_err.c \
 		src/execve/ft_error_print.c \
 		src/execve/ft_here_doc.c \
+		src/execve/ft_print_err.c \
+		src/execve/ft_execve_child.c \
 		src/parsing/ft_non_inter.c \
 		src/parsing/parsing_commandes.c \
 		src/parsing/garbage_logic.c \

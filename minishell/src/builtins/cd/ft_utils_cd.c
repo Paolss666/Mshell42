@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:55:59 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 12:44:16 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:55:33 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd)
 {
 	char	*name_variable;
 
-	if(!old_pwd)
+	if (!old_pwd)
 		return ;
 	name_variable = ft_strjoin("=", old_pwd);
 	if (!name_variable || garbagge(ADD, name_variable, ENV))
@@ -40,8 +40,6 @@ void	found_old_pwd_env_and_modif(t_envp *enviroment, char *old_pwd)
 		return (garbagge(FREE, name_variable, ENV), garbagge(FREE,
 				enviroment->value, ENV), (void)0);
 }
-
-
 
 void	found_old_pwd_exp_and_modif(t_exp *export, char *old_pwd)
 {
@@ -86,7 +84,6 @@ void	change_env_export_old_pwd(t_envp *enviroment, t_exp *export,
 
 int	found_cd_home(t_exp *export, t_envp *enviroment, char *home, char *pwd)
 {
-
 	if (home && chdir(home) == 0 && pwd)
 	{
 		change_env_export_pwd(enviroment, export, home);

@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 12:28:46 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 17:31:09 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:54:18 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ int	exit_process(t_cmd *to_pars)
 	else
 		return (ft_exit_ls(to_pars));
 	return (0);
-
 }
 
 int	ft_exit(t_cmd *to_pars, t_envp *env, t_exp *exp)

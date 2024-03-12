@@ -6,13 +6,11 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 12:52:57 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/11 19:06:25 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:53:33 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
-/* Il FAUT CREER UN DOSSIER QUE POUR LA COMMANDE UNSET */
 
 int	found_unset(t_cmd *to_pars)
 {

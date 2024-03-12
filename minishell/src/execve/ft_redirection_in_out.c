@@ -6,12 +6,11 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:19:32 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 17:39:31 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 23:11:35 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
 
 void	ft_open_redir_here_doc(t_file *file_list, t_execve *pipex, int i)
 {

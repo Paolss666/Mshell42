@@ -6,17 +6,15 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:33:51 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 21:31:35 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 01:12:14 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-// void printTripleStringArray(char ***array);
-
 extern int	g_signal_received;
 
-int found_count_pipe(t_cmd *cmd)
+int	found_count_pipe(t_cmd *cmd)
 {
 	int		pipe_count;
 	char	*str;
@@ -39,7 +37,6 @@ int found_count_pipe(t_cmd *cmd)
 	}
 	return (pipe_count);
 }
-
 
 char	*create_temp_buffer(const char *str1, const char *str2)
 {
@@ -88,7 +85,7 @@ void	creation_cmd(t_cmd **current_commande, const char *new_cmd)
 	}
 }
 
-void creation_cmd_empty(t_cmd **current_commande, const char *new_cmd)
+void	creation_cmd_empty(t_cmd **current_commande, const char *new_cmd)
 {
 	t_cmd	*new_node;
 	t_cmd	*temp;
@@ -121,169 +118,15 @@ int	is_current_command_empty(t_cmd *current_command)
 	return (current_command == NULL);
 }
 
-void	add_command_to_list_token(t_cmd **command_list, t_cmd *command)
-{
-	t_cmd	*temp_list;
-
-	if (!*command_list)
-		*command_list = command;
-	else
-	{
-		temp_list = *command_list;
-		while (temp_list->next)
-			temp_list = temp_list->next;
-		temp_list->next = command;
-	}
-}
-
-void handle_pipe_case(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list)
-{
-	t_cmd	*next_temp;
-	t_cmd	*empty_command;
-
-	next_temp = temp->next;
-	if (!prev_temp || (prev_temp && ft_strcmp(temp->cmd, "|") == 0
-			&& ft_strcmp(prev_temp->cmd, "|") == 0))
-	{
-		empty_command = NULL;
-		creation_cmd_empty(&empty_command, NULL);
-		add_command_to_list_token(&command_list, empty_command);
-	}
-	if (!next_temp)
-	{
-		empty_command = NULL;
-		creation_cmd_empty(&empty_command, NULL);
-		add_command_to_list_token(&command_list, empty_command);
-	}
-}
-
-t_cmd	*loop_p_for_token(t_cmd *command_list, t_cmd *temp, t_cmd *prev_temp, t_cmd *current_command)
-{
-	while (temp)
-	{
-		if (ft_strcmp(temp->cmd, "|") != 0 && temp->cmd)
-		{
-			creation_cmd(&current_command, temp->cmd);
-			prev_temp = temp;
-			temp = temp->next;
-			if (!temp || (temp && ft_strcmp(temp->cmd, "|") == 0))
-			{
-				add_command_to_list_token(&command_list, current_command);
-				current_command = NULL;
-			}
-			continue ;
-		}
-		else
-			handle_pipe_case(temp, prev_temp, command_list);
-		prev_temp = temp;
-		temp = temp->next;
-	}
-	return (command_list);
-}
-
-t_cmd *parse_for_token(t_cmd *to_pars)
-{
-	t_cmd	*command_list;
-	t_cmd	*temp;
-	t_cmd	*prev_temp;
-	t_cmd	*current_command;
-
-	temp = to_pars;
-	command_list = NULL;
-	prev_temp = NULL;
-	current_command = NULL;
-	command_list = loop_p_for_token(command_list,
-			temp, prev_temp, current_command);
-	return (command_list);
-}
-
-
-void	commande_print(char **commande_split)
-{
-	int	i;
-
-	i = -1;
-	if (commande_split)
-	{
-		while (commande_split[++i])
-			printf("commande split %d -> %s\n", i, commande_split[i]);
-	}
-	return ;
-}
-
-void	print_string_array(char **str_array)
-{
-	if (str_array == NULL)
-	{
-		printf("Array is NULL\n");
-		return ;
-	}
-	for (int i = 0; str_array[i] != NULL; ++i)
-	{
-		printf("good_commande %s\n", str_array[i]);
-	}
-}
-
-
-
-void	print_file_list(t_file *head)
-{
-	t_file	*current;
-
-	current = head;
-	while (current != NULL)
-	{
-		printf("redir: %s, nome_file: %s\n", current->redir,
-				current->nome_file);
-		current = current->next;
-	}
-}
-
-int	get_file_list_array_size(t_file ***file)
-{
-	int	size;
-
-	size = 0;
-	while (file[size] != NULL)
-		size++;
-	return (size);
-}
-
-
-char	*change_in_quotes_espace(char *cmd, char replacement)
-{
-	int		i;
-	int		inside_quotes;
-
-	i = 0;
-	inside_quotes = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == '\"')
-			inside_quotes = !inside_quotes;
-		else if (inside_quotes && cmd[i] == '*')
-			cmd[i] = replacement;
-		i++;
-	}
-	return (cmd);
-}
-
-void	close_if_plus_zero(t_execve *pipex)
-{
-	close(pipex->tmp_fd[pipex->current_pipe][0]);
-	close(pipex->tmp_fd[pipex->current_pipe][1]);
-	close(pipex->fd[0]);
-	close(pipex->fd[1]);
-}
-
-void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex, int i)
+void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex,
+		int i)
 {
 	if (i)
 	{
 		garbagge(FLUSH, NULL, ALL);
 		exit(1);
 	}
-	if (execve(get_good_path, good_commande, pipex->new_enviroment) == - 1)
+	if (execve(get_good_path, good_commande, pipex->new_enviroment) == -1)
 	{
 		perror("execve error");
 		garbagge(FLUSH, NULL, ALL);
@@ -291,14 +134,13 @@ void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex, int
 	}
 }
 
-void    found_echo_in_pipe(t_cmd *new_to_pars)
+void	found_echo_in_pipe(t_cmd *new_to_pars)
 {
 	char	*echo;
 
-
-    echo = ft_substr(new_to_pars->cmd, 5, ft_strlen(new_to_pars->cmd));
+	echo = ft_substr(new_to_pars->cmd, 5, ft_strlen(new_to_pars->cmd));
 	if (!echo || garbagge(ADD, echo, PARS))
-		return (garbagge(FLUSH, NULL, ALL),exit(1));
+		return (garbagge(FLUSH, NULL, ALL), exit(1));
 	remove_quote(echo);
 	printf("%s\n", echo);
 	if (new_to_pars->next)
@@ -307,28 +149,11 @@ void    found_echo_in_pipe(t_cmd *new_to_pars)
 	exit(0);
 }
 
-int        ft_check_valid_flag_echo(char *s)
+void	found_echo_in_pipe_flag(char **tmp)
 {
 	int	i;
 
 	i = 0;
-	if (s && s[i] == '-' && s[i + 1])
-	{
-		while (s[++i])
-		{
-			if (s[i] != 'n')
-				return (1);
-		}
-		return (0);
-	}
-	return (1);
-}
-
-void    found_echo_in_pipe_flag(char **tmp)
-{
-	int	i;
-
-    i = 0;
 	while (tmp[i])
 	{
 		if (ft_check_valid_flag_echo(tmp[i]))
@@ -346,7 +171,6 @@ void    found_echo_in_pipe_flag(char **tmp)
 	exit(0);
 }
 
-
 void	print_env_array(char **str_array)
 {
 	int	i;
@@ -361,7 +185,7 @@ void	print_env_array(char **str_array)
 	}
 }
 
-const char *found_in_env_char(char **envi)
+const char	*found_in_env_char(char **envi)
 {
 	int			i;
 	const char	*f;
@@ -386,23 +210,6 @@ void	found_pwd_in_pipe(t_execve *pipex)
 	exit(0);
 }
 
-
-int	if_not_numeric(char *s)
-{
-	int	i;
-
-	i = 0;
-	if (s[i] == '-')
-		i++;
-	while (s[i])
-	{
-		if (ft_isalpha(s[i]) || s[i] == '-')
-			return (0);
-		i++;
-	}
-	return (i);
-}
-
 void	print_err_to_not_numb(char *exit_r)
 {
 	ft_putstr_fd("bash: exit :", 2);
@@ -411,7 +218,6 @@ void	print_err_to_not_numb(char *exit_r)
 	garbagge(FLUSH, NULL, ALL);
 	exit(2);
 }
-
 
 void	found_exit_in_pipe(t_cmd *ntp)
 {
@@ -460,7 +266,6 @@ void	found_export_in_pipe(char *cmd, t_execve *pipe)
 	exit(0);
 }
 
-
 void	found_env_in_pipe(char *cmd, t_execve *pipe)
 {
 	char	*error;
@@ -480,121 +285,11 @@ void	found_env_in_pipe(char *cmd, t_execve *pipe)
 	exit(0);
 }
 
-void    child_check_path_ifnt_error(t_cmd *new_to_pars, t_envp *enviroment, t_execve *pipex, char **tmp)
-{
-	int	j;
-
-	j = 0;
-	if (tmp && tmp[0]
-		&& ft_strcmp(tmp[0], "echo")
-		&& ft_strcmp(tmp[0], "env")
-		&& ft_strcmp(tmp[0], "export")
-		&& ft_strcmp(tmp[0], "exit")
-		&& ft_strcmp(tmp[0], "pwd")
-		&& ft_strcmp(tmp[0], "cd") && ft_strcmp(tmp[0], "unset"))
-	{
-		pipex->get_g_path = ft_good_path_access(new_to_pars, enviroment, pipex);
-		if (!pipex->get_g_path)
-		{
-            j = ft_error_commande_not_to_pars(new_to_pars, pipex);
-			if (j)
-			{
-				close(pipex->fd[0]);
-				close(pipex->fd[1]);
-				close(pipex->tmp_fd[pipex->current_pipe][0]);
-				close(pipex->tmp_fd[pipex->current_pipe][1]);
-				(garbagge(FLUSH, NULL, ALL), exit(j));
-			}
-		}
-	}
-}
-
-
-void	found_built_in_child(char **tmp, t_execve *pipex, t_cmd *new_to_pars, int j)
-{
-	if (tmp && tmp[0] && !ft_strcmp(tmp[0], "echo")
-		&& tmp[1] && !ft_check_valid_flag_echo(tmp[1]))
-		found_echo_in_pipe_flag(tmp + 1);
-	if (tmp && tmp[0] && !ft_strcmp(tmp[0], "echo"))
-		found_echo_in_pipe(new_to_pars);
-	if (tmp && tmp[0] && !ft_strcmp(tmp[0], "env"))
-		found_env_in_pipe(new_to_pars->cmd, pipex);
-	if (tmp && tmp[0] && !ft_strcmp(tmp[0], "export") && !tmp[1])
-		found_export_in_pipe(new_to_pars->cmd, pipex);
-	else if (tmp && tmp[0] && !ft_strcmp(tmp[0], "export"))
-		(garbagge(FLUSH, NULL, ALL), exit(0));
-	if (tmp && tmp[0] && !ft_strcmp(tmp[0], "exit"))
-		found_exit_in_pipe(new_to_pars);
-	if (tmp && tmp[0] && !ft_strcmp(tmp[0], "pwd"))
-		found_pwd_in_pipe(pipex);
-	else if (!new_to_pars || !new_to_pars->cmd
-		|| !ft_strcmp(tmp[0], "unset")
-		|| !ft_strcmp(tmp[0], "cd"))
-		(garbagge(FLUSH, NULL, ALL), exit(0));
-	else
-		pass_execve(pipex->good_cmd, pipex->get_g_path, pipex, j);
-}
-
-
-void    built_in_child_execve(t_cmd *new_to_pars, t_execve *pipex, int j, t_envp *enviroment)
-{
-	char	**tmp;
-
-	tmp = NULL;
-	if (new_to_pars && new_to_pars->cmd)
-	{
-		tmp = ft_split_garbage_gogo(new_to_pars->cmd, ' ');
-		if (!tmp)
-			(garbagge(FLUSH, NULL, ALL), exit (99));
-	}
-	child_check_path_ifnt_error(new_to_pars, enviroment, pipex, tmp);
-	if (pipex->n_pipe - 1 > 0)
-		close_if_plus_zero(pipex);
-	found_built_in_child(tmp, pipex, new_to_pars, j);
-}
-
-
-
-
-void	child(t_cmd *new_to_pars, t_execve *pipex, int i, t_envp *enviroment)
-{
-	char	*tmp;
-
-	if (new_to_pars && new_to_pars->cmd)
-	{
-		tmp = ft_strdup(new_to_pars->cmd);
-		if (!tmp || garbagge(ADD, tmp, PARS))
-			return ((void)0);
-		pipex->good_cmd = ft_split_garbage_gogo(new_to_pars->cmd, ' ');
-		if (!pipex->good_cmd)
-			return (perror("error split"), (void)0);
-	}
-	redirection(pipex->fd, pipex->current_pipe, pipex);
-	built_in_child_execve(new_to_pars, pipex, i, enviroment);
-}
-
-void	parent(int *fd, int i, t_execve *pipex)
-{
-	if (i > 0)
-	{
-		close(pipex->tmp_fd[i - 1][0]);
-		close(pipex->tmp_fd[i - 1][1]);
-	}
-	if (i < pipex->n_pipe - 1)
-		close(fd[1]);
-	if (pipex->n_pipe - 1 > 0)
-	{
-		close(fd[1]);
-		close(fd[0]);
-	}
-}
-
 int	found_in_to_pars(t_cmd *current)
 {
-	if (ft_strncmp(current->cmd, "<", 1) == 0
-		|| ft_strncmp(current->cmd, ">", 1) == 0
-		|| ft_strncmp(current->cmd, ">>", 2) == 0 || ft_strncmp(current->cmd,
-			"<<", 2) == 0)
+	if (ft_strncmp(current->cmd, "<", 1) == 0 || ft_strncmp(current->cmd, ">",
+			1) == 0 || ft_strncmp(current->cmd, ">>", 2) == 0
+		|| ft_strncmp(current->cmd, "<<", 2) == 0)
 		return (0);
 	return (1);
 }
@@ -653,7 +348,6 @@ t_cmd	*remove_redirections(t_cmd *to_pars)
 	return (new_list);
 }
 
-
 void	postfork_ms_sig(int signal)
 {
 	(void)signal;
@@ -679,8 +373,8 @@ void	logic_parent(t_execve *pipex, t_file **temp)
 	}
 }
 
-
-void	in_logic_fork(t_cmd *new_to_pars, t_execve *pipex, t_file **temp, t_envp *enviroment)
+void	in_logic_fork(t_cmd *new_to_pars, t_execve *pipex, t_file **temp,
+		t_envp *enviroment)
 {
 	int	i;
 
@@ -697,7 +391,7 @@ void	in_logic_fork(t_cmd *new_to_pars, t_execve *pipex, t_file **temp, t_envp *e
 }
 
 int	execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
-	t_envp *enviroment)
+		t_envp *enviroment)
 {
 	t_file	**temp;
 
@@ -709,14 +403,14 @@ int	execute_pipeline_command(t_execve *pipex, t_cmd *new_to_pars,
 			perror("pipe error");
 	}
 	pipex->pid[pipex->current_pipe] = fork();
-	in_logic_fork(new_to_pars, pipex, temp,enviroment);
+	in_logic_fork(new_to_pars, pipex, temp, enviroment);
 	return (0);
 }
 
-void    logic_wait_pd(t_execve *pipex, int n)
+void	logic_wait_pd(t_execve *pipex, int n)
 {
-	int		status;
-	int		i;
+	int	status;
+	int	i;
 
 	i = 0;
 	if (!pipex)
@@ -741,7 +435,6 @@ void    logic_wait_pd(t_execve *pipex, int n)
 		i++;
 	}
 }
-
 
 void	close_if_open(int fd)
 {
@@ -797,7 +490,7 @@ void	found_single_quotes(t_cmd *to_pars)
 	}
 }
 
-void add_node_sp(t_cmd **head_ref, char *cmd)
+void	add_node_sp(t_cmd **head_ref, char *cmd)
 {
 	t_cmd	*new_node;
 	t_cmd	*last;
@@ -816,9 +509,7 @@ void add_node_sp(t_cmd **head_ref, char *cmd)
 	last->next = new_node;
 }
 
-
-
-void count_spaces_before_and_after(char *str, int index, t_for_re *re)
+void	count_spaces_before_and_after(char *str, int index, t_for_re *re)
 {
 	int	j;
 
@@ -855,7 +546,7 @@ t_for_re	*init_esp(char *cmd)
 	return (esp);
 }
 
-char *check_redir_for_split(char *cmd)
+char	*check_redir_for_split(char *cmd)
 {
 	char		*result;
 	t_for_re	*esp;
@@ -884,17 +575,16 @@ char *check_redir_for_split(char *cmd)
 	return (result);
 }
 
-void add_spaces_around_token(char *token, char **new_token, char *last_char)
+void	add_spaces_around_token(char *token, char **new_token, char *last_char)
 {
-	if (*last_char != -1 && *last_char != ' '
-		&& *last_char != '"' && *last_char != '\'')
-			*(*new_token)++ = ' ';
+	if (*last_char != -1 && *last_char != ' ' && *last_char != '"'
+		&& *last_char != '\'')
+		*(*new_token)++ = ' ';
 	*(*new_token)++ = *token;
-	if ((*(token + 1) != ' ' && *(token + 1) != '\0'
-			&& *(token + 1) != '"'
-			&& *(token + 1) != '\'')
-		&& (*token == '<' || *token == '>' || *token == '|'))
-			*(*new_token)++ = ' ';
+	if ((*(token + 1) != ' ' && *(token + 1) != '\0' && *(token + 1) != '"'
+			&& *(token + 1) != '\'') && (*token == '<' || *token == '>'
+			|| *token == '|'))
+		*(*new_token)++ = ' ';
 	*last_char = *token;
 }
 
@@ -922,7 +612,7 @@ t_a_re	*add_init(void)
 	return (add);
 }
 
-void add_ep_redirection_and_pipes(t_cmd *head)
+void	add_ep_redirection_and_pipes(t_cmd *head)
 {
 	t_cmd	*current;
 	t_a_re	*add;
@@ -938,7 +628,8 @@ void add_ep_redirection_and_pipes(t_cmd *head)
 		{
 			if (*add->token == '<' || *add->token == '>' || *add->token == '|')
 				add_spaces_around_token(add->token,
-					&add->new_token, &add->last_char);
+					&add->new_token,
+					&add->last_char);
 			else
 				*add->new_token++ = *add->token;
 			add->last_char = *add->token;
@@ -949,8 +640,6 @@ void add_ep_redirection_and_pipes(t_cmd *head)
 		current = current->next;
 	}
 }
-
-
 
 void	append_to_list_red(t_cmd **new_list, t_cmd *cmd)
 {
@@ -968,8 +657,7 @@ void	append_to_list_red(t_cmd **new_list, t_cmd *cmd)
 	}
 }
 
-
-t_cmd *add_cmd_for_redir(t_cmd *list)
+t_cmd	*add_cmd_for_redir(t_cmd *list)
 {
 	t_cmd	*new_list;
 	int		i;
@@ -997,8 +685,7 @@ t_cmd *add_cmd_for_redir(t_cmd *list)
 	return (new_list);
 }
 
-
-t_cmd *parsing_before_pipe_red(t_cmd *to_pars)
+t_cmd	*parsing_before_pipe_red(t_cmd *to_pars)
 {
 	t_cmd	*cur;
 
@@ -1008,15 +695,16 @@ t_cmd *parsing_before_pipe_red(t_cmd *to_pars)
 	return (cur);
 }
 
-int	brain_execute_pipe_command(t_cmd *new_to_pars, t_execve *pipex, t_envp *enviroment)
+int	brain_execute_pipe_command(t_cmd *new_to_pars, t_execve *pipex,
+		t_envp *enviroment)
 {
 	int	n;
 
 	n = 0;
 	while ((pipex && pipex->current_pipe < pipex->n_pipe && new_to_pars)
 		|| (pipex && pipex->current_pipe < pipex->n_pipe && new_to_pars
-			&& pipex->pipe_redirections[pipex->current_pipe])
-		|| (pipex && pipex->current_pipe < pipex->n_pipe && !new_to_pars
+			&& pipex->pipe_redirections[pipex->current_pipe]) || (pipex
+			&& pipex->current_pipe < pipex->n_pipe && !new_to_pars
 			&& pipex->pipe_redirections[pipex->current_pipe]))
 	{
 		if (execute_pipeline_command(pipex, new_to_pars, enviroment))
@@ -1028,7 +716,7 @@ int	brain_execute_pipe_command(t_cmd *new_to_pars, t_execve *pipex, t_envp *envi
 	return (n);
 }
 
-t_cmd *copy_node(t_cmd *original)
+t_cmd	*copy_node(t_cmd *original)
 {
 	t_cmd	*copy;
 
@@ -1057,7 +745,8 @@ int	len_liste_cmd(t_cmd *cmd)
 	return (index + 1);
 }
 
-int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_status)
+int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export,
+		int error_status)
 {
 	t_execve	*pipex;
 	t_cmd		*new_to_pars;
@@ -1083,8 +772,6 @@ int	ft_execve(t_cmd *to_pars, t_envp *enviroment, t_exp *export, int error_statu
 	error_status = pipex->error;
 	return (pipex->error);
 }
-
-
 
 int	found_infile_or_endfile(t_cmd *to_pars)
 {

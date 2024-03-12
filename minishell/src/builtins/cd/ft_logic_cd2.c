@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_logic_cd2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 14:14:48 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 20:37:55 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:06:38 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_home_not_found(char *home)
 		ft_putstr_fd("HOME not set\n", 2);
 		return (2);
 	}
-	return(0);
+	return (0);
 }
 
 char	*home_found(char *home)

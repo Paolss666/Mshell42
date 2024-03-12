@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:11:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 22:49:39 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 23:37:48 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,25 @@
 
 int		g_signal_received = 0;
 
-int	ft_check_only_quote(char *line)
+int    ft_check_only_quote(char *line)
 {
-	int		i;
-	t_quote	q;
+    int        i;
+    t_quote    q;
 
-	i = 0;
-	q.d_q = 0;
-	q.s_q = 0;
-	while (line[i])
-	{
-		if (line[i] != '\'' && line[i] != '"')
-			return (1);
-		else
-			ft_inc_quote(line[i], &q.d_q, &q.s_q);
-		i++;
-	}
-	if (q.d_q % 2 == 0 && q.s_q % 2 == 0)
-		return (0);
-	return (1);
+    i = 0;
+    q.d_q = 0;
+    q.s_q = 0;
+    while (line[i])
+    {
+        ft_inc_quote(line[i], &q.d_q, &q.s_q);
+        if ((line[i] != '\'' && line[i] != '"')
+			|| ((q.d_q % 2 == 1 && q.s_q % 2 == 0 && line[i] == '\'') || (q.s_q % 2 == 1 && q.d_q % 2 == 0 && line[i] == '"')))
+            return (1);
+        i++;
+    }
+    if (q.d_q % 2 == 0 && q.s_q % 2 == 0)
+        return (0);
+    return (1);
 }
 
 char	*display_prompt(void)

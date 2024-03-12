@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:28:47 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/08 12:11:51 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:55:15 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ int	found_cd_oldpwd(t_exp *export, t_envp *enviroment, t_l_cd *cd)
 	return (0);
 }
 
-
-int		logic_cd(t_cmd *to_pars, t_exp *export, t_envp *enviroment, t_l_cd *cd)
+int	logic_cd(t_cmd *to_pars, t_exp *export, t_envp *enviroment, t_l_cd *cd)
 {
 	int	err;
 

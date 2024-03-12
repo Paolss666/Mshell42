@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 12:43:18 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 21:18:09 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/11 23:17:08 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*expand_last_dollar(char *expanded_value, char *value)
 		return (garbagge(FLUSH, NULL, ALL), exit(1), NULL);
 	return (expanded_value);
 }
-
 
 void	add_node_logic(t_file **file_list, t_file *temp, t_file *new_node)
 {
@@ -120,10 +119,7 @@ char	**export_list_to_exp_env(t_exp *enviroment)
 	return (new_enviroment);
 }
 
-
-
-
-void initialize_file_descriptors(t_execve *pipe)
+void	initialize_file_descriptors(t_execve *pipe)
 {
 	int	i;
 
@@ -199,8 +195,8 @@ t_file	***ft_cpy_list_redir2(int i, t_execve *pipe, t_file ***list_array)
 	return (list_array);
 }
 
-
-t_execve	*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export, int	error_status)
+t_execve	*init_structure(t_envp *enviroment, t_cmd *to_pars, t_exp *export,
+		int error_status)
 {
 	t_execve	*pipe;
 	int			i;

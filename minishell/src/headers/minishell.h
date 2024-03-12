@@ -6,7 +6,7 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 22:47:38 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 01:12:04 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ typedef struct s_execve
 	int				for_h;
 }					t_execve;
 
-// ------ commande -- //
 
 typedef struct s_expand
 {
@@ -179,6 +178,17 @@ typedef struct s_quote
 	size_t			i;
 }					t_quote;
 
+typedef struct s_expp
+{
+    char            *value;
+    char            *expanded_value;
+    char            *dollar;
+    int                len_tot;
+    char            *tmp;
+    t_quote            q;
+}                    t_expp;
+
+
 // ----------- UT --------------- //
 void				cook(size_t *k, t_quote q, const char *src);
 int					ft_found_pwd(t_cmd *to_pars);
@@ -203,7 +213,6 @@ int					kill_useless_quote(char *str);
 int					kill_double_quote(char *str, int i, int j, int flag);
 // int					remove_double_quotes(char *str);
 int					check_if_only_space(char *s);
-
 // ----------- ERRORI EXEC --------------- //
 void				freeList(t_cmd *head);
 void				free_list_to_pars(t_cmd **to_pars);
@@ -217,6 +226,7 @@ void				ft_error_redir_file(int fd, t_execve *pipex, int i,
 void				free_cmd_list(t_cmd *head);
 t_cmd				*free_cmds_list(t_cmd *head);
 // ----------- PARS --------------//
+
 int					main_brain(char **env, t_brain *brain);
 void				ft_issatty(t_brain *brain, char **env);
 int					non_interactive_mode(t_brain *brain, char **env);
@@ -242,6 +252,31 @@ void				logic_garbage_clear(int list, t_list *a, t_list *b,
 int					logic_add_back(t_list **a, t_list **b, t_list **c,
 						t_gb *gb);
 // ----------- PIPE // REDIRECTION --------------//
+void	child(t_cmd *new_to_pars, t_execve *pipex, int i, t_envp *enviroment);
+void	add_command_to_list_token(t_cmd **command_list, t_cmd *command);
+void	handle_pipe_case(t_cmd *temp, t_cmd *prev_temp, t_cmd *command_list);
+t_cmd	*loop_p_for_token(t_cmd *command_list, t_cmd *temp, t_cmd *prev_temp,
+		t_cmd *current_command);
+t_cmd	*parse_for_token(t_cmd *to_pars);
+void	creation_cmd(t_cmd **current_commande, const char *new_cmd);
+void	creation_cmd_empty(t_cmd **current_commande, const char *new_cmd);
+int	get_file_list_array_size(t_file ***file);
+char	*change_in_quotes_espace(char *cmd, char replacement);
+void	found_echo_in_pipe(t_cmd *new_to_pars);
+void	found_echo_in_pipe_flag(char **tmp);
+void	print_env_array(char **str_array);
+const char	*found_in_env_char(char **envi);
+void	found_pwd_in_pipe(t_execve *pipex);
+void	print_err_to_not_numb(char *exit_r);
+void	found_exit_in_pipe(t_cmd *ntp);
+void	found_export_in_pipe(char *cmd, t_execve *pipe);
+void	found_env_in_pipe(char *cmd, t_execve *pipe);
+int	found_in_to_pars(t_cmd *current);
+void	pass_execve(char **good_commande, char *get_good_path, t_execve *pipex,
+		int i);
+void				close_if_plus_zero(t_execve *pipex);
+int					ft_check_valid_flag_echo(char *s);
+int					if_not_numeric(char *s);
 t_execve			*init_structure(t_envp *enviroment, t_cmd *to_pars,
 						t_exp *export, int error_status);
 void				parent(int *fd, int i, t_execve *pipex);
@@ -273,14 +308,55 @@ int					echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd,
 // ----------- REDIRECTION ------- //
 int					found_infile_or_endfile(t_cmd *to_pars);
 char				*direction_in_out_file(t_cmd *to_pars);
-
+// -----------  ------- //
+size_t				find_next_non_n_index(const char *cmd);
+char				*ft_strcp_for_me(char *dest, const char *src);
+int					found_echo_not_flag(t_cmd *arg_cmd);
+int					logic_print_echo(t_cmd *arg_cmd,
+						int print_argument, char *expanded_value);
+int					logic_print_echo_flag(t_cmd *to_pars, int error_status);
+size_t				funny_c_echo_logic(const char *cmd,
+						size_t idx, size_t cmd_len);
 // ------------ BUILDING ----------- //
-int					split_by_quotes_and_spaces(char *str, char *tokens[],
-						int flag);
-int					handle_quotes(char **ptr, char quote, char *tokens[],
-						int *i);
-int					find_missing_quote(char **ptr, char quote);
-void				find_and_terminate_token(char **ptr);
+int					process_echo_dash(t_cmd *to_pars, char *tmp);
+int					found_with_check_flag(t_cmd *to_pars, char *tmp);
+void				add_environment_variable(t_envp **enviroment, char *name_v, char *value);
+void				found_name_v_only_in_export(t_exp *new_upgrade_exp, char *name_v,
+									char *value);
+void				found_name_both_env(char *value, char *name_v, char *modif_variable,
+						t_envp *current);
+void				found_name_both_expo(char *modif_variable,
+						char *value, char *name_v, t_exp *new_upgrade_exp);
+char				*found_plus_modif_path(t_exp *new_upgrade_exp, char *value,
+						char *modif_variable);
+char				*modif_variable_exp(char *name_v, char *value);
+void				add_export_variable(t_exp **export, char *name_v, char *value);
+int					check_export_variable_exists(char *check_equal, char *check_name_v,
+						t_exp **check_equal_list);
+t_exp				*ft_new_export(char *name_v, char *value);
+t_exp				*add_list_export(char *name_v, char *found_equal, t_exp **export);
+int					add_export_variable_pro(char *line, char *found_equal, t_exp **export,
+						t_exp *check_equal_list);
+void				add_both_list(t_exp **export, t_envp **enviroment, char *name_v,
+						char *value);
+t_envp				*find_in_environment_list(t_envp *enviroment, char *name_v);
+t_exp				*find_in_export_list(t_exp *export, char *name_v);
+void				logic_add_in_exp_env(t_envp **enviroment, t_exp **export, t_v *v,
+						char *modif_variable);
+t_v					*init_v(char *line, char *found_equal);
+void				update_environment_and_export(t_envp **enviroment, t_exp **export,
+					char *line, char *found_equal);
+void				udpate_plus_after_env_exp(t_envp **enviroment, t_exp **export, char *line, char *found_equal);
+int					is_valid_export_value(char *cmd);
+void				remove_q(char *s);
+void				ft_export_logic( t_envp **enviroment, t_exp **export, char *line);
+int					check_plus_before(char *line);
+int					add_export_env(t_cmd *to_pars, t_envp **enviroment, t_exp **export);
+int	handle_export_error(char *cmd);
+// int					handle_quotes(char **ptr, char quote, char *tokens[],
+// 						int *i);
+// int					find_missing_quote(char **ptr, char quote);
+// void				find_and_terminate_token(char **ptr);
 // ------------ cd ----------- //
 int					ft_pwd(t_cmd *to_pars);
 int					ft_cd(t_cmd *to_pars);
@@ -388,6 +464,9 @@ char				*found_variable_env(t_envp *enviroment, char *name_v);
 char				*found_variable_exp(t_exp *export, char *name_v);
 int					is_valid_variable_char(char c);
 int					found_dollar_alone(char *s);
+int					ft_exit_neg(t_cmd *to_pars);
+void	err_neg_max_int(char *cmd);
+int	check_plus_arg_neg(void);
 // ------------ ERROR SYNTAX ----------- //
 int					check_forb_logic(int i, char c, char *str);
 int					check_alone(char *s);
@@ -421,8 +500,13 @@ int					ft_error_parenthesis(char *str);
 int					ft_error_semicol(char *str);
 int					ft_error_stx(char *str);
 int					is_error(char *to_epur);
+// int	is_directory(char *s);
+void	ft_error_commande_split(char *cmd);
+void	ft_error_quotes(t_execve *pipex, char *cmd);
+void	ft_error_single_quotes(t_execve *pipex, char *cmd);
+int	logic_split_for_commande(char *cmd, t_execve *pipex);
 /* int 				check_only_single_space(char *s); */
-
+// int	ft_error_commande_not_to_pars(t_cmd *to_pars, t_execve *pipex);
 char				**ft_split_garbage_gogo(char const *s, char c);
 void				ft_strlcpy_msh(char *token, const char *src, size_t size,
 						size_t *k);

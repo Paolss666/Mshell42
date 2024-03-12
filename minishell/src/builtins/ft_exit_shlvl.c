@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit_shlvl.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 08:36:48 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/05 21:31:55 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:53:08 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+void	err_neg_max_int(char *cmd)
+{
+	ft_putstr_fd("exit: \n", 2);
+	ft_putstr_fd("bash: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(" : numeric argument required\n", 2);
+	garbagge(FLUSH, NULL, ALL);
+	exit(2);
+}
 
 void	logic_shlvl_exit_exp(t_exp *export)
 {
@@ -39,7 +49,6 @@ void	logic_shlvl_exit_exp(t_exp *export)
 	if (!export->path || garbagge(ADD, export->path, ENV))
 		return (garbagge(FREE, NULL, ENV), exit(EXIT_FAILURE), (void)0);
 }
-
 
 void	logic_shlvl_exit_env(t_envp *enviroment)
 {

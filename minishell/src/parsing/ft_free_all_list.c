@@ -6,26 +6,11 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 23:00:48 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/11 20:51:00 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:55:56 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
-void	freeList(t_cmd *head)
-{
-	t_cmd	*current;
-	t_cmd	*next;
-
-	current = head;
-	while (current != NULL)
-	{
-		next = current->next;
-		garbagge(FREE, current->cmd, PARS);
-		garbagge(FREE, current, PARS);
-		current = next;
-	}
-}
 
 t_cmd	*free_cmds_list(t_cmd *head)
 {

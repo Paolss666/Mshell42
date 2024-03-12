@@ -6,13 +6,11 @@
 /*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 17:53:35 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 17:19:49 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:49:47 by npaolett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-
 
 int	found_export(t_cmd *to_pars)
 {
