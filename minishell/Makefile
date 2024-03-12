@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+         #
+#    By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/04 16:22:18 by npaolett          #+#    #+#              #
-#    Updated: 2024/03/12 01:09:19 by npaolett         ###   ########.fr        #
+#    Updated: 2024/03/12 03:10:00 by npoalett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,11 +51,19 @@ SRC =	src/builtins/ft_pwd.c\
 		src/builtins/export/ft_utils_export5.c  \
 		src/builtins/ft_unset.c    \
 		src/execve/ft_exceve.c	 \
+		src/execve/ft_b_in.c	 \
+		src/execve/ft_b_in2.c	 \
+		src/execve/ft_for_signal.c	 \
+		src/execve/ft_execve_et_wait.c\
 		src/execve/ft_utils_execve2.c	 \
 		src/execve/ft_logic_exceve.c	 \
 		src/execve/ft_utils_exceve.c	 \
 		src/execve/ft_redirection_in_out.c \
 		src/execve/ft_redir_open_err_et_err.c \
+		src/execve/ft_redir_utils.c \
+		src/execve/ft_redir_utils2.c \
+		src/execve/ft_redir_utils3.c \
+		src/execve/ft_utils_exce.c \
 		src/execve/ft_error_print.c \
 		src/execve/ft_here_doc.c \
 		src/execve/ft_print_err.c \
@@ -89,7 +97,15 @@ SRC =	src/builtins/ft_pwd.c\
 		src/error_manager/purify.c\
 		src/parsing/split_gogo_utils.c \
 		src/parsing/split_gogo.c\
+		src/parsing/ft_exp_quot.c\
 		src/parsing/split_gogo_quote.c \
+		src/parsing/ft_quotes_main.c \
+		src/parsing/ft_found_inmain.c \
+		src/parsing/ft_logic_main.c \
+		src/parsing/ft_quotes_main2.c \
+		src/parsing/ft_utils_for_cmd.c \
+		src/parsing/ft_utils_check_path.c \
+		src/parsing/ft_exp_goodpth.c \
 		src/parsing/main.c \
 
 OBJ = $(SRC:.c=.o)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_gogo_quote.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 20:33:34 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/11 22:14:20 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 01:52:09 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,9 @@ static void	ft_array(char **array, const char *s, char c)
 	size_t		i;
 	size_t		j;
 	size_t		count;
-	t_boolean	swtc;
 	size_t		n_words;
 
 	(void)c;
-	swtc = 0;
 	i = 0;
 	j = 0;
 	n_words = (ft_count_word(s));
@@ -106,7 +104,7 @@ static void	ft_array(char **array, const char *s, char c)
 		array[i] = (char *)malloc(count + 1);
 		if (!array[i] || garbagge(ADD, array[i], PARS))
 			return ;
-		if (count >= 0)
+		if (count > 0)
 			ft_strlcpy_msh_quote(array[i], s + j, count + 1, &j);
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_all_list.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 23:00:48 by npoalett          #+#    #+#             */
-/*   Updated: 2024/03/12 00:55:56 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 02:38:27 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,15 @@ void	free_cmd_list(t_cmd *head)
 		garbagge(FREE, head, PARS);
 	}
 	return ((void)0);
+}
+
+/* --->>>>> toutes les commandes mis dans les listes chainees <<-------- */
+void	ft_free_tab_garbage(char **tab)
+{
+	int	i;
+
+	i = -1;
+	while (tab[++i])
+		garbagge(FREE, tab[i], PARS);
+	garbagge(FREE, tab, PARS);
 }

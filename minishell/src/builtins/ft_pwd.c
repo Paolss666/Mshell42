@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 10:29:14 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/12 00:54:42 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 02:42:42 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int	found_pwd(t_cmd *to_pars)
+{
+	while (to_pars)
+	{
+		if (ft_strcmp(to_pars->cmd, "pwd") == 0)
+			return (1);
+		to_pars = to_pars->next;
+	}
+	return (0);
+}
 
 int	ft_pwd(t_cmd *to_pars)
 {

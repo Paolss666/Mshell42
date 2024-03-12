@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 14:58:13 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/12 01:12:04 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 03:04:05 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,20 +202,13 @@ t_cmd				*add_new_cmd(char **commande_split, int i);
 void				close_if_open(int fd);
 void				close_all_fd_tmp(t_execve *pipex, int n);
 int					garbagge(int rule, void *p, int list);
-
 void				set_signal_action(int sig_case);
-/* void				ft_clean_spaces(char *str); */
 int					count_quote(char *str, char c, char d);
-/* void				change_quote_in_star(char *str); */
-// void				kill_double_quote(char *str, int i, int j, int flag);
 void				kill_single_quote(char *str, int i, int j, int flag);
 int					kill_useless_quote(char *str);
 int					kill_double_quote(char *str, int i, int j, int flag);
-// int					remove_double_quotes(char *str);
 int					check_if_only_space(char *s);
 // ----------- ERRORI EXEC --------------- //
-void				freeList(t_cmd *head);
-void				free_list_to_pars(t_cmd **to_pars);
 int					is_directory(char *s);
 int					ft_error_commande_not_to_pars(t_cmd *to_pars,
 						t_execve *pipex);
@@ -241,6 +234,23 @@ t_envp				*add_node_to_end(t_envp **list, const char *name,
 t_envp				*logic_init_node(t_envp *new_node, const char *name,
 						const char *value, char *temp);
 char				**ft_split_garbage(char const *s, char c);
+void	logic_found_shlvl_env(t_envp *enviroment);
+char	*found_path_envp_list(t_envp *enviroment);
+int		found_pwd(t_cmd *to_pars);
+void	change_in_exp(t_exp *export);
+int    ft_check_only_quote(char *line);
+char	*logic_get_good_path(char **with_flag, char **env_split,
+		t_execve *pipex);
+void	replace_quotes(char *str);
+int	contains_only_spaces(const char *str);
+int	has_both_quotes(const char *str);
+int	count_single_quotes(char *cmd);
+int	logic_check_type_quotes(char *str);
+void	logic_exp_quotes(int r_st, int i, t_envp *environment, t_cmd *current);
+char	*ft_strndup_g(const char *src, size_t n);
+t_brain	*init_brain(void);
+int	minishell_brain_bis(t_cmd *to_pars, t_envp *enviroment, t_exp *export,
+		int error_status);
 // ----------- GARBAGE --------------//
 int					ft_check_only_quote(char *line);
 void				del(void *p);
@@ -308,6 +318,38 @@ int					echo_flag_funny(t_cmd *to_pars, t_cmd *arg_cmd,
 // ----------- REDIRECTION ------- //
 int					found_infile_or_endfile(t_cmd *to_pars);
 char				*direction_in_out_file(t_cmd *to_pars);
+void	append_to_list_red(t_cmd **new_list, t_cmd *cmd);
+t_cmd	*add_cmd_for_redir(t_cmd *list);
+void	add_ep_redirection_and_pipes(t_cmd *head);
+t_a_re	*add_init(void);
+char	*new_cmd_for_token(char *token);
+void	add_spaces_around_token(char *token, char **new_token, char *last_char);
+char	*check_redir_for_split(char *cmd);
+t_for_re	*init_esp(char *cmd);
+t_cmd	*add_redirection_to_list(t_cmd **new_list_ptr, t_cmd *prev,
+		t_cmd *current);
+t_cmd	*remove_redirections(t_cmd *to_pars);
+void	add_spaces_around_token(char *token, char **new_token, char *last_char);
+char	*new_cmd_for_token(char *token);
+void	count_spaces_before_and_after(char *str, int index, t_for_re *re);
+t_cmd	*parsing_before_pipe_red(t_cmd *to_pars);
+t_cmd	*copy_node(t_cmd *original);
+char	*create_temp_buffer(const char *str1, const char *str2);
+void	creation_cmd(t_cmd **current_commande, const char *new_cmd);
+void	found_echo_in_pipe(t_cmd *new_to_pars);
+void	found_echo_in_pipe_flag(char **tmp);
+void	print_env_array(char **str_array);
+const char	*found_in_env_char(char **envi);
+void	found_pwd_in_pipe(t_execve *pipex);
+void	print_err_to_not_numb(char *exit_r);
+void	found_exit_in_pipe(t_cmd *ntp);
+void	found_export_in_pipe(char *cmd, t_execve *pipe);
+void	found_env_in_pipe(char *cmd, t_execve *pipe);
+int	found_in_to_pars(t_cmd *current);
+void	postfork_ms_sig(int signal);
+void	ms_signals(void);
+int	len_liste_cmd(t_cmd *cmd);
+void	logic_wait_pd(t_execve *pipex, int n);
 // -----------  ------- //
 size_t				find_next_non_n_index(const char *cmd);
 char				*ft_strcp_for_me(char *dest, const char *src);
@@ -384,6 +426,8 @@ t_exp				*init_export(t_envp *enviroment);
 int					found_pwd(t_cmd *to_pars);
 int					found_token(t_cmd *to_pars);
 t_cmd				*add_cmd_star(t_cmd *list, char *line);
+int					len_liste_exp(t_exp *enviromet);
+int					len_liste_envp(t_envp *enviromet);
 // ------------ BUILDING ----------- //
 int					found_export(t_cmd *to_pars);
 int					found_unset(t_cmd *to_pars);

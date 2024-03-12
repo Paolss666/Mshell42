@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_logic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: npaolett <npaolett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:47:27 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/06 16:05:48 by npaolett         ###   ########.fr       */
+/*   Updated: 2024/03/12 03:08:33 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,19 @@ int	garbagge(int rule, void *p, int list)
 			ft_list_remove_if(&c, p, cmp);
 	}
 	return (free(gb), 0);
+}
+
+char	*ft_strndup_g(const char *src, size_t n)
+{
+	size_t	len;
+	char	*dest;
+
+	len = ft_strlen(src);
+	if (n < len)
+		len = n;
+	dest = (char *)malloc(len + 2);
+	if (!dest || garbagge(ADD, dest, PARS))
+		return (NULL);
+	ft_strlcpy(dest, src, len + 1);
+	return (dest);
 }

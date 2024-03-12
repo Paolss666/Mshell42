@@ -6,7 +6,7 @@
 /*   By: npoalett <npoalett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:40:46 by npaolett          #+#    #+#             */
-/*   Updated: 2024/03/05 20:59:00 by npoalett         ###   ########.fr       */
+/*   Updated: 2024/03/12 03:06:36 by npoalett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ char				*ft_strstr(const char *haystack, const char *needle);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strdup(const char *s);
+char				*ft_strndup_g(const char *src, size_t n);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
 char const			*ft_strnstr(const char *big,
 						const char *little, size_t len);
